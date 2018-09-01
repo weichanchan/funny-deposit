@@ -1,7 +1,7 @@
 package com.funny.utils.interceptor;
 
-import com.funny.entity.TokenEntity;
-import com.funny.service.TokenService;
+import com.funny.admin.system.entity.TokenEntity;
+import com.funny.admin.system.service.TokenService;
 import com.funny.utils.RRException;
 import com.funny.utils.annotation.IgnoreAuth;
 import org.apache.commons.lang.StringUtils;

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.funny.dao.SysOssDao">
+<mapper namespace="com.funny.admin.system.dao.SysOssDao">
 
-	<select id="queryObject" resultType="com.funny.entity.SysOssEntity">
+	<select id="queryObject" resultType="com.funny.admin.system.entity.SysOssEntity">
 		select * from sys_oss where id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.funny.entity.SysOssEntity">
+	<select id="queryList" resultType="com.funny.admin.system.entity.SysOssEntity">
 		select * from sys_oss order by id desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -18,7 +18,7 @@
 		select count(*) from sys_oss 
 	</select>
 	 
-	<insert id="save" parameterType="com.funny.entity.SysOssEntity" useGeneratedKeys="true" keyProperty="id">
+	<insert id="save" parameterType="com.funny.admin.system.entity.SysOssEntity" useGeneratedKeys="true" keyProperty="id">
 		insert into sys_oss
 		(
 			`url`, 
@@ -31,7 +31,7 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.funny.entity.SysOssEntity">
+	<update id="update" parameterType="com.funny.admin.system.entity.SysOssEntity">
 		update sys_oss 
 		<set>
 			<if test="url != null">`url` = #{url}, </if>

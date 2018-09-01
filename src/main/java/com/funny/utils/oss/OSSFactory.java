@@ -1,6 +1,6 @@
 package com.funny.utils.oss;
 
-import com.funny.service.SysConfigService;
+import com.funny.admin.system.service.SysConfigService;
 import com.funny.utils.ConfigConstant;
 import com.funny.utils.Constant;
 import com.funny.utils.SpringContextUtils;

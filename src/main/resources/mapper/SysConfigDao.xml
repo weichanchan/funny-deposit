@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
-<mapper namespace="com.funny.dao.SysConfigDao">
-	<select id="queryObject" resultType="com.funny.entity.SysConfigEntity">
+<mapper namespace="com.funny.admin.system.dao.SysConfigDao">
+	<select id="queryObject" resultType="com.funny.admin.system.entity.SysConfigEntity">
 		select * from sys_config where id = #{id}
 	</select>
 	
-	<select id="queryList" parameterType="map" resultType="com.funny.entity.SysConfigEntity">
+	<select id="queryList" parameterType="map" resultType="com.funny.admin.system.entity.SysConfigEntity">
 		select * from sys_config where status = 1 
 		<if test="key != null and key.trim() != ''">
 			and `key` like concat('%',#{key},'%') 
@@ -22,12 +22,12 @@
 		</if>
 	</select>
 	
-	<insert id="save" parameterType="com.funny.entity.SysConfigEntity">
+	<insert id="save" parameterType="com.funny.admin.system.entity.SysConfigEntity">
 		insert into sys_config(`key`, `value`, remark)
 			values(#{key},#{value},#{remark})
 	</insert>
 	
-	<update id="update" parameterType="com.funny.entity.SysConfigEntity">
+	<update id="update" parameterType="com.funny.admin.system.entity.SysConfigEntity">
 		update sys_config set `key` = #{key}, `value` = #{value}, remark = #{remark} 
 			 where id = #{id}
 	</update>

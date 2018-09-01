@@ -1,7 +1,7 @@
 package com.funny.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.funny.entity.ScheduleJobEntity;
+import com.funny.admin.system.entity.ScheduleJobEntity;
 import com.funny.utils.Constant.ScheduleStatus;
 import org.quartz.*;
 

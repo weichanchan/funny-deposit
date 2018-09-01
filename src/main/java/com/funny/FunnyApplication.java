@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.funny.dao")
+@MapperScan("com.funny.admin.system.dao")
 public class FunnyApplication {
 
 	public static void main(String[] args) {

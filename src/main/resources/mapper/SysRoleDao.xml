@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.funny.dao.SysRoleDao">
+<mapper namespace="com.funny.admin.system.dao.SysRoleDao">
 
-	<select id="queryObject" resultType="com.funny.entity.SysRoleEntity">
+	<select id="queryObject" resultType="com.funny.admin.system.entity.SysRoleEntity">
 		select * from sys_role where role_id = #{value}
 	</select>
 	
-	<select id="queryList" resultType="com.funny.entity.SysRoleEntity">
+	<select id="queryList" resultType="com.funny.admin.system.entity.SysRoleEntity">
 		select * from sys_role 
 		<where>
 			<if test="roleName != null and roleName.trim() != ''">
@@ -42,7 +42,7 @@
 		</where>
 	</select>
 	
-	<insert id="save" parameterType="com.funny.entity.SysRoleEntity" useGeneratedKeys="true" keyProperty="roleId">
+	<insert id="save" parameterType="com.funny.admin.system.entity.SysRoleEntity" useGeneratedKeys="true" keyProperty="roleId">
 		insert into sys_role
 		(
 			`role_id`, 
@@ -61,7 +61,7 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.funny.entity.SysRoleEntity">
+	<update id="update" parameterType="com.funny.admin.system.entity.SysRoleEntity">
 		update sys_role 
 		<set> 
 			<if test="roleName != null">`role_name` = #{roleName}, </if>

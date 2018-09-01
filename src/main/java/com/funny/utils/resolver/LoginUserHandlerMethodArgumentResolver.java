@@ -1,7 +1,7 @@
 package com.funny.utils.resolver;
 
-import com.funny.entity.UserEntity;
-import com.funny.service.UserService;
+import com.funny.admin.system.entity.UserEntity;
+import com.funny.admin.system.service.UserService;
 import com.funny.utils.annotation.LoginUser;
 import com.funny.utils.interceptor.AuthorizationInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;

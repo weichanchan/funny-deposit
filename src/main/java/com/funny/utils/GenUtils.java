@@ -1,7 +1,7 @@
 package com.funny.utils;
 
-import com.funny.entity.ColumnEntity;
-import com.funny.entity.TableEntity;
+import com.funny.admin.system.entity.ColumnEntity;
+import com.funny.admin.system.entity.TableEntity;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.funny.dao.SysUserDao">
-	<select id="queryObject" resultType="com.funny.entity.SysUserEntity">
+<mapper namespace="com.funny.admin.system.dao.SysUserDao">
+	<select id="queryObject" resultType="com.funny.admin.system.entity.SysUserEntity">
 		select * from sys_user where user_id = #{value}
 	</select>
 	
-	<select id="queryList" resultType="com.funny.entity.SysUserEntity">
+	<select id="queryList" resultType="com.funny.admin.system.entity.SysUserEntity">
 		select * from sys_user 
 		<where>
 			<if test="createUserId != null">
@@ -56,11 +56,11 @@
 		where ur.user_id = #{userId}
 	</select>
 	
-	<select id="queryByUserName" resultType="com.funny.entity.SysUserEntity">
+	<select id="queryByUserName" resultType="com.funny.admin.system.entity.SysUserEntity">
 		select * from sys_user where username = #{username}
 	</select>
 	
-	<insert id="save" parameterType="com.funny.entity.SysUserEntity" useGeneratedKeys="true" keyProperty="userId">
+	<insert id="save" parameterType="com.funny.admin.system.entity.SysUserEntity" useGeneratedKeys="true" keyProperty="userId">
 		insert into sys_user
 		(
 			`user_id`, 
@@ -85,7 +85,7 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.funny.entity.SysUserEntity">
+	<update id="update" parameterType="com.funny.admin.system.entity.SysUserEntity">
 		update sys_user 
 		<set> 
 			<if test="username != null">`username` = #{username}, </if>

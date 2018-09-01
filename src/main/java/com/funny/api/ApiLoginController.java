@@ -1,9 +1,9 @@
 package com.funny.api;
 
-import com.funny.service.TokenService;
+import com.funny.admin.system.service.TokenService;
 import com.funny.utils.R;
 import com.funny.utils.annotation.IgnoreAuth;
-import com.funny.service.UserService;
+import com.funny.admin.system.service.UserService;
 import com.funny.utils.validator.Assert;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

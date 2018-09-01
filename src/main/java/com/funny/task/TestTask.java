@@ -1,7 +1,7 @@
 package com.funny.task;
 
-import com.funny.entity.SysUserEntity;
-import com.funny.service.SysUserService;
+import com.funny.admin.system.entity.SysUserEntity;
+import com.funny.admin.system.service.SysUserService;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;

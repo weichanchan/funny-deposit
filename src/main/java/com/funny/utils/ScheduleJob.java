@@ -1,9 +1,9 @@
 package com.funny.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.funny.entity.ScheduleJobEntity;
-import com.funny.entity.ScheduleJobLogEntity;
-import com.funny.service.ScheduleJobLogService;
+import com.funny.admin.system.entity.ScheduleJobEntity;
+import com.funny.admin.system.entity.ScheduleJobLogEntity;
+import com.funny.admin.system.service.ScheduleJobLogService;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

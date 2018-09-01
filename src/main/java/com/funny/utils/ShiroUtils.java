@@ -1,6 +1,6 @@
 package com.funny.utils;
 
-import com.funny.entity.SysUserEntity;
+import com.funny.admin.system.entity.SysUserEntity;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;

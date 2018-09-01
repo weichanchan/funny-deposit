@@ -1,8 +1,8 @@
 package com.funny.utils.shiro;
 
-import com.funny.entity.SysUserEntity;
-import com.funny.service.SysMenuService;
-import com.funny.service.SysUserService;
+import com.funny.admin.system.entity.SysUserEntity;
+import com.funny.admin.system.service.SysMenuService;
+import com.funny.admin.system.service.SysUserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
