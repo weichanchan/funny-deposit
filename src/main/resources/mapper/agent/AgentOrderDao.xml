@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.funny.admin.agent.dao.AgentOrderDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.funny.admin.agent.entity.AgentOrderEntity" id="agentOrderMap">
+        <result property="id" column="id"/>
+        <result property="agentOrderNo" column="agent_order_no"/>
+        <result property="jdOrderId" column="jd_order_id"/>
+        <result property="type" column="type"/>
+        <result property="fintime" column="finTime"/>
+        <result property="notifyurl" column="notifyUrl"/>
+        <result property="rechargeNum" column="recharge_num"/>
+        <result property="quantity" column="quantity"/>
+        <result property="wareno" column="wareNo"/>
+        <result property="costprice" column="costPrice"/>
+        <result property="features" column="features"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
+		select * from agent_order where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
+		select * from agent_order
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from agent_order 
+	</select>
+
+	<select id="getMaxId" resultType="long">
+		select Max(id) maxId from agent_order
+	</select>
+	 
+	<insert id="save" parameterType="com.funny.admin.agent.entity.AgentOrderEntity">
+		insert into agent_order
+		(
+			`id`, 
+			`agent_order_no`, 
+			`jd_order_id`, 
+			`type`, 
+			`finTime`, 
+			`notifyUrl`, 
+			`recharge_num`, 
+			`quantity`, 
+			`wareNo`, 
+			`costPrice`, 
+			`features`, 
+			`status`, 
+			`create_time`
+		)
+		values
+		(
+			#{id}, 
+			#{agentOrderNo}, 
+			#{jdOrderId}, 
+			#{type}, 
+			#{fintime}, 
+			#{notifyurl}, 
+			#{rechargeNum}, 
+			#{quantity}, 
+			#{wareno}, 
+			#{costprice}, 
+			#{features}, 
+			#{status}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.funny.admin.agent.entity.AgentOrderEntity">
+		update agent_order 
+		<set>
+			<if test="agentOrderNo != null">`agent_order_no` = #{agentOrderNo}, </if>
+			<if test="jdOrderId != null">`jd_order_id` = #{jdOrderId}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="fintime != null">`finTime` = #{fintime}, </if>
+			<if test="notifyurl != null">`notifyUrl` = #{notifyurl}, </if>
+			<if test="rechargeNum != null">`recharge_num` = #{rechargeNum}, </if>
+			<if test="quantity != null">`quantity` = #{quantity}, </if>
+			<if test="wareno != null">`wareNo` = #{wareno}, </if>
+			<if test="costprice != null">`costPrice` = #{costprice}, </if>
+			<if test="features != null">`features` = #{features}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from agent_order where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from agent_order where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

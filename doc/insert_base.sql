@@ -33,6 +33,12 @@ INSERT INTO `sys_menu` VALUES ('27', '1', '参数管理', 'sys/config.html', 'sy
 INSERT INTO `sys_menu` VALUES ('28', '1', '代码生成器', 'sys/generator.html', 'sys:generator:list,sys:generator:code', '1', 'fa fa-rocket', '8');
 INSERT INTO `sys_menu` VALUES ('29', '1', '系统日志', 'sys/log.html', 'sys:log:list', '1', 'fa fa-file-text-o', '7');
 INSERT INTO `sys_menu` VALUES ('30', '1', '文件上传', 'sys/oss.html', 'sys:oss:all', '1', 'fa fa-file-image-o', '6');
+INSERT INTO `sys_menu` VALUES ('31', '0', '订单管理', NULL, NULL, '0', 'fa fa-cog', '0');
+INSERT INTO `sys_menu` VALUES ('32', '31', '订单管理', 'sys/oss.html', 'sys:oss:all', '1', 'fa fa-file-image-o', '6');
+INSERT INTO `sys_menu` VALUES ('33', '32', '查看', NULL, 'agentorder:list,agentorder:info', '2', NULL, '0');
+INSERT INTO `sys_menu` VALUES ('34', '32', '新增', NULL, 'agentorder:save', '2', NULL, '0');
+INSERT INTO `sys_menu` VALUES ('35', '32', '修改', NULL, 'agentorder:update', '2', NULL, '0');
+INSERT INTO `sys_menu` VALUES ('36', '32', '删除', NULL, 'agentorder:delete', '2', NULL, '0');
 
 
 

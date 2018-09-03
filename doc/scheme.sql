@@ -1,3 +1,32 @@
+-- 代理商订单
+DROP TABLE IF EXISTS `agent_order`;
+CREATE TABLE `agent_order` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `agent_order_no` varchar(10) NOT NULL COMMENT '代理商订单号',
+  `jd_order_id` varchar(64) NOT NULL COMMENT '京东订单号',
+  `type` int(1) NOT NULL DEFAULT '1' COMMENT '订单类型，1：普通',
+  `finTime` varchar(20) NOT NULL COMMENT '清算时间',
+  `notifyUrl` varchar(255) NOT NULL COMMENT '回调通知地址',
+  `recharge_num` varchar(11) DEFAULT NULL COMMENT '充值号码',
+  `quantity` int(10) NOT NULL COMMENT '数量',
+  `wareNo` varchar(10) NOT NULL COMMENT '商品编码',
+  `costPrice` bigint(20) NOT NULL COMMENT '成本价',
+  `features` varchar(255) DEFAULT NULL COMMENT '特殊属性',
+  `status` int(1) DEFAULT '1' COMMENT '订单状态，1：充值成功；2：充值失败；3：充值中',
+  `create_time` datetime NOT NULL COMMENT '订单创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='代理商订单表';
+
+-- 商品信息
+DROP TABLE IF EXISTS `ware_info`;
+CREATE TABLE `ware_info` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `ware_no` varchar(10) NOT NULL COMMENT '商品编号',
+  `agent_price` bigint(20) NOT NULL COMMENT '代理商价格',
+  `type` int(1) NOT NULL DEFAULT '1' COMMENT '充值类型，直充类型：1；卡密类型：2',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品信息表';
+
 -- 菜单
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu` (
