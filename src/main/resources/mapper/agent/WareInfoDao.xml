@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.funny.admin.agent.dao.WareInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.funny.admin.agent.entity.WareInfoEntity" id="wareInfoMap">
+        <result property="id" column="id"/>
+        <result property="wareNo" column="ware_no"/>
+        <result property="agentPrice" column="agent_price"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.funny.admin.agent.entity.WareInfoEntity">
+		select * from ware_info where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.funny.admin.agent.entity.WareInfoEntity">
+		select * from ware_info
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ware_info 
+	</select>
+	 
+	<insert id="save" parameterType="com.funny.admin.agent.entity.WareInfoEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into ware_info
+		(
+			`ware_no`, 
+			`agent_price`, 
+			`type`
+		)
+		values
+		(
+			#{wareNo}, 
+			#{agentPrice}, 
+			#{type}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.funny.admin.agent.entity.WareInfoEntity">
+		update ware_info 
+		<set>
+			<if test="wareNo != null">`ware_no` = #{wareNo}, </if>
+			<if test="agentPrice != null">`agent_price` = #{agentPrice}, </if>
+			<if test="type != null">`type` = #{type}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from ware_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ware_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
