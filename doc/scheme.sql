@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS `agent_order`;
 CREATE TABLE `agent_order` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `agent_order_no` varchar(10) NOT NULL COMMENT '代理商订单号',
-  `jd_order_id` varchar(64) NOT NULL COMMENT '京东订单号',
+  `jd_order_no` varchar(64) NOT NULL COMMENT '京东订单号',
   `type` int(1) NOT NULL DEFAULT '1' COMMENT '订单类型，1：普通',
   `finTime` varchar(20) NOT NULL COMMENT '清算时间',
   `notifyUrl` varchar(255) NOT NULL COMMENT '回调通知地址',
@@ -24,6 +24,7 @@ CREATE TABLE `ware_info` (
   `ware_no` varchar(10) NOT NULL COMMENT '商品编号',
   `agent_price` bigint(20) NOT NULL COMMENT '代理商价格',
   `type` int(1) NOT NULL DEFAULT '1' COMMENT '充值类型，直充类型：1；卡密类型：2',
+  `status` int(1) NOT NULL DEFAULT '1' COMMENT '商品状态，1：可售；2：不可售',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品信息表';
 

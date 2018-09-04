@@ -9,10 +9,16 @@
         <result property="wareNo" column="ware_no"/>
         <result property="agentPrice" column="agent_price"/>
         <result property="type" column="type"/>
+        <result property="status" column="status"/>
     </resultMap>
 
 	<select id="queryObject" resultType="com.funny.admin.agent.entity.WareInfoEntity">
 		select * from ware_info where id = #{value}
+	</select>
+
+    <!-- 根据商品编号查询商品-->
+	<select id="queryObjectByWareNo" resultType="com.funny.admin.agent.entity.WareInfoEntity">
+		select * from ware_info where ware_no = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.funny.admin.agent.entity.WareInfoEntity">
@@ -39,13 +45,15 @@
 		(
 			`ware_no`, 
 			`agent_price`, 
-			`type`
+			`type`,
+			`status`
 		)
 		values
 		(
 			#{wareNo}, 
 			#{agentPrice}, 
-			#{type}
+			#{type},
+			#{status}
 		)
 	</insert>
 	 
@@ -54,7 +62,8 @@
 		<set>
 			<if test="wareNo != null">`ware_no` = #{wareNo}, </if>
 			<if test="agentPrice != null">`agent_price` = #{agentPrice}, </if>
-			<if test="type != null">`type` = #{type}</if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="status != null">`status` = #{status}</if>
 		</set>
 		where id = #{id}
 	</update>

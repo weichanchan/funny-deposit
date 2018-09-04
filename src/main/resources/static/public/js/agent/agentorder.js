@@ -5,7 +5,7 @@ $(function () {
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
 			{ label: '代理商订单号', name: 'agentOrderNo', index: 'agent_order_no', width: 80 }, 			
-			{ label: '京东订单号', name: 'jdOrderId', index: 'jd_order_id', width: 80 }, 			
+			{ label: '京东订单号', name: 'jdOrderNo', index: 'jd_order_no', width: 80 },
 			{ label: '订单类型，1：普通', name: 'type', index: 'type', width: 80 }, 			
 			{ label: '清算时间', name: 'fintime', index: 'finTime', width: 80 }, 			
 			{ label: '回调通知地址', name: 'notifyurl', index: 'notifyUrl', width: 80 }, 			
@@ -89,7 +89,7 @@ var vm = new Vue({
 			});
 		},
 		test: function(){
-            var url =  "../api/beginDistill";
+            var url =  "../api/beginDistill1";
             $.ajax({
                 type: "GET",
                 url: url,

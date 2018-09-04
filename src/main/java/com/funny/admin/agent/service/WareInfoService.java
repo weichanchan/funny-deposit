@@ -15,6 +15,8 @@ import java.util.Map;
 public interface WareInfoService {
 	
 	WareInfoEntity queryObject(Long id);
+
+	WareInfoEntity queryObjectByWareNo(String wareNo);
 	
 	List<WareInfoEntity> queryList(Map<String, Object> map);
 	

@@ -21,7 +21,12 @@ public class AgentOrderServiceImpl implements AgentOrderService {
 	public AgentOrderEntity queryObject(Long id){
 		return agentOrderDao.queryObject(id);
 	}
-	
+
+	@Override
+	public AgentOrderEntity queryObjectByJdOrderNo(String jdOrderNo) {
+		return agentOrderDao.queryObjectByJdOrderNo(jdOrderNo);
+	}
+
 	@Override
 	public List<AgentOrderEntity> queryList(Map<String, Object> map){
 		return agentOrderDao.queryList(map);

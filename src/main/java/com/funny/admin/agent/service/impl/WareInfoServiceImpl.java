@@ -19,7 +19,12 @@ public class WareInfoServiceImpl implements WareInfoService {
 	public WareInfoEntity queryObject(Long id){
 		return wareInfoDao.queryObject(id);
 	}
-	
+
+	@Override
+	public WareInfoEntity queryObjectByWareNo(String wareNo) {
+		return wareInfoDao.queryObjectByWareNo(wareNo);
+	}
+
 	@Override
 	public List<WareInfoEntity> queryList(Map<String, Object> map){
 		return wareInfoDao.queryList(map);

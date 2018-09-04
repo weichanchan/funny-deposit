@@ -15,7 +15,9 @@ import java.util.Map;
 public interface AgentOrderService {
 	
 	AgentOrderEntity queryObject(Long id);
-	
+
+	AgentOrderEntity queryObjectByJdOrderNo(String jdOrderNo);
+
 	List<AgentOrderEntity> queryList(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);

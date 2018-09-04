@@ -23,6 +23,8 @@ public class WareInfoEntity implements Serializable {
 	private Long agentPrice;
 	//充值类型，直充类型：1；卡密类型：2
 	private Integer type;
+	//商品状态，1：可售；2：不可售
+	private Integer status;
 
 	/**
 	 * 设置：主键id
@@ -72,4 +74,17 @@ public class WareInfoEntity implements Serializable {
 	public Integer getType() {
 		return type;
 	}
+
+    /**
+     * 设置：商品状态，1：可售；2：不可售
+     */
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+    /**
+     * 获取：商品状态，1：可售；2：不可售
+     */
+    public Integer getStatus() {
+        return status;
+    }
 }

@@ -7,7 +7,7 @@
     <resultMap type="com.funny.admin.agent.entity.AgentOrderEntity" id="agentOrderMap">
         <result property="id" column="id"/>
         <result property="agentOrderNo" column="agent_order_no"/>
-        <result property="jdOrderId" column="jd_order_id"/>
+        <result property="jdOrderNo" column="jd_order_no"/>
         <result property="type" column="type"/>
         <result property="fintime" column="finTime"/>
         <result property="notifyurl" column="notifyUrl"/>
@@ -22,6 +22,10 @@
 
 	<select id="queryObject" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
 		select * from agent_order where id = #{value}
+	</select>
+
+	<select id="queryObjectByJdOrderNo" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
+		select * from agent_order where jd_order_no = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
@@ -52,7 +56,7 @@
 		(
 			`id`, 
 			`agent_order_no`, 
-			`jd_order_id`, 
+			`jd_order_no`,
 			`type`, 
 			`finTime`, 
 			`notifyUrl`, 
@@ -68,7 +72,7 @@
 		(
 			#{id}, 
 			#{agentOrderNo}, 
-			#{jdOrderId}, 
+			#{jdOrderNo},
 			#{type}, 
 			#{fintime}, 
 			#{notifyurl}, 
@@ -86,7 +90,7 @@
 		update agent_order 
 		<set>
 			<if test="agentOrderNo != null">`agent_order_no` = #{agentOrderNo}, </if>
-			<if test="jdOrderId != null">`jd_order_id` = #{jdOrderId}, </if>
+			<if test="jdOrderNo != null">`jd_order_no` = #{jdOrderNo}, </if>
 			<if test="type != null">`type` = #{type}, </if>
 			<if test="fintime != null">`finTime` = #{fintime}, </if>
 			<if test="notifyurl != null">`notifyUrl` = #{notifyurl}, </if>

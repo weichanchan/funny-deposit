@@ -21,7 +21,7 @@ public class AgentOrderEntity implements Serializable {
 	//代理商订单号
 	private String agentOrderNo;
 	//京东订单号
-	private String jdOrderId;
+	private String jdOrderNo;
 	//订单类型，1：普通
 	private Integer type;
 	//清算时间
@@ -70,14 +70,14 @@ public class AgentOrderEntity implements Serializable {
 	/**
 	 * 设置：京东订单号
 	 */
-	public void setJdOrderId(String jdOrderId) {
-		this.jdOrderId = jdOrderId;
+	public void setJdOrderNo(String jdOrderNo) {
+		this.jdOrderNo = jdOrderNo;
 	}
 	/**
 	 * 获取：京东订单号
 	 */
-	public String getJdOrderId() {
-		return jdOrderId;
+	public String getJdOrderNo() {
+		return jdOrderNo;
 	}
 	/**
 	 * 设置：订单类型，1：普通

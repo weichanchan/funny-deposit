@@ -11,5 +11,5 @@ import com.funny.admin.system.dao.BaseDao;
  * @date 2018-09-04 11:13:01
  */
 public interface WareInfoDao extends BaseDao<WareInfoEntity> {
-	
+	WareInfoEntity queryObjectByWareNo(String wareNo);
 }
