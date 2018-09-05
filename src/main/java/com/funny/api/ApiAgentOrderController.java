@@ -1,7 +1,9 @@
 package com.funny.api;
 
+import com.funny.admin.agent.entity.AgentInfoEntity;
 import com.funny.admin.agent.entity.AgentOrderEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
+import com.funny.admin.agent.service.AgentInfoService;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.utils.R;
@@ -19,7 +21,7 @@ import java.util.*;
 @RequestMapping("/api")
 public class ApiAgentOrderController {
     //代理商id
-    private static final String agentId = "22501";
+    //private static final String agentId = "22501";
     //业务编号
     private static final String bussType = "13758";
 
@@ -27,6 +29,8 @@ public class ApiAgentOrderController {
     private AgentOrderService agentOrderService;
     @Autowired
     private WareInfoService wareInfoService;
+    @Autowired
+    private AgentInfoService agentInfoService;
 
     /**
      * 提交充值&提取卡密
@@ -129,6 +133,7 @@ public class ApiAgentOrderController {
         String isSuccess = "T" ;
         String errorCode = "";
         Map<String, Object> map = new HashMap(15);
+
         //校验签名
         boolean b = SignUtils.checkSign(params);
         if(b==false){
@@ -136,6 +141,7 @@ public class ApiAgentOrderController {
             // 签名验证不正确
             errorCode = "JDI_00002";
         }
+
         String jdOrderNo = (String) params.get("jdOrderNo");
         AgentOrderEntity agentOrder = agentOrderService.queryObjectByJdOrderNo(jdOrderNo);
         if(agentOrder!=null){
@@ -172,6 +178,7 @@ public class ApiAgentOrderController {
         String isSuccess = "T" ;
         String errorCode = "";
         Map<String, Object> map = new HashMap(15);
+
         //校验签名
         boolean b = SignUtils.checkSign(params);
         if(b==false){
@@ -179,48 +186,49 @@ public class ApiAgentOrderController {
             // 签名验证不正确
             errorCode = "JDI_00002";
         }
-        String agentId1 = (String) params.get("agentId");
+
+        String agentId = (String) params.get("agentId");
+        AgentInfoEntity agentInfoEntity = agentInfoService.queryObjectByAgentId(agentId);
         //代理商id是否存在
-        if(agentId.equals(agentId1)){
-            String jdOrderNo = (String) params.get("jdOrderNo");
+        if(agentInfoEntity!=null){
+            // TODO: 2018/9/5  代理商id不正确
             String agentOrderNo = (String) params.get("agentOrderNo");
             //根据代理商订单号查询订单
             AgentOrderEntity agentOrder = agentOrderService.queryObjectByAgentOrderNo(agentOrderNo);
+            //代理商订单是否存在
             if(agentOrder!=null){
-                Integer status = agentOrder.getStatus();
-                //比较 "传入的状态"与"订单状态"，如果相同
-                if(agentOrder.getStatus().equals(status)){
-                    map.put("jdOrderNo", jdOrderNo);
-                    map.put("agentOrderNo", agentOrder.getAgentOrderNo());
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-                    String time = sdf.format(new Date());
-                    map.put("time", time);
-                    map.put("status", agentOrder.getStatus());
-                    map.put("quantity", agentOrder.getQuantity());
-                    // TODO: 2018/9/5  卡密信息
+                WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(agentOrder.getWareNo());
+                String agentId1 = wareInfoEntity.getAgentId();
+                //代理商id是否正确
+                if(agentId1.equals(agentId)){
+                    String jdOrderNo = (String) params.get("jdOrderNo");Integer status = agentOrder.getStatus();
+                    //比较 订单状态
+                    if(agentOrder.getStatus().equals(status)){
+                        // TODO: 2018/9/5  卡密信息
+                    } else {
+                        isSuccess = "F";
+                        //对应状态不存在
+                        errorCode = "JDO_10005";
+                    }
                 } else {
                     isSuccess = "F";
-                    //对应状态不存在
-                    errorCode = "JDO_10005";
+                    //代理商ID不正确
+                    errorCode = "JDO_10007";
                 }
 
             } else {
                 isSuccess = "F";
-                // 次订单不存在
+                // 此订单不存在
                 errorCode = "JDO_10006";
             }
+
         } else {
             isSuccess = "F";
             //商家不存在
             errorCode = "JDO_00001";
         }
-
         map.put("isSuccess", isSuccess);
         map.put("errorCode", errorCode);
-        map.put("sign",  params.get("sign"));
-        map.put("signType", params.get("signType"));
-        map.put("timestamp", params.get("timestamp"));
-        map.put("version", params.get("version"));
         return R.ok(map);
     }
 
@@ -243,5 +251,4 @@ public class ApiAgentOrderController {
         agentOrderNo = prefix + SERIAL_NUMBER.substring(0, count-num.length()) + num;
         return agentOrderNo;
     }
-
 }

@@ -25,6 +25,8 @@ public class WareInfoEntity implements Serializable {
 	private Integer type;
 	//商品状态，1：可售；2：不可售
 	private Integer status;
+	//关联的代理商id
+	private String agentId;
 
 	/**
 	 * 设置：主键id
@@ -74,7 +76,6 @@ public class WareInfoEntity implements Serializable {
 	public Integer getType() {
 		return type;
 	}
-
     /**
      * 设置：商品状态，1：可售；2：不可售
      */
@@ -87,4 +88,17 @@ public class WareInfoEntity implements Serializable {
     public Integer getStatus() {
         return status;
     }
+    /**
+     * 设置：关联的代理商id
+     */
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
+    }
+    /**
+     * 获取：关联的代理商id
+     */
+    public String getAgentId() {
+        return agentId;
+    }
+
 }
