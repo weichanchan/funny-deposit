@@ -25,25 +25,30 @@ public class AgentOrderEntity implements Serializable {
 	//订单类型，1：普通
 	private Integer type;
 	//清算时间
-	private String fintime;
+	private String finTime;
 	//回调通知地址
-	private String notifyurl;
+	private String notifyUrl;
 	//充值号码
 	private String rechargeNum;
 	//数量
 	private Integer quantity;
 	//商品编码
-	private String wareno;
+	private String wareNo;
 	//成本价
-	private Long costprice;
+	private Long costPrice;
 	//特殊属性
 	private String features;
 	//订单状态，1：充值成功；2：充值失败；3：充值中
 	private Integer status;
+	//卡密信息
+	private Integer cardInfo;
 	//订单创建时间
 	private Date createTime;
 
-	/**
+    public AgentOrderEntity() {
+    }
+
+    /**
 	 * 设置：主键id
 	 */
 	public void setId(Long id) {
@@ -94,26 +99,27 @@ public class AgentOrderEntity implements Serializable {
 	/**
 	 * 设置：清算时间
 	 */
-	public void setFintime(String fintime) {
-		this.fintime = fintime;
+	public void setFinTime(String finTime) {
+		this.finTime = finTime;
 	}
 	/**
 	 * 获取：清算时间
 	 */
-	public String getFintime() {
-		return fintime;
+	public String getFinTime() {
+		return finTime;
 	}
 	/**
 	 * 设置：回调通知地址
 	 */
-	public void setNotifyurl(String notifyurl) {
-		this.notifyurl = notifyurl;
+	public void setNotifyUrl(String notifyUrl) {
+		this.notifyUrl = notifyUrl;
 	}
+
 	/**
 	 * 获取：回调通知地址
 	 */
-	public String getNotifyurl() {
-		return notifyurl;
+	public String getNotifyUrl() {
+		return notifyUrl;
 	}
 	/**
 	 * 设置：充值号码
@@ -142,26 +148,26 @@ public class AgentOrderEntity implements Serializable {
 	/**
 	 * 设置：商品编码
 	 */
-	public void setWareno(String wareno) {
-		this.wareno = wareno;
-	}
+    public void setWareNo(String wareNo) {
+        this.wareNo = wareNo;
+    }
 	/**
 	 * 获取：商品编码
 	 */
-	public String getWareno() {
-		return wareno;
-	}
+    public String getWareNo() {
+        return wareNo;
+    }
 	/**
 	 * 设置：成本价
 	 */
-	public void setCostprice(Long costprice) {
-		this.costprice = costprice;
+	public void setCostPrice(Long costPrice) {
+		this.costPrice = costPrice;
 	}
 	/**
 	 * 获取：成本价
 	 */
-	public Long getCostprice() {
-		return costprice;
+	public Long getCostPrice() {
+		return costPrice;
 	}
 	/**
 	 * 设置：特殊属性
@@ -187,7 +193,19 @@ public class AgentOrderEntity implements Serializable {
 	public Integer getStatus() {
 		return status;
 	}
-	/**
+    /**
+     * 设置：卡密信息
+     */
+    public void setCardInfo(Integer cardInfo) {
+        this.cardInfo = cardInfo;
+    }
+    /**
+     * 获取：卡密信息
+     */
+    public Integer getCardInfo() {
+        return cardInfo;
+    }
+    /**
 	 * 设置：订单创建时间
 	 */
 	public void setCreateTime(Date createTime) {

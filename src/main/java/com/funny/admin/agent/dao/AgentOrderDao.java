@@ -13,6 +13,6 @@ import com.funny.admin.system.dao.BaseDao;
 public interface AgentOrderDao extends BaseDao<AgentOrderEntity> {
 
     Long getMaxId();
-
     AgentOrderEntity queryObjectByJdOrderNo(String jdOrderNo);
+    AgentOrderEntity queryObjectByAgentOrderNo(String agentOrderNo);
 }

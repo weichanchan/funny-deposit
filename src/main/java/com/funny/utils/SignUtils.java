@@ -45,6 +45,7 @@ public class SignUtils {
             Map<String, Object> param = new HashMap<String, Object>();
             for(Iterator it = params.keySet().iterator() ; it.hasNext();){
                 String key = it.next().toString();
+                //参数为空不参与签名
                 if(StringUtils.isNotEmpty((String)params.get(key))){
                     param.put(key, params.get(key));
                 }

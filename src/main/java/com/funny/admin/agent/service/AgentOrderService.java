@@ -18,6 +18,8 @@ public interface AgentOrderService {
 
 	AgentOrderEntity queryObjectByJdOrderNo(String jdOrderNo);
 
+	AgentOrderEntity queryObjectByAgentOrderNo(String agentOrderNo);
+
 	List<AgentOrderEntity> queryList(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);

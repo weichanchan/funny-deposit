@@ -28,6 +28,11 @@ public class AgentOrderServiceImpl implements AgentOrderService {
 	}
 
 	@Override
+	public AgentOrderEntity queryObjectByAgentOrderNo(String agentOrderNo) {
+		return agentOrderDao.queryObjectByAgentOrderNo(agentOrderNo);
+	}
+
+	@Override
 	public List<AgentOrderEntity> queryList(Map<String, Object> map){
 		return agentOrderDao.queryList(map);
 	}

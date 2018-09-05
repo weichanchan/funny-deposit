@@ -10,6 +10,7 @@
         <result property="agentPrice" column="agent_price"/>
         <result property="type" column="type"/>
         <result property="status" column="status"/>
+        <result property="agentId" column="agent_id"/>
     </resultMap>
 
 	<select id="queryObject" resultType="com.funny.admin.agent.entity.WareInfoEntity">
@@ -46,14 +47,16 @@
 			`ware_no`, 
 			`agent_price`, 
 			`type`,
-			`status`
+			`status`,
+			`agent_id`
 		)
 		values
 		(
 			#{wareNo}, 
 			#{agentPrice}, 
 			#{type},
-			#{status}
+			#{status},
+			#{agentId}
 		)
 	</insert>
 	 
@@ -63,7 +66,8 @@
 			<if test="wareNo != null">`ware_no` = #{wareNo}, </if>
 			<if test="agentPrice != null">`agent_price` = #{agentPrice}, </if>
 			<if test="type != null">`type` = #{type}, </if>
-			<if test="status != null">`status` = #{status}</if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="agentId != null">`agent_id` = #{agentId}</if>
 		</set>
 		where id = #{id}
 	</update>

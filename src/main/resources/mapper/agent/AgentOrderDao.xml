@@ -9,14 +9,15 @@
         <result property="agentOrderNo" column="agent_order_no"/>
         <result property="jdOrderNo" column="jd_order_no"/>
         <result property="type" column="type"/>
-        <result property="fintime" column="finTime"/>
-        <result property="notifyurl" column="notifyUrl"/>
+        <result property="finTime" column="finTime"/>
+        <result property="notifyUrl" column="notify_url"/>
         <result property="rechargeNum" column="recharge_num"/>
         <result property="quantity" column="quantity"/>
-        <result property="wareno" column="wareNo"/>
-        <result property="costprice" column="costPrice"/>
+        <result property="wareNo" column="ware_no"/>
+        <result property="costPrice" column="cost_price"/>
         <result property="features" column="features"/>
         <result property="status" column="status"/>
+        <result property="cardInfo" column="card_info"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
 
@@ -26,6 +27,10 @@
 
 	<select id="queryObjectByJdOrderNo" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
 		select * from agent_order where jd_order_no = #{value}
+	</select>
+
+	<select id="queryObjectByAgentOrderNo" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
+		select * from agent_order where agent_order_no = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
@@ -58,14 +63,15 @@
 			`agent_order_no`, 
 			`jd_order_no`,
 			`type`, 
-			`finTime`, 
-			`notifyUrl`, 
+			`fin_time`,
+			`notify_url`,
 			`recharge_num`, 
 			`quantity`, 
-			`wareNo`, 
-			`costPrice`, 
+			`ware_no`,
+			`cost_price`,
 			`features`, 
 			`status`, 
+			`card_info`,
 			`create_time`
 		)
 		values
@@ -74,14 +80,15 @@
 			#{agentOrderNo}, 
 			#{jdOrderNo},
 			#{type}, 
-			#{fintime}, 
-			#{notifyurl}, 
+			#{finTime},
+			#{notifyUrl},
 			#{rechargeNum}, 
 			#{quantity}, 
-			#{wareno}, 
-			#{costprice}, 
+			#{wareNo},
+			#{costPrice},
 			#{features}, 
 			#{status}, 
+			#{cardInfo},
 			#{createTime}
 		)
 	</insert>
@@ -92,14 +99,15 @@
 			<if test="agentOrderNo != null">`agent_order_no` = #{agentOrderNo}, </if>
 			<if test="jdOrderNo != null">`jd_order_no` = #{jdOrderNo}, </if>
 			<if test="type != null">`type` = #{type}, </if>
-			<if test="fintime != null">`finTime` = #{fintime}, </if>
-			<if test="notifyurl != null">`notifyUrl` = #{notifyurl}, </if>
+			<if test="finTime != null">`fin_time` = #{finTime}, </if>
+			<if test="notifyUrl != null">`notify_url` = #{notifyUrl}, </if>
 			<if test="rechargeNum != null">`recharge_num` = #{rechargeNum}, </if>
 			<if test="quantity != null">`quantity` = #{quantity}, </if>
-			<if test="wareno != null">`wareNo` = #{wareno}, </if>
-			<if test="costprice != null">`costPrice` = #{costprice}, </if>
+			<if test="wareNo != null">`ware_no` = #{wareNo}, </if>
+			<if test="costPrice != null">`costPrice` = #{costPrice}, </if>
 			<if test="features != null">`features` = #{features}, </if>
 			<if test="status != null">`status` = #{status}, </if>
+			<if test="cardInfo != null">`card_info` = #{cardInfo}, </if>
 			<if test="createTime != null">`create_time` = #{createTime}</if>
 		</set>
 		where id = #{id}
