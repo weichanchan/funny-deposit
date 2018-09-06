@@ -7,26 +7,26 @@ import java.util.Map;
 
 /**
  * 代理商信息表
- * 
+ *
  * @author weicc
  * @email sunlightcs@gmail.com
  * @date 2018-09-05 18:04:57
  */
 public interface AgentInfoService {
-	
-	AgentInfoEntity queryObject(Long id);
 
-	AgentInfoEntity queryObjectByAgentId(String agentId);
+    AgentInfoEntity queryObject(Long id);
 
-	List<AgentInfoEntity> queryList(Map<String, Object> map);
-	
-	int queryTotal(Map<String, Object> map);
-	
-	void save(AgentInfoEntity agentInfo);
-	
-	void update(AgentInfoEntity agentInfo);
-	
-	void delete(Long id);
-	
-	void deleteBatch(Long[] ids);
+    AgentInfoEntity queryObjectByAgentId(String agentId);
+
+    List<AgentInfoEntity> queryList(Map<String, Object> map);
+
+    int queryTotal(Map<String, Object> map);
+
+    void save(AgentInfoEntity agentInfo);
+
+    void update(AgentInfoEntity agentInfo);
+
+    void delete(Long id);
+
+    void deleteBatch(Long[] ids);
 }

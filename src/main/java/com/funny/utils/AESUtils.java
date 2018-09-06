@@ -10,19 +10,21 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 
 /**
- *AES加密解密工具类
- *@author M-Y
+ * AES加密解密工具类
+ *
+ * @author M-Y
  */
 public class AESUtils {
     private static final Logger logger = Logger.getLogger(AESUtils.class);
     private static final String defaultCharset = "UTF-8";
     private static final String KEY_AES = "AES";
     private static final String KEY = "123456";
+
     /**
      * 加密
      *
      * @param data 需要加密的内容
-     * @param key 加密密码
+     * @param key  加密密码
      * @return
      */
     public static String encrypt(String data, String key) {
@@ -33,7 +35,7 @@ public class AESUtils {
      * 解密
      *
      * @param data 待解密内容
-     * @param key 解密密钥
+     * @param key  解密密钥
      * @return
      */
     public static String decrypt(String data, String key) {
@@ -89,6 +91,7 @@ public class AESUtils {
         }
         return null;
     }
+
     /**
      * 将二进制转换成16进制
      *
@@ -106,6 +109,7 @@ public class AESUtils {
         }
         return sb.toString();
     }
+
     /**
      * 将16进制转换为二进制
      *
@@ -124,6 +128,7 @@ public class AESUtils {
         }
         return result;
     }
+
     public static void main(String[] args) throws Exception {
         String content = "{'repairPhone':'18547854787','customPhone':'12365478965','captchav':'58m7'}";
         System.out.println("加密前：" + content);

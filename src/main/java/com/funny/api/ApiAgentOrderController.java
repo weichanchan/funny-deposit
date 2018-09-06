@@ -35,13 +35,14 @@ public class ApiAgentOrderController {
 
     /**
      * 提交充值&提取卡密
+     *
      * @return
      */
     @IgnoreAuth
     @RequestMapping("/beginDistill")
-    public R beginDistill(@RequestParam Map<String, Object> params){
+    public R beginDistill(@RequestParam Map<String, Object> params) {
         //充值请求结果
-        String isSuccess = "T" ;
+        String isSuccess = "T";
         String errorCode = "";
         String sign = (String) params.get("sign");
         String signType = (String) params.get("signType");
@@ -59,74 +60,74 @@ public class ApiAgentOrderController {
 
         //校验签名
         boolean b = SignUtils.checkSign(params);
-        if(b==false){
+        if (b == false) {
             isSuccess = "F";
             // 签名验证不正确（可退款）
             errorCode = "JDI_00002";
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice,  sign, signType, timestamp, version);
+            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
             return R.ok(map);
         }
 
         //根据京东订单号防重，如果已存在，返回订单信息
-        AgentOrderEntity agentOrderEntity =  agentOrderService.queryObjectByJdOrderNo(jdOrderNo);
-        if(agentOrderEntity !=  null){
+        AgentOrderEntity agentOrderEntity = agentOrderService.queryObjectByJdOrderNo(jdOrderNo);
+        if (agentOrderEntity != null) {
             agentOrderNo = agentOrderEntity.getAgentOrderNo();
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice,  sign, signType, timestamp, version);
+            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
             return R.ok(map);
         }
 
         //对应商品
         String wareNo = (String) params.get("wareNo");
         WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareNo);
-        if(wareInfoEntity==null){
+        if (wareInfoEntity == null) {
             //没有对应商品（可退款）
             errorCode = "JDI_00003";
             isSuccess = "F";
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice,  sign, signType, timestamp, version);
+            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
             return R.ok(map);
         }
 
         //商品状态
-        if(wareInfoEntity.getStatus()==2){
+        if (wareInfoEntity.getStatus() == 2) {
             //此商品不可售（可退款）
             errorCode = "JDI_00004";
             isSuccess = "F";
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice,  sign, signType, timestamp, version);
+            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
             return R.ok(map);
         }
 
         //商品类型
         Integer quantity = Integer.valueOf((String) params.get("quantity"));
         //直充类型商品只能买一个
-        if(wareInfoEntity.getType()==1 && quantity>1){
+        if (wareInfoEntity.getType() == 1 && quantity > 1) {
             errorCode = "JDI_00001";
             isSuccess = "F";
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice,  sign, signType, timestamp, version);
+            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
             return R.ok(map);
         }
 
         //判断商品价格和成本价格是否相等
         agentPrice = wareInfoEntity.getAgentPrice();
         Long costPrice = Long.valueOf((String) params.get("costPrice"));
-        if(!agentPrice.equals(costPrice)){
+        if (!agentPrice.equals(costPrice)) {
             // 成本价不正确（可退款）
             errorCode = "JDI_00005";
             isSuccess = "F";
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice,  sign, signType, timestamp, version);
+            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
             return R.ok(map);
         }
 
         Map<String, Object> param = new HashMap<String, Object>();
-        for(Iterator it = params.keySet().iterator() ; it.hasNext();){
+        for (Iterator it = params.keySet().iterator(); it.hasNext(); ) {
             String key = it.next().toString();
-            String key1 = (String)params.get(key);
+            String key1 = (String) params.get(key);
             //去掉协议参数
-            if("sign".equals(key1) || "signType".equals(key1) || "timestamp".equals(key1) || "version".equals(key1)){
+            if ("sign".equals(key1) || "signType".equals(key1) || "timestamp".equals(key1) || "version".equals(key1)) {
                 param.put(key, params.get(key));
             }
         }
 
-        agentOrderEntity.setJdOrderNo((String)params.get("jdOrderNo"));
+        agentOrderEntity.setJdOrderNo((String) params.get("jdOrderNo"));
         agentOrderEntity.setType(Integer.valueOf((String) params.get("type")));
         agentOrderEntity.setFinTime((String) params.get("finTime"));
         agentOrderEntity.setNotifyUrl((String) params.get("notifyUrl"));
@@ -142,16 +143,16 @@ public class ApiAgentOrderController {
     }
 
     //获取返回参数map
-    private Map getReturnMap( String isSuccess, String errorCode, String agentOrderNo,
-                               String jdOrderNo, Long agentPrice, String sign,
-                              String signType, String timestamp, String version) {
+    private Map getReturnMap(String isSuccess, String errorCode, String agentOrderNo,
+                             String jdOrderNo, Long agentPrice, String sign,
+                             String signType, String timestamp, String version) {
         Map map = new HashMap();
         map.put("isSuccess", isSuccess);
         map.put("errorCode", errorCode);
-        if(!StringUtils.isEmpty(agentOrderNo)){
+        if (!StringUtils.isEmpty(agentOrderNo)) {
             map.put("agentOrderNo", agentOrderNo);
         }
-        if(agentPrice != null){
+        if (agentPrice != null) {
             map.put("agentPrice", agentPrice);
         }
         map.put("jdOrderNo", jdOrderNo);
@@ -167,15 +168,15 @@ public class ApiAgentOrderController {
      */
     @IgnoreAuth
     @RequestMapping("/findDistill")
-    public R findDistill(@RequestParam Map<String, Object> params){
+    public R findDistill(@RequestParam Map<String, Object> params) {
         //订单查询结果
-        String isSuccess = "T" ;
+        String isSuccess = "T";
         String errorCode = "";
         Map<String, Object> map = new HashMap(15);
 
         //校验签名
         boolean b = SignUtils.checkSign(params);
-        if(b==false){
+        if (b == false) {
             isSuccess = "F";
             // 签名验证不正确
             errorCode = "JDI_00002";
@@ -183,7 +184,7 @@ public class ApiAgentOrderController {
 
         String jdOrderNo = (String) params.get("jdOrderNo");
         AgentOrderEntity agentOrder = agentOrderService.queryObjectByJdOrderNo(jdOrderNo);
-        if(agentOrder!=null){
+        if (agentOrder != null) {
             map.put("jdOrderNo", jdOrderNo);
             map.put("agentOrderNo", agentOrder.getAgentOrderNo());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -199,7 +200,7 @@ public class ApiAgentOrderController {
         }
         map.put("isSuccess", isSuccess);
         map.put("errorCode", errorCode);
-        map.put("sign",  params.get("sign"));
+        map.put("sign", params.get("sign"));
         map.put("signType", params.get("signType"));
         map.put("timestamp", params.get("timestamp"));
         map.put("version", params.get("version"));
@@ -208,19 +209,20 @@ public class ApiAgentOrderController {
 
     /**
      * 回调通知
+     *
      * @return
      */
     @IgnoreAuth
     @RequestMapping("/kamiNotify")
-    public R kamiNotify(@RequestParam Map<String, Object> params){
+    public R kamiNotify(@RequestParam Map<String, Object> params) {
         //回调结果
-        String isSuccess = "T" ;
+        String isSuccess = "T";
         String errorCode = "";
         Map<String, Object> map = new HashMap(15);
 
         //校验签名
         boolean b = SignUtils.checkSign(params);
-        if(b==false){
+        if (b == false) {
             isSuccess = "F";
             // 签名验证不正确
             errorCode = "JDI_00002";
@@ -229,20 +231,21 @@ public class ApiAgentOrderController {
         String agentId = (String) params.get("agentId");
         AgentInfoEntity agentInfoEntity = agentInfoService.queryObjectByAgentId(agentId);
         //代理商id是否存在
-        if(agentInfoEntity!=null){
+        if (agentInfoEntity != null) {
             // TODO: 2018/9/5  代理商id不正确
             String agentOrderNo = (String) params.get("agentOrderNo");
             //根据代理商订单号查询订单
             AgentOrderEntity agentOrder = agentOrderService.queryObjectByAgentOrderNo(agentOrderNo);
             //代理商订单是否存在
-            if(agentOrder!=null){
+            if (agentOrder != null) {
                 WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(agentOrder.getWareNo());
                 String agentId1 = wareInfoEntity.getAgentId();
                 //代理商id是否正确
-                if(agentId1.equals(agentId)){
-                    String jdOrderNo = (String) params.get("jdOrderNo");Integer status = agentOrder.getStatus();
+                if (agentId1.equals(agentId)) {
+                    String jdOrderNo = (String) params.get("jdOrderNo");
+                    Integer status = agentOrder.getStatus();
                     //比较 订单状态
-                    if(agentOrder.getStatus().equals(status)){
+                    if (agentOrder.getStatus().equals(status)) {
                         // TODO: 2018/9/5  卡密信息
                     } else {
                         isSuccess = "F";

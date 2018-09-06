@@ -24,7 +24,7 @@ CREATE TABLE `agent_order` (
   `features` varchar(255) DEFAULT NULL COMMENT '特殊属性',
   `status` int(1) DEFAULT '3' COMMENT '订单状态，1：新创建；2：已处理',
   `recharge_status` int(1) NOT NULL DEFAULT '1' COMMENT '充值状态，1：充值成功；2：充值失败；3：充值中',
-  `card_info` varchar(255) DEFAULT NULL COMMENT '卡密信息',
+  `card_info` text COMMENT '卡密信息',
   `create_time` datetime NOT NULL COMMENT '订单创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='代理商订单表';
@@ -33,7 +33,7 @@ CREATE TABLE `agent_order` (
 DROP TABLE IF EXISTS `card_info`;
 CREATE TABLE `card_info` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `activation_code` varchar(32) NOT NULL COMMENT '激活码',
+  `activation_code` varchar(125) NOT NULL COMMENT '激活码',
   `ware_no` varchar(64) NOT NULL COMMENT '关联商品id',
   `agent_order_no` int(64) DEFAULT NULL COMMENT '关联订单id',
   PRIMARY KEY (`id`)

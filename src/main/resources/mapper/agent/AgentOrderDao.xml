@@ -3,7 +3,7 @@
 
 <mapper namespace="com.funny.admin.agent.dao.AgentOrderDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.funny.admin.agent.entity.AgentOrderEntity" id="agentOrderMap">
         <result property="id" column="id"/>
         <result property="agentOrderNo" column="agent_order_no"/>
@@ -22,42 +22,42 @@
         <result property="createTime" column="create_time"/>
     </resultMap>
 
-	<select id="queryObject" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
+    <select id="queryObject" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
 		select * from agent_order where id = #{value}
 	</select>
 
-	<select id="queryObjectByJdOrderNo" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
+    <select id="queryObjectByJdOrderNo" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
 		select * from agent_order where jd_order_no = #{value}
 	</select>
 
-	<select id="queryObjectByAgentOrderNo" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
+    <select id="queryObjectByAgentOrderNo" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
 		select * from agent_order where agent_order_no = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
-		select * from agent_order
+    <select id="queryList" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
+        select * from agent_order
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
-			<otherwise>
+            <otherwise>
                 order by id desc
-			</otherwise>
+            </otherwise>
         </choose>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
-	
- 	<select id="queryTotal" resultType="int">
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
 		select count(*) from agent_order 
 	</select>
 
-	<select id="getMaxId" resultType="long">
+    <select id="getMaxId" resultType="long">
 		select Max(id) maxId from agent_order
 	</select>
-	 
-	<insert id="save" parameterType="com.funny.admin.agent.entity.AgentOrderEntity">
+
+    <insert id="save" parameterType="com.funny.admin.agent.entity.AgentOrderEntity">
 		insert into agent_order
 		(
 			`id`, 
@@ -95,37 +95,37 @@
 			#{createTime}
 		)
 	</insert>
-	 
-	<update id="update" parameterType="com.funny.admin.agent.entity.AgentOrderEntity">
-		update agent_order 
-		<set>
-			<if test="agentOrderNo != null">`agent_order_no` = #{agentOrderNo}, </if>
-			<if test="jdOrderNo != null">`jd_order_no` = #{jdOrderNo}, </if>
-			<if test="type != null">`type` = #{type}, </if>
-			<if test="finTime != null">`fin_time` = #{finTime}, </if>
-			<if test="notifyUrl != null">`notify_url` = #{notifyUrl}, </if>
-			<if test="rechargeNum != null">`recharge_num` = #{rechargeNum}, </if>
-			<if test="quantity != null">`quantity` = #{quantity}, </if>
-			<if test="wareNo != null">`ware_no` = #{wareNo}, </if>
-			<if test="costPrice != null">`costPrice` = #{costPrice}, </if>
-			<if test="features != null">`features` = #{features}, </if>
-			<if test="status != null">`status` = #{status}, </if>
-			<if test="rechargeStatus != null">`recharge_status` = #{rechargeStatus}, </if>
-			<if test="cardInfo != null">`card_info` = #{cardInfo}, </if>
-			<if test="createTime != null">`create_time` = #{createTime}</if>
-		</set>
-		where id = #{id}
-	</update>
-	
-	<delete id="delete">
+
+    <update id="update" parameterType="com.funny.admin.agent.entity.AgentOrderEntity">
+        update agent_order
+        <set>
+            <if test="agentOrderNo != null">`agent_order_no` = #{agentOrderNo},</if>
+            <if test="jdOrderNo != null">`jd_order_no` = #{jdOrderNo},</if>
+            <if test="type != null">`type` = #{type},</if>
+            <if test="finTime != null">`fin_time` = #{finTime},</if>
+            <if test="notifyUrl != null">`notify_url` = #{notifyUrl},</if>
+            <if test="rechargeNum != null">`recharge_num` = #{rechargeNum},</if>
+            <if test="quantity != null">`quantity` = #{quantity},</if>
+            <if test="wareNo != null">`ware_no` = #{wareNo},</if>
+            <if test="costPrice != null">`costPrice` = #{costPrice},</if>
+            <if test="features != null">`features` = #{features},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="rechargeStatus != null">`recharge_status` = #{rechargeStatus},</if>
+            <if test="cardInfo != null">`card_info` = #{cardInfo},</if>
+            <if test="createTime != null">`create_time` = #{createTime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
 		delete from agent_order where id = #{value}
 	</delete>
-	
-	<delete id="deleteBatch">
-		delete from agent_order where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
+
+    <delete id="deleteBatch">
+        delete from agent_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>

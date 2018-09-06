@@ -3,7 +3,7 @@
 
 <mapper namespace="com.funny.admin.agent.dao.AgentInfoDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.funny.admin.agent.entity.AgentInfoEntity" id="agentInfoMap">
         <result property="id" column="id"/>
         <result property="agentId" column="agent_id"/>
@@ -11,34 +11,35 @@
         <result property="agentPhone" column="agent_phone"/>
     </resultMap>
 
-	<select id="queryObject" resultType="com.funny.admin.agent.entity.AgentInfoEntity">
+    <select id="queryObject" resultType="com.funny.admin.agent.entity.AgentInfoEntity">
 		select * from agent_info where id = #{value}
 	</select>
 
-	<select id="queryObjectByAgentId" resultType="com.funny.admin.agent.entity.AgentInfoEntity">
+    <select id="queryObjectByAgentId" resultType="com.funny.admin.agent.entity.AgentInfoEntity">
 		select * from agent_info where agent_id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.funny.admin.agent.entity.AgentInfoEntity">
-		select * from agent_info
+    <select id="queryList" resultType="com.funny.admin.agent.entity.AgentInfoEntity">
+        select * from agent_info
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
-			<otherwise>
+            <otherwise>
                 order by id desc
-			</otherwise>
+            </otherwise>
         </choose>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
-	
- 	<select id="queryTotal" resultType="int">
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
 		select count(*) from agent_info 
 	</select>
-	 
-	<insert id="save" parameterType="com.funny.admin.agent.entity.AgentInfoEntity" useGeneratedKeys="true" keyProperty="id">
+
+    <insert id="save" parameterType="com.funny.admin.agent.entity.AgentInfoEntity" useGeneratedKeys="true"
+            keyProperty="id">
 		insert into agent_info
 		(
 			`agent_id`, 
@@ -52,26 +53,26 @@
 			#{agentPhone}
 		)
 	</insert>
-	 
-	<update id="update" parameterType="com.funny.admin.agent.entity.AgentInfoEntity">
-		update agent_info 
-		<set>
-			<if test="agentId != null">`agent_id` = #{agentId}, </if>
-			<if test="agentName != null">`agent_name` = #{agentName}, </if>
-			<if test="agentPhone != null">`agent_phone` = #{agentPhone}</if>
-		</set>
-		where id = #{id}
-	</update>
-	
-	<delete id="delete">
+
+    <update id="update" parameterType="com.funny.admin.agent.entity.AgentInfoEntity">
+        update agent_info
+        <set>
+            <if test="agentId != null">`agent_id` = #{agentId},</if>
+            <if test="agentName != null">`agent_name` = #{agentName},</if>
+            <if test="agentPhone != null">`agent_phone` = #{agentPhone}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
 		delete from agent_info where id = #{value}
 	</delete>
-	
-	<delete id="deleteBatch">
-		delete from agent_info where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
+
+    <delete id="deleteBatch">
+        delete from agent_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>

@@ -20,7 +20,7 @@ import com.funny.utils.R;
 
 /**
  * 代理商信息表
- * 
+ *
  * @author weicc
  * @email sunlightcs@gmail.com
  * @date 2018-09-05 18:04:57
@@ -28,69 +28,69 @@ import com.funny.utils.R;
 @RestController
 @RequestMapping("agentinfo")
 public class AgentInfoController {
-	@Autowired
-	private AgentInfoService agentInfoService;
-	
-	/**
-	 * 列表
-	 */
-	@RequestMapping("/list")
-	@RequiresPermissions("agentinfo:list")
-	public R list(@RequestParam Map<String, Object> params){
-		//查询列表数据
+    @Autowired
+    private AgentInfoService agentInfoService;
+
+    /**
+     * 列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("agentinfo:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        //查询列表数据
         Query query = new Query(params);
 
-		List<AgentInfoEntity> agentInfoList = agentInfoService.queryList(query);
-		int total = agentInfoService.queryTotal(query);
-		
-		PageUtils pageUtil = new PageUtils(agentInfoList, total, query.getLimit(), query.getPage());
-		
-		return R.ok().put("page", pageUtil);
-	}
-	
-	
-	/**
-	 * 信息
-	 */
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("agentinfo:info")
-	public R info(@PathVariable("id") Long id){
-		AgentInfoEntity agentInfo = agentInfoService.queryObject(id);
-		
-		return R.ok().put("agentInfo", agentInfo);
-	}
-	
-	/**
-	 * 保存
-	 */
-	@RequestMapping("/save")
-	@RequiresPermissions("agentinfo:save")
-	public R save(@RequestBody AgentInfoEntity agentInfo){
-		agentInfoService.save(agentInfo);
-		
-		return R.ok();
-	}
-	
-	/**
-	 * 修改
-	 */
-	@RequestMapping("/update")
-	@RequiresPermissions("agentinfo:update")
-	public R update(@RequestBody AgentInfoEntity agentInfo){
-		agentInfoService.update(agentInfo);
-		
-		return R.ok();
-	}
-	
-	/**
-	 * 删除
-	 */
-	@RequestMapping("/delete")
-	@RequiresPermissions("agentinfo:delete")
-	public R delete(@RequestBody Long[] ids){
-		agentInfoService.deleteBatch(ids);
-		
-		return R.ok();
-	}
-	
+        List<AgentInfoEntity> agentInfoList = agentInfoService.queryList(query);
+        int total = agentInfoService.queryTotal(query);
+
+        PageUtils pageUtil = new PageUtils(agentInfoList, total, query.getLimit(), query.getPage());
+
+        return R.ok().put("page", pageUtil);
+    }
+
+
+    /**
+     * 信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("agentinfo:info")
+    public R info(@PathVariable("id") Long id) {
+        AgentInfoEntity agentInfo = agentInfoService.queryObject(id);
+
+        return R.ok().put("agentInfo", agentInfo);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("agentinfo:save")
+    public R save(@RequestBody AgentInfoEntity agentInfo) {
+        agentInfoService.save(agentInfo);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("agentinfo:update")
+    public R update(@RequestBody AgentInfoEntity agentInfo) {
+        agentInfoService.update(agentInfo);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("agentinfo:delete")
+    public R delete(@RequestBody Long[] ids) {
+        agentInfoService.deleteBatch(ids);
+
+        return R.ok();
+    }
+
 }
