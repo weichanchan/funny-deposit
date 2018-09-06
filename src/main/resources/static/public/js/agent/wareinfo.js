@@ -6,7 +6,18 @@ $(function () {
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
 			{ label: '商品编号', name: 'wareNo', index: 'ware_no', width: 80 }, 			
 			{ label: '代理商价格', name: 'agentPrice', index: 'agent_price', width: 80 }, 			
-			{ label: '充值类型，直充类型：1；卡密类型：2', name: 'type', index: 'type', width: 80 }			
+			{ label: '充值类型', name: 'type', index: 'type', width: 80,
+                formatter: function (value, options, row) {
+                    return value === 1 ? '直充类型' : '卡密类型';
+                }
+            },
+			{ label: '商品状态', name: 'status', index: 'status', width: 80,
+                formatter: function (value, options, row) {
+                    return value === 1 ?
+                        '<font color="green">可售</font>' :
+                        '<font color="red">不可售</font>';
+                }
+			}
         ],
 		viewrecords: true,
         height: 385,
@@ -39,6 +50,7 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
 		showList: true,
+        showCardInfo: false,
 		title: null,
 		wareInfo: {}
 	},

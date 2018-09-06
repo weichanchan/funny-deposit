@@ -21,7 +21,7 @@ public class WareInfoEntity implements Serializable {
 	private String wareNo;
 	//代理商价格
 	private Long agentPrice;
-	//充值类型，直充类型：1；卡密类型：2
+	//充值类型，1：直充类型:；2：卡密类型
 	private Integer type;
 	//商品状态，1：可售；2：不可售
 	private Integer status;
@@ -65,13 +65,13 @@ public class WareInfoEntity implements Serializable {
 		return agentPrice;
 	}
 	/**
-	 * 设置：充值类型，直充类型：1；卡密类型：2
+	 * 设置：充值类型，1：直充类型:；2：卡密类型
 	 */
 	public void setType(Integer type) {
 		this.type = type;
 	}
 	/**
-	 * 获取：充值类型，直充类型：1；卡密类型：2
+	 * 获取：充值类型，1：直充类型:；2：卡密类型
 	 */
 	public Integer getType() {
 		return type;

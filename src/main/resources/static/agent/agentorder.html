@@ -47,21 +47,26 @@
 			    </div>
 			</div>
 									<div class="form-group">
-			   	<div class="col-sm-2 control-label">订单类型，1：普通</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="agentOrder.type" placeholder="订单类型，1：普通"/>
-			    </div>
-			</div>
+			   	<div class="col-sm-2 control-label">订单类型</div>
+                 <div class="col-sm-10">
+                      <label class="radio-inline">
+                           <input type="radio" name="type" value="1" v-model="agentOrder.type"/> 普通
+                       </label>
+                      <label class="radio-inline">
+                            <input type="radio" name="type" value="2" v-model="agentOrder.type"/> 其他
+                       </label>
+                  </div>
+             </div>
 									<div class="form-group">
 			   	<div class="col-sm-2 control-label">清算时间</div>
 			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="agentOrder.fintime" placeholder="清算时间"/>
+			      <input type="text" class="form-control" v-model="agentOrder.finTime" placeholder="清算时间"/>
 			    </div>
 			</div>
 									<div class="form-group">
 			   	<div class="col-sm-2 control-label">回调通知地址</div>
 			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="agentOrder.notifyurl" placeholder="回调通知地址"/>
+			      <input type="text" class="form-control" v-model="agentOrder.notifyUrl" placeholder="回调通知地址"/>
 			    </div>
 			</div>
 									<div class="form-group">
@@ -79,13 +84,13 @@
 									<div class="form-group">
 			   	<div class="col-sm-2 control-label">商品编码</div>
 			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="agentOrder.wareno" placeholder="商品编码"/>
+			      <input type="text" class="form-control" v-model="agentOrder.wareNo" placeholder="商品编码"/>
 			    </div>
 			</div>
 									<div class="form-group">
 			   	<div class="col-sm-2 control-label">成本价</div>
 			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="agentOrder.costprice" placeholder="成本价"/>
+			      <input type="text" class="form-control" v-model="agentOrder.costPrice" placeholder="成本价"/>
 			    </div>
 			</div>
 									<div class="form-group">
@@ -95,22 +100,40 @@
 			    </div>
 			</div>
 									<div class="form-group">
-			   	<div class="col-sm-2 control-label">充值状态，1：充值成功；2：充值失败；3：充值中</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="agentOrder.status" placeholder="充值状态，1：充值成功；2：充值失败；3：充值中"/>
-			    </div>
+			   	<div class="col-sm-2 control-label">订单状态</div>
+				<div class="col-sm-10">
+					<label class="radio-inline">
+						<input type="radio" name="status" value="1" v-model="agentOrder.status"/> 新创建
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="status" value="2" v-model="agentOrder.status"/> 已处理
+					</label>
+				</div>
 			</div>
 									<div class="form-group">
+			   	<div class="col-sm-2 control-label">充值状态</div>
+				<div class="col-sm-10">
+					<label class="radio-inline">
+						<input type="radio" name="rechargeStatus" value="1" v-model="agentOrder.rechargeStatus"/> 充值成功
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="rechargeStatus" value="2" v-model="agentOrder.rechargeStatus"/> 充值失败
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="rechargeStatus" value="3" v-model="agentOrder.rechargeStatus"/> 充值中
+					</label>
+				</div>
+			</div>
+<!--									<div class="form-group">
 			   	<div class="col-sm-2 control-label">订单创建时间</div>
 			   	<div class="col-sm-10">
 			      <input type="text" class="form-control" v-model="agentOrder.createTime" placeholder="订单创建时间"/>
 			    </div>
-			</div>
+			</div>-->
 							<div class="form-group">
 				<div class="col-sm-2 control-label"></div> 
 				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
 				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-								<input type="button" class="btn btn-primary" @click="test" value="测试"/>
 			</div>
 		</form>
 	</div>

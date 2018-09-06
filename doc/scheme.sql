@@ -29,13 +29,23 @@ CREATE TABLE `agent_order` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='代理商订单表';
 
+-- 卡密信息
+DROP TABLE IF EXISTS `card_info`;
+CREATE TABLE `card_info` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `activation_code` varchar(32) NOT NULL COMMENT '激活码',
+  `ware_no` varchar(64) NOT NULL COMMENT '关联商品id',
+  `agent_order_no` int(64) DEFAULT NULL COMMENT '关联订单id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='卡密信息表';
+
 -- 商品信息
 DROP TABLE IF EXISTS `ware_info`;
 CREATE TABLE `ware_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `ware_no` varchar(10) NOT NULL COMMENT '商品编号',
+  `ware_no` varchar(64) NOT NULL COMMENT '商品编号',
   `agent_price` bigint(20) NOT NULL COMMENT '代理商价格',
-  `type` int(1) NOT NULL DEFAULT '1' COMMENT '充值类型，直充类型：1；卡密类型：2',
+  `type` int(1) NOT NULL DEFAULT '1' COMMENT '充值类型，1：直充类型:；2：卡密类型',
   `status` int(1) NOT NULL DEFAULT '1' COMMENT '商品状态，1：可售；2：不可售',
   `agent_id` varchar(64) NOT NULL COMMENT '关联的代理商id',
   PRIMARY KEY (`id`)
