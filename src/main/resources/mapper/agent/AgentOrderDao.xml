@@ -17,6 +17,7 @@
         <result property="costPrice" column="cost_price"/>
         <result property="features" column="features"/>
         <result property="status" column="status"/>
+        <result property="rechargeStatus" column="recharge_status"/>
         <result property="cardInfo" column="card_info"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
@@ -71,6 +72,7 @@
 			`cost_price`,
 			`features`, 
 			`status`, 
+			`recharge_status`,
 			`card_info`,
 			`create_time`
 		)
@@ -88,6 +90,7 @@
 			#{costPrice},
 			#{features}, 
 			#{status}, 
+			#{rechargeStatus},
 			#{cardInfo},
 			#{createTime}
 		)
@@ -107,6 +110,7 @@
 			<if test="costPrice != null">`costPrice` = #{costPrice}, </if>
 			<if test="features != null">`features` = #{features}, </if>
 			<if test="status != null">`status` = #{status}, </if>
+			<if test="rechargeStatus != null">`recharge_status` = #{rechargeStatus}, </if>
 			<if test="cardInfo != null">`card_info` = #{cardInfo}, </if>
 			<if test="createTime != null">`create_time` = #{createTime}</if>
 		</set>

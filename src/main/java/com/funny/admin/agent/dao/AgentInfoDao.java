@@ -11,6 +11,6 @@ import com.funny.admin.system.dao.BaseDao;
  * @date 2018-09-05 18:04:57
  */
 public interface AgentInfoDao extends BaseDao<AgentInfoEntity> {
-
+    //根据代理商id查询代理商信息
     AgentInfoEntity queryObjectByAgentId(String agentId);
 }

@@ -22,7 +22,8 @@ CREATE TABLE `agent_order` (
   `ware_no` varchar(10) NOT NULL COMMENT '商品编码',
   `cost_price` bigint(20) NOT NULL COMMENT '成本价',
   `features` varchar(255) DEFAULT NULL COMMENT '特殊属性',
-  `status` int(1) DEFAULT '1' COMMENT '订单状态，1：充值成功；2：充值失败；3：充值中',
+  `status` int(1) DEFAULT '3' COMMENT '订单状态，1：新创建；2：已处理',
+  `recharge_status` int(1) NOT NULL DEFAULT '1' COMMENT '充值状态，1：充值成功；2：充值失败；3：充值中',
   `card_info` varchar(255) DEFAULT NULL COMMENT '卡密信息',
   `create_time` datetime NOT NULL COMMENT '订单创建时间',
   PRIMARY KEY (`id`)

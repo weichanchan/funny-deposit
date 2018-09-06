@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.funny.admin.agent.entity.AgentOrderEntity;
+import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.AgentOrderService;
+import com.funny.admin.agent.service.WareInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +32,8 @@ import com.funny.utils.R;
 public class AgentOrderController {
 	@Autowired
 	private AgentOrderService agentOrderService;
+	@Autowired
+    private WareInfoService wareInfoService;
 	
 	/**
 	 * 列表
@@ -66,11 +70,27 @@ public class AgentOrderController {
 	@RequestMapping("/save")
 	@RequiresPermissions("agentorder:save")
 	public R save(@RequestBody AgentOrderEntity agentOrder){
+        //生成代理商订单号
+        String agentOrderNo = createAgentOrderNo();
+        agentOrder.setAgentOrderNo(agentOrderNo);
 		agentOrderService.save(agentOrder);
 		
 		return R.ok();
 	}
-	
+
+    /**
+     * 处理订单
+     * @param agentOrder
+     */
+	public void handleAgentOrder(AgentOrderEntity agentOrder){
+	    String wareNo = agentOrder.getWareNo();
+        WareInfoEntity wareInfo = wareInfoService.queryObjectByWareNo(wareNo);
+        Integer wareType = wareInfo.getType();
+        //商品是卡密类型
+        if(wareType==2){
+            // TODO: 2018/9/6  获取卡密类型
+        }
+    }
 	/**
 	 * 修改
 	 */
@@ -78,7 +98,7 @@ public class AgentOrderController {
 	@RequiresPermissions("agentorder:update")
 	public R update(@RequestBody AgentOrderEntity agentOrder){
 		agentOrderService.update(agentOrder);
-		
+
 		return R.ok();
 	}
 	
@@ -92,5 +112,24 @@ public class AgentOrderController {
 		
 		return R.ok();
 	}
-	
+
+	//流水号格式
+	private static String SERIAL_NUMBER="00000";
+	/**
+	 * 生成代理商订单号
+	 * @return
+	 */
+	public String createAgentOrderNo() {
+		Long maxId = agentOrderService.getMaxId();
+		if(maxId==null){
+			maxId = 0l;
+		}
+		String num = String.valueOf(maxId);
+		String agentOrderNo = null;
+		String prefix = "SP";
+		int count = SERIAL_NUMBER.length();
+		StringBuilder sb = new StringBuilder();
+		agentOrderNo = prefix + SERIAL_NUMBER.substring(0, count-num.length()) + num;
+		return agentOrderNo;
+	}
 }

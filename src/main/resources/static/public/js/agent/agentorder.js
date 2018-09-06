@@ -14,7 +14,7 @@ $(function () {
 			{ label: '商品编码', name: 'wareno', index: 'wareNo', width: 80 }, 			
 			{ label: '成本价', name: 'costprice', index: 'costPrice', width: 80 }, 			
 			{ label: '特殊属性', name: 'features', index: 'features', width: 80 }, 			
-			{ label: '订单状态，1：充值成功；2：充值失败；3：充值中', name: 'status', index: 'status', width: 80 }, 			
+			{ label: '充值状态，1：充值成功；2：充值失败；3：充值中', name: 'status', index: 'status', width: 80 },
 			{ label: '订单创建时间', name: 'createTime', index: 'create_time', width: 80 }			
         ],
 		viewrecords: true,

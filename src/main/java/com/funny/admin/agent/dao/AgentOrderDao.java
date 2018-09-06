@@ -11,8 +11,10 @@ import com.funny.admin.system.dao.BaseDao;
  * @date 2018-09-03 10:23:02
  */
 public interface AgentOrderDao extends BaseDao<AgentOrderEntity> {
-
+    //获取订单表中的最大id
     Long getMaxId();
+    //根据京东订单号查询代理商订单
     AgentOrderEntity queryObjectByJdOrderNo(String jdOrderNo);
+    //根据代理商订单号查询代理商订单
     AgentOrderEntity queryObjectByAgentOrderNo(String agentOrderNo);
 }

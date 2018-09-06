@@ -38,8 +38,10 @@ public class AgentOrderEntity implements Serializable {
 	private Long costPrice;
 	//特殊属性
 	private String features;
-	//订单状态，1：充值成功；2：充值失败；3：充值中
+	//订单状态，1：新创建；2：已处理
 	private Integer status;
+	//充值状态，1：充值成功；2：充值失败；3：充值中
+	private Integer rechargeStatus;
 	//卡密信息
 	private Integer cardInfo;
 	//订单创建时间
@@ -182,17 +184,29 @@ public class AgentOrderEntity implements Serializable {
 		return features;
 	}
 	/**
-	 * 设置：订单状态，1：充值成功；2：充值失败；3：充值中
+	 * 设置：订单状态，1：新创建；2：已处理
 	 */
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
 	/**
-	 * 获取：订单状态，1：充值成功；2：充值失败；3：充值中
+	 * 获取：订单状态，1：新创建；2：已处理
 	 */
 	public Integer getStatus() {
 		return status;
 	}
+    /**
+     * 设置：充值状态，1：充值成功；2：充值失败；3：充值中
+     */
+    public void setRechargeStatus(Integer rechargeStatus) {
+        this.rechargeStatus = rechargeStatus;
+    }
+    /**
+     * 获取：充值状态，1：充值成功；2：充值失败；3：充值中
+     */
+    public Integer getRechargeStatus() {
+        return rechargeStatus;
+    }
     /**
      * 设置：卡密信息
      */
