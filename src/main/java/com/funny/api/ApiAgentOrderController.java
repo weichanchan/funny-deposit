@@ -99,7 +99,7 @@ public class ApiAgentOrderController {
         //商品类型
         Integer quantity = Integer.valueOf((String) params.get("quantity"));
         //直充类型商品只能买一个
-        if (wareInfoEntity.getType() == 1 && quantity > 1) {
+        if (quantity <= 0 || (wareInfoEntity.getType() == 1 && quantity > 1)) {
             errorCode = "JDI_00001";
             isSuccess = "F";
             map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
@@ -128,6 +128,7 @@ public class ApiAgentOrderController {
         }
 
         agentOrderEntity.setJdOrderNo((String) params.get("jdOrderNo"));
+        // TODO: 2018/9/7  如果是卡密类充值，充值状态初始值应该是什么？增加一个待充值状态？
         agentOrderEntity.setType(Integer.valueOf((String) params.get("type")));
         agentOrderEntity.setFinTime((String) params.get("finTime"));
         agentOrderEntity.setNotifyUrl((String) params.get("notifyUrl"));
@@ -137,6 +138,10 @@ public class ApiAgentOrderController {
         agentOrderEntity.setCostPrice(costPrice);
         agentOrderEntity.setFeatures((String) params.get("features"));
         agentOrderEntity.setCreateTime(new Date());
+        agentOrderEntity.setSign(sign);
+        agentOrderEntity.setSignType(signType);
+        agentOrderEntity.setTimestamp(timestamp);
+        agentOrderEntity.setVersion(version);
         agentOrderService.save(agentOrderEntity);
 
         return R.ok();

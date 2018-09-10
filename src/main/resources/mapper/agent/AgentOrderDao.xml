@@ -20,6 +20,11 @@
         <result property="rechargeStatus" column="recharge_status"/>
         <result property="cardInfo" column="card_info"/>
         <result property="createTime" column="create_time"/>
+        <result property="handleTime" column="handle_time"/>
+        <result property="sign" column="sign"/>
+        <result property="signType" column="sign_type"/>
+        <result property="timestamp" column="timestamp"/>
+        <result property="version" column="version"/>
     </resultMap>
 
     <select id="queryObject" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
@@ -74,7 +79,12 @@
 			`status`, 
 			`recharge_status`,
 			`card_info`,
-			`create_time`
+			`create_time`,
+			`handle_time`,
+			`sign`,
+			`sign_type`,
+			`timestamp`,
+			`version`
 		)
 		values
 		(
@@ -92,7 +102,12 @@
 			#{status}, 
 			#{rechargeStatus},
 			#{cardInfo},
-			#{createTime}
+			#{createTime},
+			#{handleTime},
+			#{sign},
+			#{signType},
+			#{timestamp},
+			#{version}
 		)
 	</insert>
 
@@ -107,14 +122,31 @@
             <if test="rechargeNum != null">`recharge_num` = #{rechargeNum},</if>
             <if test="quantity != null">`quantity` = #{quantity},</if>
             <if test="wareNo != null">`ware_no` = #{wareNo},</if>
-            <if test="costPrice != null">`costPrice` = #{costPrice},</if>
+            <if test="costPrice != null">`cost_price` = #{costPrice},</if>
             <if test="features != null">`features` = #{features},</if>
             <if test="status != null">`status` = #{status},</if>
             <if test="rechargeStatus != null">`recharge_status` = #{rechargeStatus},</if>
             <if test="cardInfo != null">`card_info` = #{cardInfo},</if>
-            <if test="createTime != null">`create_time` = #{createTime}</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="handleTime != null">`handle_time` = #{handleTime},</if>
+            <if test="sign != null">`sign` = #{sign},</if>
+            <if test="signType != null">`sign_type` = #{signType},</if>
+            <if test="timestamp != null">`timestamp` = #{timestamp},</if>
+            <if test="version != null">`version` = #{version}</if>
         </set>
         where id = #{id}
+    </update>
+
+    <update id="updateBatch" parameterType="com.funny.admin.agent.entity.AgentOrderEntity">
+        update agent_order
+        <set>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="rechargeNum != null">`recharge_num` = #{rechargeNum}</if>
+        </set>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </update>
 
     <delete id="delete">

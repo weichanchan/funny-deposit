@@ -66,6 +66,8 @@ public class WareInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("wareinfo:save")
     public R save(@RequestBody WareInfoEntity wareInfo) {
+        // TODO: 2018/9/10  代理商id，目前只有一个，先写固定值
+        wareInfo.setAgentId("22501");
         wareInfoService.save(wareInfo);
 
         return R.ok();

@@ -28,6 +28,12 @@
                     class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
             <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="del"><i
                     class="fa fa-trash-o"></i>&nbsp;删除</a>
+            <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="startHandle"><i
+                    class="fa fa-play"></i>&nbsp;开始处理</a>
+            <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="handleSuccess"><i
+                    class=""></i>&nbsp;处理成功</a>
+            <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="handleFailed"><i
+                    class=""></i>&nbsp;处理失败</a>
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
@@ -108,7 +114,10 @@
                         <input type="radio" name="status" value="1" v-model="agentOrder.status"/> 新创建
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="status" value="2" v-model="agentOrder.status"/> 已处理
+                        <input type="radio" name="status" value="2" v-model="agentOrder.status"/> 处理中
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="status" value="3" v-model="agentOrder.status"/> 已处理
                     </label>
                 </div>
             </div>

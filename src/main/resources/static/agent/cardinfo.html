@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>商品信息表</title>
+    <title>卡密信息表</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -23,13 +23,11 @@
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
-            <a v-if="hasPermission('wareinfo:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-            <a v-if="hasPermission('wareinfo:update')" class="btn btn-primary" @click="update"><i
+            <a v-if="hasPermission('cardinfo:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            <a v-if="hasPermission('cardinfo:update')" class="btn btn-primary" @click="update"><i
                     class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a v-if="hasPermission('wareinfo:delete')" class="btn btn-primary" @click="del"><i
+            <a v-if="hasPermission('cardinfo:delete')" class="btn btn-primary" @click="del"><i
                     class="fa fa-trash-o"></i>&nbsp;删除</a>
-            <a v-if="hasPermission('wareinfo:delete')" class="btn btn-primary" @click="addCardInfo"><i
-                    class="fa fa-plus"></i>&nbsp;添加卡密信息</a>
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
@@ -39,41 +37,33 @@
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">商品编号</div>
+                <div class="col-sm-2 control-label">账号</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="wareInfo.wareNo" placeholder="商品编号"/>
+                    <input type="text" class="form-control" v-model="cardInfo.accountNo" placeholder="账号"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">代理商价格</div>
+                <div class="col-sm-2 control-label">密码/激活码</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="wareInfo.agentPrice" placeholder="代理商价格"/>
+                    <input type="text" class="form-control" v-model="cardInfo.password" placeholder="密码/激活码"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">充值类型</div>
+                <div class="col-sm-2 control-label">关联商品id</div>
                 <div class="col-sm-10">
-                    <label class="radio-inline">
-                        <input type="radio" name="type" id="directRecharge" value="1" v-model="wareInfo.type"/> 直充类型
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="type" id="accountPwd" value="2" v-model="wareInfo.type"
-                               @click="accountPwdSelected"/> 卡密类型
-                    </label>
-                    <!--<label class="radio-inline" style="display: none" id="addCardInfoLable">
-                        <a class="btn btn-primary" @click="addCardInfo"><i class="fa fa-plus"></i>&nbsp;新增卡密信息</a>
-                    </label>-->
+                    <input type="text" class="form-control" v-model="cardInfo.wareNo" placeholder="关联商品id"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">商品状态</div>
+                <div class="col-sm-2 control-label">关联订单id</div>
                 <div class="col-sm-10">
-                    <label class="radio-inline">
-                        <input type="radio" name="status" value="1" v-model="wareInfo.status"/> 可售
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="status" value="2" v-model="wareInfo.status"/> 不可售
-                    </label>
+                    <input type="text" class="form-control" v-model="cardInfo.agentOrderNo" placeholder="关联订单id"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">有效期</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="cardInfo.expiryDate" placeholder="有效期"/>
                 </div>
             </div>
             <div class="form-group">
@@ -85,6 +75,6 @@
     </div>
 </div>
 
-<script src="../public/js/agent/wareinfo.js"></script>
+<script src="../public/js/agent/cardinfo.js"></script>
 </body>
 </html>

@@ -1,25 +1,14 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: '../wareinfo/list',
+        url: '../cardinfo/list',
         datatype: "json",
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
-            {label: '商品编号', name: 'wareNo', index: 'ware_no', width: 80},
-            {label: '代理商价格', name: 'agentPrice', index: 'agent_price', width: 80},
-            {
-                label: '充值类型', name: 'type', index: 'type', width: 80,
-                formatter: function (value, options, row) {
-                    return value === 1 ? '直充类型' : '卡密类型';
-                }
-            },
-            {
-                label: '商品状态', name: 'status', index: 'status', width: 80,
-                formatter: function (value, options, row) {
-                    return value === 1 ?
-                        '<font color="green">可售</font>' :
-                        '<font color="red">不可售</font>';
-                }
-            }
+            {label: '账号', name: 'accountNo', index: 'account_no', width: 80},
+            {label: '密码/激活码', name: 'password', index: 'password', width: 80},
+            {label: '关联商品id', name: 'wareNo', index: 'ware_no', width: 80},
+            {label: '关联订单id', name: 'agentOrderNo', index: 'agent_order_no', width: 80},
+            {label: '有效期', name: 'expiryDate', index: 'expiry_date', width: 80}
         ],
         viewrecords: true,
         height: 385,
@@ -46,21 +35,13 @@ $(function () {
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
         }
     });
-    $("#accountPwd").click(function () {
-        var s = $("#accountPwd").is(":checked");
-        if (s) {
-            showCardInfo = true;
-        }
-    })
 });
 
 var vm = new Vue({
     el: '#rrapp',
     data: {
         showList: true,
-        showCardInfo: true,
         title: null,
-        wareInfo: {},
         cardInfo: {}
     },
     methods: {
@@ -70,8 +51,7 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.wareInfo = {};
-
+            vm.cardInfo = {};
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -84,12 +64,12 @@ var vm = new Vue({
             vm.getInfo(id)
         },
         saveOrUpdate: function (event) {
-            var url = vm.wareInfo.id == null ? "../wareinfo/save" : "../wareinfo/update";
+            var url = vm.cardInfo.id == null ? "../cardinfo/save" : "../cardinfo/update";
             $.ajax({
                 type: "POST",
                 url: url,
                 contentType: "application/json",
-                data: JSON.stringify(vm.wareInfo),
+                data: JSON.stringify(vm.cardInfo),
                 success: function (r) {
                     if (r.code === 0) {
                         alert('操作成功', function (index) {
@@ -110,7 +90,7 @@ var vm = new Vue({
             confirm('确定要删除选中的记录？', function () {
                 $.ajax({
                     type: "POST",
-                    url: "../wareinfo/delete",
+                    url: "../cardinfo/delete",
                     contentType: "application/json",
                     data: JSON.stringify(ids),
                     success: function (r) {
@@ -126,8 +106,8 @@ var vm = new Vue({
             });
         },
         getInfo: function (id) {
-            $.get("../wareinfo/info/" + id, function (r) {
-                vm.wareInfo = r.wareInfo;
+            $.get("../cardinfo/info/" + id, function (r) {
+                vm.cardInfo = r.cardInfo;
             });
         },
         reload: function (event) {
@@ -136,27 +116,6 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page
             }).trigger("reloadGrid");
-        },
-        addCardInfo: function () {
-            var id = getSelectedRow();
-            if (id == null) {
-                return;
-            }
-            var data = $("#jqGrid").jqGrid("getRowData", id);
-            var type = data.type;
-            if (type == "直充类型") {
-                alert("直充类型商品不能添加卡密信息！")
-                return;
-            }
-            showCardInfo = true;
-            var y = (window.screen.availHeight - 200);
-            var x = (window.screen.availWidth - 200);
-            var mywindow = window.open("addCardInfo.html?wareId=" + id, "_blank", "height=" + 400 + ",width=" + 600);
-            mywindow.moveTo(x / 2, y / 2);
-        },
-        accountPwdSelected: function () {
-            document.getElementById("addCardInfoLable").style.display = "block"
-            alert("a")
         }
     }
 });

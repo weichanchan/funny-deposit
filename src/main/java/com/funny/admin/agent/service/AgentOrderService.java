@@ -33,4 +33,8 @@ public interface AgentOrderService {
     void deleteBatch(Long[] ids);
 
     Long getMaxId();
+
+    List<AgentOrderEntity> updateBatch(int status, int rechargeStatus, Long[] ids);
+
+    void handleSuccess(Long id) ;
 }

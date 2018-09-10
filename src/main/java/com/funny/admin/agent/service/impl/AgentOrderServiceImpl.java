@@ -3,15 +3,22 @@ package com.funny.admin.agent.service.impl;
 import com.funny.admin.agent.dao.AgentOrderDao;
 import com.funny.admin.agent.entity.AgentOrderEntity;
 import com.funny.admin.agent.service.AgentOrderService;
+import com.funny.api.event.AgentOrderNotifyEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 
 @Service("agentOrderService")
+@Transactional(rollbackFor = Exception.class)
 public class AgentOrderServiceImpl implements AgentOrderService {
+    @Resource
+    ApplicationContext applicationContext;
     @Autowired
     private AgentOrderDao agentOrderDao;
 
@@ -63,6 +70,18 @@ public class AgentOrderServiceImpl implements AgentOrderService {
     @Override
     public Long getMaxId() {
         return agentOrderDao.getMaxId();
+    }
+
+    @Override
+    public List<AgentOrderEntity> updateBatch(int status, int rechargeStatus, Long[] ids) {
+        return agentOrderDao.updateBatch(status, rechargeStatus, ids);
+    }
+
+    @Override
+    public void handleSuccess(Long id) {
+        AgentOrderEntity agentOrderEntity = agentOrderDao.queryObject(id);
+
+        applicationContext.publishEvent(new AgentOrderNotifyEvent(id));
     }
 
 }

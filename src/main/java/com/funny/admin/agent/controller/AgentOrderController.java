@@ -1,5 +1,8 @@
 package com.funny.admin.agent.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,9 +48,18 @@ public class AgentOrderController {
         Query query = new Query(params);
 
         List<AgentOrderEntity> agentOrderList = agentOrderService.queryList(query);
+        List<AgentOrderEntity> agentOrderEntityList = new ArrayList<AgentOrderEntity>();
+        //将清算时间格式"yyyyMMddHHmmss"转化为"yyyy-MM-dd HH:mm:ss"
+        String reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
+        for (AgentOrderEntity agentOrderEntity : agentOrderList) {
+            String fTime = agentOrderEntity.getFinTime();
+            fTime = fTime.replaceAll(reg, "$1-$2-$3 $4:$5:$6");
+            agentOrderEntity.setFinTime(fTime);
+            agentOrderEntityList.add(agentOrderEntity);
+        }
         int total = agentOrderService.queryTotal(query);
 
-        PageUtils pageUtil = new PageUtils(agentOrderList, total, query.getLimit(), query.getPage());
+        PageUtils pageUtil = new PageUtils(agentOrderEntityList, total, query.getLimit(), query.getPage());
 
         return R.ok().put("page", pageUtil);
     }
@@ -79,18 +91,28 @@ public class AgentOrderController {
     }
 
     /**
-     * 处理订单
+     * 开始处理订单
      *
-     * @param agentOrder
+     * @param id
      */
-    public void handleAgentOrder(AgentOrderEntity agentOrder) {
-        String wareNo = agentOrder.getWareNo();
-        WareInfoEntity wareInfo = wareInfoService.queryObjectByWareNo(wareNo);
-        Integer wareType = wareInfo.getType();
-        //商品是卡密类型
-        if (wareType == 2) {
-            // TODO: 2018/9/6  获取卡密类型
+    @RequestMapping("/handleAgentOrder/{id}")
+    @RequiresPermissions("agentorder:update")
+    public R handleAgentOrder(@PathVariable("id") Long id) {
+        //  Long id = (Long) params.get("id");
+        AgentOrderEntity agentOrderEntity = agentOrderService.queryObject(id);
+        if (agentOrderEntity != null) {
+            agentOrderEntity.setStatus(2);
+            agentOrderEntity.setRechargeStatus(3);
+            agentOrderService.update(agentOrderEntity);
         }
+        return R.ok();
+    }
+
+    // TODO: 2018/9/7 处理成功、失败
+    @RequestMapping("/handleSuccess/{id}")
+    public R handleSuccess(@PathVariable("id") Long id) {
+        agentOrderService.handleSuccess(id);
+        return R.ok();
     }
 
     /**

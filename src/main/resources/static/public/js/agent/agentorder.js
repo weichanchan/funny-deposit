@@ -6,18 +6,37 @@ $(function () {
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
             {label: '代理商订单号', name: 'agentOrderNo', index: 'agent_order_no', width: 80},
             {label: '京东订单号', name: 'jdOrderNo', index: 'jd_order_no', width: 80},
-            {label: '订单类型', name: 'type', index: 'type', width: 70,
+            {
+                label: '订单类型', name: 'type', index: 'type', width: 70,
                 formatter: function (value, options, row) {
                     return value === 1 ? '普通' : '其他';
                 }
             },
             {label: '清算时间', name: 'finTime', index: 'fin_time', width: 80},
-            {label: '回调通知地址', name: 'notifyUrl', index: 'notify_url', width: 120},
+            // {label: '回调通知地址', name: 'notifyUrl', index: 'notify_url', width: 120},
             {label: '充值号码', name: 'rechargeNum', index: 'recharge_num', width: 80},
             {label: '数量', name: 'quantity', index: 'quantity', width: 50},
             {label: '商品编码', name: 'wareNo', index: 'ware_no', width: 80},
-            {label: '成本价', name: 'costPrice', index: 'cost_price', width: 80},
-            {label: '充值状态', name: 'status', index: 'status', width: 80,
+            {
+                label: '成本价(元)', name: 'costPrice', index: 'cost_price', width: 80,
+                formatter: function (value, options, row) {
+                    return (value / 100).toFixed(2);
+                }
+            },
+            {
+                label: '订单状态', name: 'status', index: 'status', width: 80,
+                formatter: function (value, options, row) {
+                    if (value === 1) {
+                        return '新创建';
+                    } else if (value === 2) {
+                        return '<font color="gray">处理中</font>'
+                    } else {
+                        return '<font color="green">已处理</font>';
+                    }
+                }
+            },
+            {
+                label: '充值状态', name: 'rechargeStatus', index: 'recharge_status', width: 80,
                 formatter: function (value, options, row) {
                     if (value === 1) {
                         return '<font color="green">充值成功</font>';
@@ -132,6 +151,61 @@ var vm = new Vue({
             });
         },
         reload: function (event) {
+            vm.showList = true;
+            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            $("#jqGrid").jqGrid('setGridParam', {
+                page: page
+            }).trigger("reloadGrid");
+        },
+        startHandle: function (event) {
+            var id = getSelectedRow();
+            if (id == null) {
+                return;
+            }
+            var rowData = $("#jqGrid").jqGrid("getRowData", id);
+            confirm('确定要处理选中的记录？', function () {
+                $.ajax({
+                    type: "POST",
+                    url: "../agentorder/handleAgentOrder/" + id,
+                    contentType: "application/json",
+                    // dataType:json ,
+                    success: function (r) {
+                        if (r.code == 0) {
+                            alert('正在处理... ...', function (index) {
+                                $("#jqGrid").trigger("reloadGrid");
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            });
+        },
+        handleSuccess: function (event) {
+            var id = getSelectedRow();
+            if (id == null) {
+                return;
+            }
+            var rowData = $("#jqGrid").jqGrid("getRowData", id);
+            confirm('确定要处理选中的记录？', function () {
+                $.ajax({
+                    type: "POST",
+                    url: "../agentorder/handleSuccess/" + id,
+                    contentType: "application/json",
+                    // dataType:json ,
+                    success: function (r) {
+                        if (r.code == 0) {
+                            alert('处理成功！', function (index) {
+                                $("#jqGrid").trigger("reloadGrid");
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            });
+        },
+        handleFailed: function (event) {
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {

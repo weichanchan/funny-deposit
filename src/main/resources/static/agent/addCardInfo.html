@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>商品信息表</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../public/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../public/plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="../public/plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../public/css/main.css">
+    <script src="../public/libs/jquery.min.js"></script>
+    <script src="../public/plugins/layer/layer.js"></script>
+    <script src="../public/libs/bootstrap.min.js"></script>
+    <script src="../public/libs/vue.min.js"></script>
+    <script src="../public/plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="../public/plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="../public/plugins/ztree/jquery.ztree.all.min.js"></script>
+    <script src="../public/js/common.js"></script>
+    <script src="../public/libs/ajaxupload.js"></script>
+</head>
+<body>
+
+<div id="rrapp" v-cloak>
+    <div class="panel panel-default">
+        <div class="panel-heading">手动添加数据</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">激活码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="pwd1" placeholder="激活码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">激活码</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="pwd2" placeholder="激活码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="add" value="保存"/>
+                <a class="btn btn-primary" id="upload"><i class="fa fa-plus"></i>&nbsp;从excel导入</a>
+                <!--&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="importExcel" value="从excel导入"/>-->
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    //商品id
+    var wareNo = T.p('wareId');
+    var vm = new Vue({
+        el: '#rrapp',
+        data: {
+            title: null,
+            cardInfo: {},
+            pwd1: "",
+            pwd2: "",
+        },
+        methods: {
+            add: function () {
+                var pwds = new Array();
+                pwds[0] = vm.pwd1;
+                pwds[1] = vm.pwd2;
+                var pwdList = pwds.toString();
+                $.ajax({
+                    type: "GET",
+                    url: "../cardinfo/save",
+                    contentType: "application/json?wareId=" + wareId + "&pwds=" + pwdList,
+                    data: {
+                        "wareNo": wareNo,
+                        "pwds": pwdList
+                    },
+                    success: function (r) {
+                        if (r.code === 0) {
+                            alert('操作成功', function (index) {
+                                //todo 关闭窗口时，把信息传回原页面
+                                window.close();
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            }
+        }
+    });
+
+    new AjaxUpload('#upload', {
+        action: '../cardinfo/importExcel',
+        name: 'file',
+        autoSubmit: true,
+        responseType: "json",
+        data: {"wareId": wareId},
+        onSubmit: function (file, extension) {
+            if (!(extension && /^(xls|xlsx)$/.test(extension.toLowerCase()))) {
+                alert('只支持excel文件！');
+                return false;
+            }
+        },
+        onComplete: function (file, r) {
+            if (r.code == 0) {
+                alert("导入成功！");
+                window.close();
+            } else {
+                alert(r.msg);
+            }
+        }
+    });
+</script>
+<!--<script src="../public/js/agent/wareinfo.js"></script>-->
+</body>
+</html>

@@ -36,7 +36,7 @@ public class AgentOrderEntity implements Serializable {
     private Long costPrice;
     //特殊属性
     private String features;
-    //订单状态，1：新创建；2：已处理
+    //订单状态，1：新创建；2：处理中；3：已处理
     private Integer status;
     //充值状态，1：充值成功；2：充值失败；3：充值中
     private Integer rechargeStatus;
@@ -44,6 +44,11 @@ public class AgentOrderEntity implements Serializable {
     private Integer cardInfo;
     //订单创建时间
     private Date createTime;
+    private Date handleTime;
+    private String sign;
+    private String signType;
+    private String timestamp;
+    private String version;
 
     public AgentOrderEntity() {
     }
@@ -203,14 +208,14 @@ public class AgentOrderEntity implements Serializable {
     }
 
     /**
-     * 设置：订单状态，1：新创建；2：已处理
+     * 设置：订单状态，1：新创建；2：处理中；3：已处理
      */
     public void setStatus(Integer status) {
         this.status = status;
     }
 
     /**
-     * 获取：订单状态，1：新创建；2：已处理
+     * 获取：订单状态，1：新创建；2：处理中；3：已处理
      */
     public Integer getStatus() {
         return status;
@@ -256,5 +261,45 @@ public class AgentOrderEntity implements Serializable {
      */
     public Date getCreateTime() {
         return createTime;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public String getSignType() {
+        return signType;
+    }
+
+    public void setSignType(String signType) {
+        this.signType = signType;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public Date getHandleTime() {
+        return handleTime;
+    }
+
+    public void setHandleTime(Date handleTime) {
+        this.handleTime = handleTime;
     }
 }
