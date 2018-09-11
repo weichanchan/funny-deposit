@@ -31,16 +31,21 @@ public class CardInfoServiceImpl implements CardInfoService {
 		return cardInfoDao.queryListNum(map);
 	}
 
-	@Override
-	public List<CardInfoEntity> queryColumns() {
-		return cardInfoDao.queryColumns();
-	}
+    @Override
+    public List<CardInfoEntity> queryListByWareNo(Map<String, Object> map) {
+        return cardInfoDao.queryListByWareNo(map);
+    }
 
 	@Override
 	public int queryTotal(Map<String, Object> map){
 		return cardInfoDao.queryTotal(map);
 	}
-	
+
+	@Override
+	public int queryTotalByWareNo(Map<String, Object> map) {
+		return cardInfoDao.queryTotalByWareNo(map);
+	}
+
 	@Override
 	public void save(CardInfoEntity cardInfo){
 		cardInfoDao.save(cardInfo);

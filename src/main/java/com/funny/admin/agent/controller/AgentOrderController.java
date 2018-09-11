@@ -1,26 +1,18 @@
 package com.funny.admin.agent.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.funny.admin.agent.entity.AgentOrderEntity;
-import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.WareInfoService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.funny.utils.PageUtils;
 import com.funny.utils.Query;
 import com.funny.utils.R;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**

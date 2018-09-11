@@ -143,8 +143,9 @@ public class ApiAgentOrderController {
         agentOrderEntity.setTimestamp(timestamp);
         agentOrderEntity.setVersion(version);
         agentOrderService.save(agentOrderEntity);
+        map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
 
-        return R.ok();
+        return R.ok(map);
     }
 
     //获取返回参数map

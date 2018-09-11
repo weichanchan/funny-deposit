@@ -23,7 +23,7 @@ CREATE TABLE `agent_order` (
   `cost_price` bigint(20) NOT NULL COMMENT '成本价',
   `features` varchar(255) DEFAULT NULL COMMENT '特殊属性',
   `status` int(1) DEFAULT '3' COMMENT '订单状态，1：新创建；2：处理中；3：已处理',
-  `recharge_status` int(1) NOT NULL DEFAULT '1' COMMENT '充值状态，1：充值成功；2：充值失败；3：充值中',
+  `recharge_status` int(1) NOT NULL DEFAULT '0' COMMENT '充值状态，0：未充值；1：充值成功；2：充值失败；3：充值中',
   `card_info` text COMMENT '卡密信息',
   `create_time` datetime NOT NULL COMMENT '订单创建时间',
   `handle_time` datetime DEFAULT NULL COMMENT '处理订单时间',

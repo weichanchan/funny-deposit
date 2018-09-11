@@ -154,9 +154,20 @@ var vm = new Vue({
             var mywindow = window.open("addCardInfo.html?wareId=" + id, "_blank", "height=" + 400 + ",width=" + 600);
             mywindow.moveTo(x / 2, y / 2);
         },
-        accountPwdSelected: function () {
-            document.getElementById("addCardInfoLable").style.display = "block"
-            alert("a")
+        cardinfo: function () {
+            var id = getSelectedRow();
+            if (id == null) {
+                return;
+            }
+            var data = $("#jqGrid").jqGrid("getRowData", id);
+            var type = data.type;
+            if (type == "直充类型") {
+                alert("请选择卡密类型商品！")
+                return;
+            }
+            var url = "cardinfo.html?wareId="+id +"&wareNo="+data.wareNo;
+            // encodeURI 编码
+            window.location.assign(encodeURI(url));
         }
     }
 });

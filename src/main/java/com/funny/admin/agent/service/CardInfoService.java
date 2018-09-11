@@ -20,10 +20,12 @@ public interface CardInfoService {
 
     List<CardInfoEntity> queryListNum(Map<String, Object> map);
 
-    List<CardInfoEntity> queryColumns();
+    List<CardInfoEntity> queryListByWareNo(Map<String, Object> map);
 
 	int queryTotal(Map<String, Object> map);
-	
+
+	int queryTotalByWareNo(Map<String, Object> map);
+
 	void save(CardInfoEntity cardInfo);
 	
 	void update(CardInfoEntity cardInfo);

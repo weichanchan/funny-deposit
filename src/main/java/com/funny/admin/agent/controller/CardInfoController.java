@@ -1,33 +1,24 @@
 package com.funny.admin.agent.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
+import com.alibaba.druid.util.StringUtils;
 import com.funny.admin.agent.entity.CardInfoEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.WareInfoService;
-import com.funny.utils.ExcelUtils;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.funny.utils.PageUtils;
 import com.funny.utils.Query;
 import com.funny.utils.R;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 
 /**
@@ -54,8 +45,8 @@ public class CardInfoController {
         //查询列表数据
         Query query = new Query(params);
 
-        List<CardInfoEntity> cardInfoList = cardInfoService.queryList(query);
-        int total = cardInfoService.queryTotal(query);
+        List<CardInfoEntity> cardInfoList = cardInfoService.queryListByWareNo(query);
+        int total = cardInfoService.queryTotalByWareNo(query);
 
         PageUtils pageUtil = new PageUtils(cardInfoList, total, query.getLimit(), query.getPage());
 
@@ -79,31 +70,37 @@ public class CardInfoController {
      */
     @RequestMapping("/save")
     public R save(@RequestParam Long wareId, String pwds) {
+        if(StringUtils.isEmpty(pwds)){
+            return R.error("至少需要一个激活码");
+        }
         CardInfoEntity cardInfo;
         Date date = getExpiryDate();
         List<CardInfoEntity> list = new ArrayList<>();
         Map map = new HashMap();
 
         String wareNo = null;
-        if (wareId != null) {
-            //通过商品id查询商品
-            WareInfoEntity wareInfoEntity = wareInfoService.queryObject(wareId);
-            if (wareInfoEntity == null) {
-                return R.error();
-            }
-            wareNo = wareInfoEntity.getWareNo();
+        if(wareId==null){
+            return R.error("添加失败！");
         }
+        //通过商品id查询商品
+        WareInfoEntity wareInfoEntity = wareInfoService.queryObject(wareId);
+        if (wareInfoEntity == null) {
+            return R.error();
+        }
+        wareNo = wareInfoEntity.getWareNo();
 
         String[] pwdList = pwds.split(",");
-        if (pwdList != null) {
-            for (int i = 0; i < pwdList.length; i++) {
-                cardInfo = new CardInfoEntity();
-                cardInfo.setWareNo(wareNo);
-                cardInfo.setPassword(pwdList[i]);
-                cardInfo.setExpiryDate(date);
-                cardInfoService.save(cardInfo);
-                list.add(cardInfo);
-            }
+        if(pwdList==null||pwdList.length==0){
+            return  R.error("需要至少一个激活码");
+        }
+
+        for (int i = 0; i < pwdList.length; i++) {
+            cardInfo = new CardInfoEntity();
+            cardInfo.setWareNo(wareNo);
+            cardInfo.setPassword(pwdList[i]);
+            cardInfo.setExpiryDate(date);
+            cardInfoService.save(cardInfo);
+            list.add(cardInfo);
         }
         map.put("wareNo", wareNo);
         map.put("cardInfoList", list);
