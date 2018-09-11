@@ -52,6 +52,8 @@ public class WareInfoServiceImpl implements WareInfoService {
 
     @Override
     public void update(WareInfoEntity wareInfo) {
+        // TODO roleId 先删除再添加
+
         wareInfoDao.update(wareInfo);
     }
 

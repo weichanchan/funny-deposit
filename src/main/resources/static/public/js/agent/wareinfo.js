@@ -60,8 +60,12 @@ var vm = new Vue({
         showList: true,
         showCardInfo: true,
         title: null,
-        wareInfo: {},
-        cardInfo: {}
+        cardInfo: {},
+        roleList: [],
+        wareInfo:{
+            status:1,
+            roleIdList:[]
+        }
     },
     methods: {
         query: function () {
@@ -70,8 +74,10 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.wareInfo = {};
+            vm.wareInfo = {status:1,roleIdList:[]};
 
+            //获取角色信息
+            this.getRoleList();
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -82,6 +88,9 @@ var vm = new Vue({
             vm.title = "修改";
 
             vm.getInfo(id)
+
+            //获取角色信息
+            this.getRoleList();
         },
         saveOrUpdate: function (event) {
             var url = vm.wareInfo.id == null ? "../wareinfo/save" : "../wareinfo/update";
