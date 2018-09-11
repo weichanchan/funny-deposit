@@ -165,9 +165,14 @@ var vm = new Vue({
                 alert("请选择卡密类型商品！")
                 return;
             }
-            var url = "cardinfo.html?wareId="+id +"&wareNo="+data.wareNo;
+            var url = "cardinfo.html?wareId=" + id + "&wareNo=" + data.wareNo;
             // encodeURI 编码
             window.location.assign(encodeURI(url));
+        },
+        getRoleList: function(){
+            $.get("../sys/role/select", function(r){
+                vm.roleList = r.list;
+            });
         }
     }
 });

@@ -40,7 +40,7 @@ public class ApiAgentOrderController {
      */
     @IgnoreAuth
     @RequestMapping("/beginDistill")
-    public R beginDistill(@RequestParam Map<String, Object> params) {
+    public Map beginDistill(@RequestParam Map<String, Object> params) {
         //充值请求结果
         String isSuccess = "T";
         String errorCode = "";
@@ -65,45 +65,37 @@ public class ApiAgentOrderController {
             // 签名验证不正确（可退款）
             errorCode = "JDI_00002";
             map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-            return R.ok(map);
+            return map;
         }
 
         //根据京东订单号防重，如果已存在，返回订单信息
         AgentOrderEntity agentOrderEntity = agentOrderService.queryObjectByJdOrderNo(jdOrderNo);
         if (agentOrderEntity != null) {
             agentOrderNo = agentOrderEntity.getAgentOrderNo();
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-            return R.ok(map);
+            return getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
+
+        agentOrderEntity = new AgentOrderEntity();
 
         //对应商品
         String wareNo = (String) params.get("wareNo");
         WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareNo);
         if (wareInfoEntity == null) {
             //没有对应商品（可退款）
-            errorCode = "JDI_00003";
-            isSuccess = "F";
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-            return R.ok(map);
+            return getReturnMap("F", "JDI_00003", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
 
         //商品状态
         if (wareInfoEntity.getStatus() == 2) {
             //此商品不可售（可退款）
-            errorCode = "JDI_00004";
-            isSuccess = "F";
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-            return R.ok(map);
+            return getReturnMap("F", "JDI_00004", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
 
         //商品类型
         Integer quantity = Integer.valueOf((String) params.get("quantity"));
         //直充类型商品只能买一个
         if (quantity <= 0 || (wareInfoEntity.getType() == 1 && quantity > 1)) {
-            errorCode = "JDI_00001";
-            isSuccess = "F";
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-            return R.ok(map);
+            return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
 
         //判断商品价格和成本价格是否相等
@@ -111,10 +103,7 @@ public class ApiAgentOrderController {
         Long costPrice = Long.valueOf((String) params.get("costPrice"));
         if (!agentPrice.equals(costPrice)) {
             // 成本价不正确（可退款）
-            errorCode = "JDI_00005";
-            isSuccess = "F";
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-            return R.ok(map);
+            return getReturnMap("F", "JDI_00005", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
 
         Map<String, Object> param = new HashMap<String, Object>();
@@ -142,10 +131,11 @@ public class ApiAgentOrderController {
         agentOrderEntity.setSignType(signType);
         agentOrderEntity.setTimestamp(timestamp);
         agentOrderEntity.setVersion(version);
+        agentOrderEntity.setRechargeStatus(0);
+        agentOrderEntity.setAgentOrderNo(UUID.randomUUID().toString().replace("-",""));
         agentOrderService.save(agentOrderEntity);
-        map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
 
-        return R.ok(map);
+        return getReturnMap("T", "", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
     }
 
     //获取返回参数map
@@ -154,7 +144,9 @@ public class ApiAgentOrderController {
                              String signType, String timestamp, String version) {
         Map map = new HashMap();
         map.put("isSuccess", isSuccess);
-        map.put("errorCode", errorCode);
+        if (!StringUtils.isEmpty(errorCode)) {
+            map.put("errorCode", errorCode);
+        }
         if (!StringUtils.isEmpty(agentOrderNo)) {
             map.put("agentOrderNo", agentOrderNo);
         }
@@ -162,10 +154,12 @@ public class ApiAgentOrderController {
             map.put("agentPrice", agentPrice);
         }
         map.put("jdOrderNo", jdOrderNo);
-        map.put("sign", sign);
-        map.put("signType", signType);
         map.put("timestamp", timestamp);
         map.put("version", version);
+        map.remove("code");
+        sign = SignUtils.getSign(map,SignUtils.secretKeyOfFunny);
+        map.put("sign", sign);
+        map.put("signType", signType);
         return map;
     }
 
@@ -210,6 +204,7 @@ public class ApiAgentOrderController {
         map.put("signType", params.get("signType"));
         map.put("timestamp", params.get("timestamp"));
         map.put("version", params.get("version"));
+
         return R.ok(map);
     }
 

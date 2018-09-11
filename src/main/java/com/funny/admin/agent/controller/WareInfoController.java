@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.WareInfoService;
+import com.funny.admin.system.service.SysUserRoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,9 @@ public class WareInfoController {
     @Autowired
     private WareInfoService wareInfoService;
 
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
+
     /**
      * 列表
      */
@@ -56,7 +60,8 @@ public class WareInfoController {
     @RequiresPermissions("wareinfo:info")
     public R info(@PathVariable("id") Long id) {
         WareInfoEntity wareInfo = wareInfoService.queryObject(id);
-
+        List<Long> roleIdList = wareInfoService.queryRoleIdList(wareInfo.getId());
+        wareInfo.setRoleIdList(roleIdList);
         return R.ok().put("wareInfo", wareInfo);
     }
 
@@ -68,6 +73,9 @@ public class WareInfoController {
     public R save(@RequestBody WareInfoEntity wareInfo) {
         // TODO: 2018/9/10  代理商id，目前只有一个，先写固定值
         wareInfo.setAgentId("22501");
+        if (wareInfo.getRoleIdList().size() == 0){
+            return R.error("请选择处理该商品订单的客服角色。");
+        }
         wareInfoService.save(wareInfo);
 
         return R.ok();

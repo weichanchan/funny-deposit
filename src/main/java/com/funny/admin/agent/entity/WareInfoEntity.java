@@ -1,6 +1,7 @@
 package com.funny.admin.agent.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -23,6 +24,10 @@ public class WareInfoEntity implements Serializable {
     private Integer type;
     //商品状态，1：可售；2：不可售
     private Integer status;
+    /**
+     * 角色ID列表
+     */
+    private List<Long> roleIdList;
     //关联的代理商id
     private String agentId;
 
@@ -110,4 +115,11 @@ public class WareInfoEntity implements Serializable {
         return agentId;
     }
 
+    public List<Long> getRoleIdList() {
+        return roleIdList;
+    }
+
+    public void setRoleIdList(List<Long> roleIdList) {
+        this.roleIdList = roleIdList;
+    }
 }

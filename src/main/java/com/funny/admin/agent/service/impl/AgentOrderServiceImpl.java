@@ -84,4 +84,9 @@ public class AgentOrderServiceImpl implements AgentOrderService {
         applicationContext.publishEvent(new AgentOrderNotifyEvent(id));
     }
 
+    @Override
+    public AgentOrderEntity queryLast() {
+        return agentOrderDao.queryLastAgentOrder();
+    }
+
 }
