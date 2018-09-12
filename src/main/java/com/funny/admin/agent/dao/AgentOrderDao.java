@@ -24,4 +24,6 @@ public interface AgentOrderDao extends BaseDao<AgentOrderEntity> {
 
     //批量修改订单状态
     List<AgentOrderEntity> updateBatch(int status, int rechargeStatus, Long[] ids);
+
+    AgentOrderEntity queryLastAgentOrder();
 }

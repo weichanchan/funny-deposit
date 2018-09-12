@@ -14,7 +14,6 @@ import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +22,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import sun.management.resources.agent;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -79,12 +77,14 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
                 Query query = new Query(queryMap);
                 List<CardInfoEntity> cardInfoLists = cardInfoService.queryListNum(query);
                 if (cardInfoLists == null || cardInfoLists.size() < quantity) {
-                    // TODO: 2018/9/10  库存不足该怎么处理，订单标记已处理，充值失败？
+                    // TODO: 2018/9/10  库存不足该怎么处理，订单标记已处理，充值失败 or 直接把商品下架？
                     logger.error("库存不足");
                     return;
                 }
 
-                String accountNo, password, expiryDate;
+                String accountNo;
+                String password;
+                String expiryDate;
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
                 //卡密类型充值
                 for (int i = 0; i < cardInfoLists.size(); i++) {

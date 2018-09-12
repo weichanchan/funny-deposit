@@ -31,6 +31,10 @@
 		select * from agent_order where id = #{value}
 	</select>
 
+    <select id="queryLastAgentOrder" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
+		select * from agent_order order by create_time desc limit 0,1
+	</select>
+
     <select id="queryObjectByJdOrderNo" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
 		select * from agent_order where jd_order_no = #{value}
 	</select>
@@ -40,13 +44,22 @@
 	</select>
 
     <select id="queryList" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
-        select * from agent_order
+        SELECT
+        *
+        FROM
+        agent_order a
+        LEFT JOIN ware_info w ON a.ware_no = w.ware_no
+        LEFT JOIN ware_role wr ON wr.ware_info_id = w.id
+        WHERE wr.role_id in
+        <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
-                order by ${sidx} ${order}
+                order by a.${sidx} ${order}
             </when>
             <otherwise>
-                order by id desc
+                order by a.id desc
             </otherwise>
         </choose>
         <if test="offset != null and limit != null">

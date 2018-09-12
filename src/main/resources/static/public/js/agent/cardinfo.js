@@ -1,6 +1,13 @@
 $(function () {
+    //商品id
+    var wareId = T.p('wareId');
+    var wareNo = T.p('wareNo');
+    var param = "";
+    if(wareNo != undefined){
+        param = "?wareNo=" + wareNo;
+    }
     $("#jqGrid").jqGrid({
-        url: '../cardinfo/list',
+        url: '../cardinfo/list'+param,
         datatype: "json",
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
@@ -8,7 +15,13 @@ $(function () {
             {label: '密码/激活码', name: 'password', index: 'password', width: 80},
             {label: '关联商品id', name: 'wareNo', index: 'ware_no', width: 80},
             {label: '关联订单id', name: 'agentOrderNo', index: 'agent_order_no', width: 80},
-            {label: '有效期', name: 'expiryDate', index: 'expiry_date', width: 80}
+            {label: '状态', name: 'status', index: 'status', width: 80,
+                formatter: function (value, options, row) {
+                    return value === 1 ? '新创建' : '已使用';
+                }
+            },
+            {label: '有效期', name: 'expiryDate', index: 'expiry_date', width: 80},
+            {label: '使用时间', name: 'rechargeTime', index: 'recharge_time', width: 80}
         ],
         viewrecords: true,
         height: 385,
@@ -42,7 +55,8 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
-        cardInfo: {}
+        cardInfo: {},
+        wareNo:""
     },
     methods: {
         query: function () {
@@ -64,6 +78,7 @@ var vm = new Vue({
             vm.getInfo(id)
         },
         saveOrUpdate: function (event) {
+            cardInfo.wareNo = vm.wareNo;
             var url = vm.cardInfo.id == null ? "../cardinfo/save" : "../cardinfo/update";
             $.ajax({
                 type: "POST",
@@ -116,6 +131,9 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page
             }).trigger("reloadGrid");
+        },
+        btnback: function () {
+            window.location.href="wareinfo.html";
         }
     }
 });

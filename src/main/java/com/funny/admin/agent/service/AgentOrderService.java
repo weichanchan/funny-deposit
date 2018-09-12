@@ -36,5 +36,13 @@ public interface AgentOrderService {
 
     List<AgentOrderEntity> updateBatch(int status, int rechargeStatus, Long[] ids);
 
-    void handleSuccess(Long id) ;
+    void handleSuccess(Long id);
+
+    /**
+     * todo 根据不同的客服查询不同的订单
+     * 查询最新的订单
+     *
+     * @return
+     */
+    AgentOrderEntity queryLast();
 }

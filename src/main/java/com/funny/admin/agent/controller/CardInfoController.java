@@ -1,5 +1,6 @@
 package com.funny.admin.agent.controller;
 
+import com.alibaba.druid.util.StringUtils;
 import com.funny.admin.agent.entity.CardInfoEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.CardInfoService;
@@ -44,8 +45,8 @@ public class CardInfoController {
         //查询列表数据
         Query query = new Query(params);
 
-        List<CardInfoEntity> cardInfoList = cardInfoService.queryList(query);
-        int total = cardInfoService.queryTotal(query);
+        List<CardInfoEntity> cardInfoList = cardInfoService.queryListByWareNo(query);
+        int total = cardInfoService.queryTotalByWareNo(query);
 
         PageUtils pageUtil = new PageUtils(cardInfoList, total, query.getLimit(), query.getPage());
 
@@ -69,31 +70,37 @@ public class CardInfoController {
      */
     @RequestMapping("/save")
     public R save(@RequestParam Long wareId, String pwds) {
+        if(StringUtils.isEmpty(pwds)){
+            return R.error("至少需要一个激活码");
+        }
         CardInfoEntity cardInfo;
         Date date = getExpiryDate();
         List<CardInfoEntity> list = new ArrayList<>();
         Map map = new HashMap();
 
         String wareNo = null;
-        if (wareId != null) {
-            //通过商品id查询商品
-            WareInfoEntity wareInfoEntity = wareInfoService.queryObject(wareId);
-            if (wareInfoEntity == null) {
-                return R.error();
-            }
-            wareNo = wareInfoEntity.getWareNo();
+        if(wareId==null){
+            return R.error("添加失败！");
         }
+        //通过商品id查询商品
+        WareInfoEntity wareInfoEntity = wareInfoService.queryObject(wareId);
+        if (wareInfoEntity == null) {
+            return R.error();
+        }
+        wareNo = wareInfoEntity.getWareNo();
 
         String[] pwdList = pwds.split(",");
-        if (pwdList != null) {
-            for (int i = 0; i < pwdList.length; i++) {
-                cardInfo = new CardInfoEntity();
-                cardInfo.setWareNo(wareNo);
-                cardInfo.setPassword(pwdList[i]);
-                cardInfo.setExpiryDate(date);
-                cardInfoService.save(cardInfo);
-                list.add(cardInfo);
-            }
+        if(pwdList==null||pwdList.length==0){
+            return  R.error("需要至少一个激活码");
+        }
+
+        for (int i = 0; i < pwdList.length; i++) {
+            cardInfo = new CardInfoEntity();
+            cardInfo.setWareNo(wareNo);
+            cardInfo.setPassword(pwdList[i]);
+            cardInfo.setExpiryDate(date);
+            cardInfoService.save(cardInfo);
+            list.add(cardInfo);
         }
         map.put("wareNo", wareNo);
         map.put("cardInfoList", list);

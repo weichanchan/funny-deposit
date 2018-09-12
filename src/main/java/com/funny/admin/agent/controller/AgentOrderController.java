@@ -10,6 +10,9 @@ import com.funny.admin.agent.entity.AgentOrderEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.WareInfoService;
+import com.funny.admin.common.AbstractController;
+import com.funny.admin.system.dao.SysUserRoleDao;
+import com.funny.admin.system.service.SysUserRoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,11 +35,13 @@ import com.funny.utils.R;
  */
 @RestController
 @RequestMapping("agentorder")
-public class AgentOrderController {
+public class AgentOrderController extends AbstractController {
     @Autowired
     private AgentOrderService agentOrderService;
     @Autowired
     private WareInfoService wareInfoService;
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
 
     /**
      * 列表
@@ -44,6 +49,7 @@ public class AgentOrderController {
     @RequestMapping("/list")
     @RequiresPermissions("agentorder:list")
     public R list(@RequestParam Map<String, Object> params) {
+        params.put("roleIds",sysUserRoleService.queryRoleIdList(getUserId()));
         //查询列表数据
         Query query = new Query(params);
 
@@ -74,6 +80,21 @@ public class AgentOrderController {
         AgentOrderEntity agentOrder = agentOrderService.queryObject(id);
 
         return R.ok().put("agentOrder", agentOrder);
+    }
+
+    /**
+     * 查看是否有新的订单
+     */
+    @RequestMapping("/infoNew")
+    @RequiresPermissions("agentorder:info")
+    public R infoNew() {
+        AgentOrderEntity agentOrder = agentOrderService.queryLast();
+        Long now = System.currentTimeMillis();
+        now = now - 7000;
+        if(agentOrder.getCreateTime().getTime() >= now){
+            return R.ok();
+        }
+        return R.ok().put("code", -1);
     }
 
     /**

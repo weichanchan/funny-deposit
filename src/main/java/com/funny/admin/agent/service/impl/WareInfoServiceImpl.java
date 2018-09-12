@@ -1,7 +1,9 @@
 package com.funny.admin.agent.service.impl;
 
 import com.funny.admin.agent.dao.WareInfoDao;
+import com.funny.admin.agent.dao.WareRoleDao;
 import com.funny.admin.agent.entity.WareInfoEntity;
+import com.funny.admin.agent.entity.WareRoleEntity;
 import com.funny.admin.agent.service.WareInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.Map;
 public class WareInfoServiceImpl implements WareInfoService {
     @Autowired
     private WareInfoDao wareInfoDao;
+    @Autowired
+    private WareRoleDao wareRoleDao;
 
     @Override
     public WareInfoEntity queryObject(Long id) {
@@ -38,10 +42,18 @@ public class WareInfoServiceImpl implements WareInfoService {
     @Override
     public void save(WareInfoEntity wareInfo) {
         wareInfoDao.save(wareInfo);
+        WareRoleEntity wareRoleEntity = new WareRoleEntity();
+        for (Long roleId: wareInfo.getRoleIdList()) {
+            wareRoleEntity.setRoleId(roleId);
+            wareRoleEntity.setWareInfoId(wareInfo.getId());
+            wareRoleDao.save(wareRoleEntity);
+        }
     }
 
     @Override
     public void update(WareInfoEntity wareInfo) {
+        // TODO roleId 先删除再添加
+
         wareInfoDao.update(wareInfo);
     }
 
@@ -53,6 +65,11 @@ public class WareInfoServiceImpl implements WareInfoService {
     @Override
     public void deleteBatch(Long[] ids) {
         wareInfoDao.deleteBatch(ids);
+    }
+
+    @Override
+    public List<Long> queryRoleIdList(Long id) {
+        return wareRoleDao.queryRoleIdList(id);
     }
 
 }

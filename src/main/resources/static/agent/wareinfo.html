@@ -30,6 +30,8 @@
                     class="fa fa-trash-o"></i>&nbsp;删除</a>
             <a v-if="hasPermission('wareinfo:delete')" class="btn btn-primary" @click="addCardInfo"><i
                     class="fa fa-plus"></i>&nbsp;添加卡密信息</a>
+            <a class="btn btn-primary" @click="cardinfo"><i class="fa fa-plus"></i>&nbsp;查看卡密信息</a>
+
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
@@ -57,8 +59,7 @@
                         <input type="radio" name="type" id="directRecharge" value="1" v-model="wareInfo.type"/> 直充类型
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="type" id="accountPwd" value="2" v-model="wareInfo.type"
-                               @click="accountPwdSelected"/> 卡密类型
+                        <input type="radio" name="type" id="accountPwd" value="2" v-model="wareInfo.type"/> 卡密类型
                     </label>
                     <!--<label class="radio-inline" style="display: none" id="addCardInfoLable">
                         <a class="btn btn-primary" @click="addCardInfo"><i class="fa fa-plus"></i>&nbsp;新增卡密信息</a>
@@ -73,6 +74,14 @@
                     </label>
                     <label class="radio-inline">
                         <input type="radio" name="status" value="2" v-model="wareInfo.status"/> 不可售
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">处理角色</div>
+                <div class="col-sm-10">
+                    <label v-for="role in roleList" class="checkbox-inline">
+                        <input type="checkbox" :value="role.roleId" v-model="wareInfo.roleIdList">{{role.roleName}}
                     </label>
                 </div>
             </div>

@@ -19,7 +19,7 @@ public class SignUtils {
     private static Logger LOGGER = LoggerFactory.getLogger(SignUtils.class);
 
     //秘钥
-    private static final String secretKeyOfFunny = "PRIVATEKEY";
+    public static final String secretKeyOfFunny = "PRIVATEKEY";
     //版本号
     private static final String versionNo = "1.0";
     private static final String appidOfWxh = "xxx";
@@ -113,6 +113,8 @@ public class SignUtils {
         try {
             //Md5加密得到sign
             sign = getMD5(sb.toString());
+            System.out.println(sb.toString());
+            System.out.println(sign);
         } catch (IOException e) {
             LOGGER.error("生成签名错误", e);
         }

@@ -30,9 +30,9 @@
                     class="fa fa-trash-o"></i>&nbsp;删除</a>
             <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="startHandle"><i
                     class="fa fa-play"></i>&nbsp;开始处理</a>
-            <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="handleSuccess"><i
+            <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="handleSuccess" style="background-color: green"><i
                     class=""></i>&nbsp;处理成功</a>
-            <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="handleFailed"><i
+            <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="handleFailed" style="background-color: red"><i
                     class=""></i>&nbsp;处理失败</a>
         </div>
         <table id="jqGrid"></table>

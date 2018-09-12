@@ -60,8 +60,12 @@ var vm = new Vue({
         showList: true,
         showCardInfo: true,
         title: null,
-        wareInfo: {},
-        cardInfo: {}
+        cardInfo: {},
+        roleList: [],
+        wareInfo:{
+            status:1,
+            roleIdList:[]
+        }
     },
     methods: {
         query: function () {
@@ -70,8 +74,10 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.wareInfo = {};
+            vm.wareInfo = {status:1,roleIdList:[]};
 
+            //获取角色信息
+            this.getRoleList();
         },
         update: function (event) {
             var id = getSelectedRow();
@@ -82,6 +88,9 @@ var vm = new Vue({
             vm.title = "修改";
 
             vm.getInfo(id)
+
+            //获取角色信息
+            this.getRoleList();
         },
         saveOrUpdate: function (event) {
             var url = vm.wareInfo.id == null ? "../wareinfo/save" : "../wareinfo/update";
@@ -154,9 +163,25 @@ var vm = new Vue({
             var mywindow = window.open("addCardInfo.html?wareId=" + id, "_blank", "height=" + 400 + ",width=" + 600);
             mywindow.moveTo(x / 2, y / 2);
         },
-        accountPwdSelected: function () {
-            document.getElementById("addCardInfoLable").style.display = "block"
-            alert("a")
+        cardinfo: function () {
+            var id = getSelectedRow();
+            if (id == null) {
+                return;
+            }
+            var data = $("#jqGrid").jqGrid("getRowData", id);
+            var type = data.type;
+            if (type == "直充类型") {
+                alert("请选择卡密类型商品！")
+                return;
+            }
+            var url = "cardinfo.html?wareId=" + id + "&wareNo=" + data.wareNo;
+            // encodeURI 编码
+            window.location.assign(encodeURI(url));
+        },
+        getRoleList: function(){
+            $.get("../sys/role/select", function(r){
+                vm.roleList = r.list;
+            });
         }
     }
 });

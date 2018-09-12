@@ -75,6 +75,8 @@ $(function () {
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
         }
     });
+    // 7秒一次去查询是否有新的订单
+    window.setInterval("vm.newOrderWarning()",7000);
 });
 
 var vm = new Vue({
@@ -156,6 +158,14 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page
             }).trigger("reloadGrid");
+        },
+        newOrderWarning:function(){
+            $.get("../agentorder/infoNew", function (r) {
+                if(r.code == 0){
+                    vm.reload();
+                    alert("您有新的订单请及时处理");
+                }
+            });
         },
         startHandle: function (event) {
             var id = getSelectedRow();

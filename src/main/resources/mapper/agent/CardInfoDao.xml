@@ -37,13 +37,21 @@
     <select id="queryListNum" resultType="com.funny.admin.agent.entity.CardInfoEntity">
 		select * from card_info where ware_no=#{wareNo} limit #{num}
 	</select>
-	
+
+    <select id="queryListByWareNo" resultType="com.funny.admin.agent.entity.CardInfoEntity">
+		select * from card_info where ware_no=#{wareNo}
+	</select>
+
  	<select id="queryColumns" resultType="com.funny.admin.agent.entity.CardInfoEntity">
 		select COLUMN_NAME  from information_schema.COLUMNS where table_name='card_info'
 	</select>
 
  	<select id="queryTotal" resultType="int">
 		select count(*) from card_info
+	</select>
+
+ 	<select id="queryTotalByWareNo" resultType="int">
+		select count(*) from card_info where ware_no=#{wareNo}
 	</select>
 
 	<insert id="save" parameterType="com.funny.admin.agent.entity.CardInfoEntity" useGeneratedKeys="true" keyProperty="id">

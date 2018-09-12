@@ -19,6 +19,18 @@
     <script src="../public/plugins/ztree/jquery.ztree.all.min.js"></script>
     <script src="../public/js/common.js"></script>
     <script src="../public/libs/ajaxupload.js"></script>
+    <style type="text/css">
+        .form-group{
+            display: table;
+        }
+        .form-group .col-sm-2{
+            display: table-cell;
+        }
+        .form-group .col-sm-10{
+            display: table-cell;
+            width: 400px;
+        }
+    </style>
 </head>
 <body>
 
@@ -27,21 +39,39 @@
         <div class="panel-heading">手动添加数据</div>
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">激活码</div>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="pwd1" placeholder="激活码"/>
+                <div class="col-sm-2 control-label">激活码1：</div>
+                <div class="col-sm-10" >
+                    <input type="text" class="form-control" v-model="pwd1" placeholder="激活码" required="required"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">激活码</div>
-                <div class="col-sm-10">
+                <div class="col-sm-2 control-label">激活码2</div>
+                <div class="col-sm-10" >
                     <input type="text" class="form-control" v-model="pwd2" placeholder="激活码"/>
                 </div>
             </div>
             <div class="form-group">
+                <div class="col-sm-2 control-label">激活码3</div>
+                <div class="col-sm-10" >
+                    <input type="text" class="form-control" v-model="pwd3" placeholder="激活码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">激活码4</div>
+                <div class="col-sm-10" >
+                    <input type="text" class="form-control" v-model="pwd4" placeholder="激活码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">激活码5</div>
+                <div class="col-sm-10" >
+                    <input type="text" class="form-control" v-model="pwd5" placeholder="激活码"/>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-primary" @click="add" value="保存"/>
-                <a class="btn btn-primary" id="upload"><i class="fa fa-plus"></i>&nbsp;从excel导入</a>
+                <input type="button" class="btn btn-primary" @click="add" value="手动保存"/> &nbsp;&nbsp;
+                <a class="btn btn-primary" id="upload" style="a"><i class="fa fa-plus"></i>&nbsp;从Excel自动导入</a>
                 <!--&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="importExcel" value="从excel导入"/>-->
             </div>
         </form>
@@ -49,7 +79,7 @@
 </div>
 <script type="text/javascript">
     //商品id
-    var wareNo = T.p('wareId');
+    var wareId = T.p('wareId');
     var vm = new Vue({
         el: '#rrapp',
         data: {
@@ -57,19 +87,30 @@
             cardInfo: {},
             pwd1: "",
             pwd2: "",
+            pwd3: "",
+            pwd4: "",
+            pwd5: ""
         },
         methods: {
             add: function () {
                 var pwds = new Array();
                 pwds[0] = vm.pwd1;
                 pwds[1] = vm.pwd2;
+                pwds[2] = vm.pwd3;
+                pwds[3] = vm.pwd4;
+                pwds[4] = vm.pwd5;
                 var pwdList = pwds.toString();
+                var str = pwdList.replace(/,/g, "");//去掉字符串中出现的所有逗号
+                if(isNull(str)){
+                    alert("请输入至少一个激活码")
+                    return;
+                };
                 $.ajax({
                     type: "GET",
                     url: "../cardinfo/save",
                     contentType: "application/json?wareId=" + wareId + "&pwds=" + pwdList,
                     data: {
-                        "wareNo": wareNo,
+                        "wareId": wareId,
                         "pwds": pwdList
                     },
                     success: function (r) {
@@ -108,6 +149,14 @@
             }
         }
     });
+
+    //判断字符串为空或者全为空格
+    function isNull( str ){
+        if ( str == "" ) return true;
+        var regu = "^[ ]+$";
+        var re = new RegExp(regu);
+        return re.test(str);
+    }
 </script>
 <!--<script src="../public/js/agent/wareinfo.js"></script>-->
 </body>
