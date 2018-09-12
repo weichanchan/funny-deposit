@@ -70,7 +70,7 @@ public class CardInfoController {
      */
     @RequestMapping("/save")
     public R save(@RequestParam Long wareId, String pwds) {
-        if(StringUtils.isEmpty(pwds)){
+        if (StringUtils.isEmpty(pwds)) {
             return R.error("至少需要一个激活码");
         }
         CardInfoEntity cardInfo;
@@ -79,7 +79,7 @@ public class CardInfoController {
         Map map = new HashMap();
 
         String wareNo = null;
-        if(wareId==null){
+        if (wareId == null) {
             return R.error("添加失败！");
         }
         //通过商品id查询商品
@@ -90,8 +90,8 @@ public class CardInfoController {
         wareNo = wareInfoEntity.getWareNo();
 
         String[] pwdList = pwds.split(",");
-        if(pwdList==null||pwdList.length==0){
-            return  R.error("需要至少一个激活码");
+        if (pwdList == null || pwdList.length == 0) {
+            return R.error("需要至少一个激活码");
         }
 
         for (int i = 0; i < pwdList.length; i++) {

@@ -16,11 +16,27 @@ import java.util.Map;
  */
 public interface CardInfoDao extends BaseDao<CardInfoEntity> {
 
-    //根据商品编号查询前 num 条数据
+    /**
+     * 根据商品编号查询前 num 条数据
+     *
+     * @param num
+     * @return
+     */
     List<CardInfoEntity> queryListNum(Map<String, Object> num);
 
-    int queryTotalByWareNo(Map<String,Object> map);
+    /**
+     * 商品编号为给定值的卡密信息记录条数
+     *
+     * @param map
+     * @return
+     */
+    int queryTotalByWareNo(Map<String, Object> map);
 
-    //根据商品编号查询数据
-    List<CardInfoEntity> queryListByWareNo(Map<String,Object> map);
+    /**
+     * 根据商品编号查询数据
+     *
+     * @param map
+     * @return
+     */
+    List<CardInfoEntity> queryListByWareNo(Map<String, Object> map);
 }

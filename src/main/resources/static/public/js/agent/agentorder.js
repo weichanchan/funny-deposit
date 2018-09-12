@@ -3,7 +3,7 @@ $(function () {
         url: '../agentorder/list',
         datatype: "json",
         colModel: [
-            {label: 'id', name: 'id', index: 'id', width: 50, key: true},
+            {label: 'id', name: 'id', index: 'id', width: 50, key: true, hidden:true},
             {label: '代理商订单号', name: 'agentOrderNo', index: 'agent_order_no', width: 80},
             {label: '京东订单号', name: 'jdOrderNo', index: 'jd_order_no', width: 80},
             {
@@ -12,7 +12,7 @@ $(function () {
                     return value === 1 ? '普通' : '其他';
                 }
             },
-            {label: '清算时间', name: 'finTime', index: 'fin_time', width: 80},
+            // {label: '清算时间', name: 'finTime', index: 'fin_time', width: 80},
             // {label: '回调通知地址', name: 'notifyUrl', index: 'notify_url', width: 120},
             {label: '充值号码', name: 'rechargeNum', index: 'recharge_num', width: 80},
             {label: '数量', name: 'quantity', index: 'quantity', width: 50},
@@ -38,16 +38,18 @@ $(function () {
             {
                 label: '充值状态', name: 'rechargeStatus', index: 'recharge_status', width: 80,
                 formatter: function (value, options, row) {
-                    if (value === 1) {
+                    if (value === 0) {
+                        return '未充值';
+                    } else if (value === 1) {
                         return '<font color="green">充值成功</font>';
-                    } else if (value === 2) {
+                    } else if (value === 2){
                         return '<font color="red">充值失败</font>'
                     } else {
                         return '<font color="gray">充值中</font>';
                     }
                 }
             },
-            {label: '特殊属性', name: 'features', index: 'features', width: 80},
+            // {label: '特殊属性', name: 'features', index: 'features', width: 80},
             // { label: '订单创建时间', name: 'createTime', index: 'create_time', width: 80 }
         ],
         viewrecords: true,

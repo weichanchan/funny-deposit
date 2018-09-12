@@ -73,7 +73,7 @@ public class WareInfoController {
     public R save(@RequestBody WareInfoEntity wareInfo) {
         // TODO: 2018/9/10  代理商id，目前只有一个，先写固定值
         wareInfo.setAgentId("22501");
-        if (wareInfo.getRoleIdList().size() == 0){
+        if (wareInfo.getRoleIdList().size() == 0) {
             return R.error("请选择处理该商品订单的客服角色。");
         }
         wareInfoService.save(wareInfo);

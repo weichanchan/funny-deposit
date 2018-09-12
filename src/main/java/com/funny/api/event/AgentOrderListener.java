@@ -9,18 +9,17 @@ import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.utils.AESUtils;
-import com.funny.utils.Query;
-import net.sf.json.JSONObject;
+import com.funny.utils.SignUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
@@ -66,18 +65,22 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
                 Integer quantity = agentOrderEntity.getQuantity();
                 if (wareInfoEntity.getType() == 1) {
                     //客服到其他平台充值
-                    updateAgentOrder(agentOrderEntity, 3, 2);
+                    updateAgentOrder(agentOrderEntity, 3, 1);
                     logger.info("充值成功！");
+                    //回调函数
+                    callBack(agentOrderEntity, cardInfoString, wareInfoEntity);
                     return;
                 }
 
                 Map<String, Object> queryMap = new HashMap<>();
                 queryMap.put("wareNo", wareNo);
                 queryMap.put("num", quantity);
-                Query query = new Query(queryMap);
-                List<CardInfoEntity> cardInfoLists = cardInfoService.queryListNum(query);
+                // Query query = new Query(queryMap);
+                List<CardInfoEntity> cardInfoLists = cardInfoService.queryListNum(queryMap);
                 if (cardInfoLists == null || cardInfoLists.size() < quantity) {
-                    // TODO: 2018/9/10  库存不足该怎么处理，订单标记已处理，充值失败 or 直接把商品下架？
+                    //商品不可售
+                    wareInfoEntity.setStatus(2);
+                    wareInfoService.update(wareInfoEntity);
                     logger.error("库存不足");
                     return;
                 }
@@ -105,40 +108,8 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
                 }
                 updateAgentOrder(agentOrderEntity, 3, 2);
 
-                cardInfoString = AESUtils.parseByte2HexStr(cardInfoString.getBytes());
-                Map map = new HashMap();
-                map.put("sign", agentOrderEntity.getSign());
-                map.put("signType", agentOrderEntity.getSignType());
-                map.put("timestamp", agentOrderEntity.getTimestamp());
-                map.put("version", agentOrderEntity.getVersion());
-
-                map.put("agentId", wareInfoEntity.getAgentId());
-                map.put("bussType", "13758");
-                //京东指定业务编号
-                map.put("jdOrderNo", agentOrderEntity.getJdOrderNo());
-                map.put("agentOrderNo", agentOrderEntity.getAgentOrderNo());
-                map.put("status", agentOrderEntity.getStatus());
-                //提取结果时间
-                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddHHmmss");
-                String time = sdf1.format(new Date());
-                map.put("time", time);
-                map.put("quantity", agentOrderEntity.getQuantity());
-                map.put("cardInfo", cardInfoString);
-                JSONObject jsonObj = JSONObject.fromObject(map);
-
-                HttpHeaders headers = new HttpHeaders();
-                MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
-                headers.setContentType(type);
-                headers.add("Accept", MediaType.APPLICATION_JSON.toString());
-
-                HttpEntity<String> formEntity = new HttpEntity<>(jsonObj.toString(), headers);
-                String notifyUrl = agentOrderEntity.getNotifyUrl();
-
-                RestTemplate template = new RestTemplate();
-                // TODO: 2018/9/9  回调函数
-
-                String response = template.postForObject(notifyUrl, formEntity, String.class);
-                logger.info(response);
+                //回调函数
+                callBack(agentOrderEntity, cardInfoString, wareInfoEntity);
             }
 
         } catch (Exception e) {
@@ -150,6 +121,58 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
                 agentOrderService.update(agentOrderEntity);
             }
         }
+    }
+
+    private void callBack(AgentOrderEntity agentOrderEntity, String cardInfoString, WareInfoEntity wareInfoEntity) {
+        Map<String, Object> map = new HashMap();
+        if (!StringUtils.isEmpty(cardInfoString)) {
+            cardInfoString = AESUtils.parseByte2HexStr(cardInfoString.getBytes());
+            map.put("cardInfo", cardInfoString);
+        }
+        map.put("signType", agentOrderEntity.getSignType());
+        map.put("timestamp", agentOrderEntity.getTimestamp());
+        map.put("version", agentOrderEntity.getVersion());
+
+        map.put("agentId", wareInfoEntity.getAgentId());
+        map.put("bussType", "13758");
+        //京东指定业务编号
+        map.put("jdOrderNo", agentOrderEntity.getJdOrderNo());
+        map.put("agentOrderNo", agentOrderEntity.getAgentOrderNo());
+        map.put("status", agentOrderEntity.getRechargeStatus());
+        //提取结果时间
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddHHmmss");
+        String time = sdf1.format(new Date());
+        map.put("time", time);
+        map.put("quantity", agentOrderEntity.getQuantity());
+
+        String sign = SignUtils.getSign(map, SignUtils.secretKeyOfFunny);
+        String param = "";
+        map.put("sign", sign);
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            param += entry.getKey() + "=" + entry.getValue() + "&";
+        }
+        param = param.substring(0, param.length() - 1);
+        LinkedMultiValueMap<String, Object> body = new LinkedMultiValueMap<>(12);
+        body.add("sign", AESUtils.parseByte2HexStr(param.getBytes()));
+        RestTemplate template = new RestTemplate();
+        String notifyUrl = agentOrderEntity.getNotifyUrl();
+        ResponseEntity<Map> response = template.postForEntity(notifyUrl, body, Map.class);
+        logger.info(response.toString());
+
+       /* JSONObject jsonObj = JSONObject.fromObject(map);
+
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+
+        HttpEntity<String> formEntity = new HttpEntity<>(jsonObj.toString(), headers);
+        String notifyUrl = agentOrderEntity.getNotifyUrl();
+
+        RestTemplate template = new RestTemplate();
+
+        String response = template.postForObject(notifyUrl, formEntity, String.class);
+        logger.info(response);*/
     }
 
     /**

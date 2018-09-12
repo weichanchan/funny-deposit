@@ -5,7 +5,12 @@ $(function () {
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
             {label: '商品编号', name: 'wareNo', index: 'ware_no', width: 80},
-            {label: '代理商价格', name: 'agentPrice', index: 'agent_price', width: 80},
+            {label: '代理商id', name: 'agentId', index: 'agent_id', width: 80},
+            {label: '代理商价格(元)', name: 'agentPrice', index: 'agent_price', width: 80,
+                formatter: function (value, options, row) {
+                    return (value / 100).toFixed(2);
+                }
+            },
             {
                 label: '充值类型', name: 'type', index: 'type', width: 80,
                 formatter: function (value, options, row) {
