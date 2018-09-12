@@ -20,4 +20,6 @@ public interface WareRoleDao extends BaseDao<WareRoleEntity> {
      * @return
      */
     List<Long> queryRoleIdList(Long id);
+
+    void deleteByWareId(Long id);
 }

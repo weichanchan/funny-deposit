@@ -42,19 +42,24 @@ public class WareInfoServiceImpl implements WareInfoService {
     @Override
     public void save(WareInfoEntity wareInfo) {
         wareInfoDao.save(wareInfo);
-        WareRoleEntity wareRoleEntity = new WareRoleEntity();
-        for (Long roleId: wareInfo.getRoleIdList()) {
-            wareRoleEntity.setRoleId(roleId);
-            wareRoleEntity.setWareInfoId(wareInfo.getId());
-            wareRoleDao.save(wareRoleEntity);
-        }
+
+        saveWareRoles(wareInfo);
     }
 
     @Override
     public void update(WareInfoEntity wareInfo) {
-        // TODO roleId 先删除再添加
-
+        wareRoleDao.deleteByWareId(wareInfo.getId());
+        saveWareRoles(wareInfo);
         wareInfoDao.update(wareInfo);
+    }
+
+    private void saveWareRoles(WareInfoEntity wareInfo) {
+        for (Long roleId : wareInfo.getRoleIdList()) {
+            WareRoleEntity wareRoleEntity = new WareRoleEntity();
+            wareRoleEntity.setRoleId(roleId);
+            wareRoleEntity.setWareInfoId(wareInfo.getId());
+            wareRoleDao.save(wareRoleEntity);
+        }
     }
 
     @Override

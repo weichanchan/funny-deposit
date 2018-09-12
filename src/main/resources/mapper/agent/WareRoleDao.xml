@@ -64,7 +64,11 @@
 	<delete id="delete">
 		delete from ware_role where id = #{value}
 	</delete>
-	
+
+	<delete id="deleteByWareId">
+		delete from ware_role where ware_info_id = #{value}
+	</delete>
+
 	<delete id="deleteBatch">
 		delete from ware_role where id in 
 		<foreach item="id" collection="array" open="(" separator="," close=")">
