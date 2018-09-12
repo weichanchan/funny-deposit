@@ -163,7 +163,9 @@ var vm = new Vue({
             $.get("../agentorder/infoNew", function (r) {
                 if(r.code == 0){
                     vm.reload();
-                    alert("您有新的订单请及时处理");
+                    var n = new Audio("../public/media/2018-09-12_12_31_38.mp3");
+                    n.play();
+                    // alert("您有新的订单请及时处理");
                 }
             });
         },

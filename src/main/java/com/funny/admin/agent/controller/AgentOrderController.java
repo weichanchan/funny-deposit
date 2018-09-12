@@ -3,6 +3,7 @@ package com.funny.admin.agent.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import com.funny.admin.agent.service.WareInfoService;
 import com.funny.admin.common.AbstractController;
 import com.funny.admin.system.dao.SysUserRoleDao;
 import com.funny.admin.system.service.SysUserRoleService;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +51,9 @@ public class AgentOrderController extends AbstractController {
     @RequestMapping("/list")
     @RequiresPermissions("agentorder:list")
     public R list(@RequestParam Map<String, Object> params) {
-        params.put("roleIds",sysUserRoleService.queryRoleIdList(getUserId()));
+        if(getUser().getUserId() != 1L){
+            params.put("roleIds",sysUserRoleService.queryRoleIdList(getUserId()));
+        }
         //查询列表数据
         Query query = new Query(params);
 
@@ -88,7 +92,11 @@ public class AgentOrderController extends AbstractController {
     @RequestMapping("/infoNew")
     @RequiresPermissions("agentorder:info")
     public R infoNew() {
-        AgentOrderEntity agentOrder = agentOrderService.queryLast();
+        Map<String, Object> params = new HashMap<>(16);
+        if(getUser().getUserId() != 1L){
+            params.put("roleIds",sysUserRoleService.queryRoleIdList(getUserId()));
+        }
+        AgentOrderEntity agentOrder = agentOrderService.queryLast(params);
         Long now = System.currentTimeMillis();
         now = now - 7000;
         if(agentOrder.getCreateTime().getTime() >= now){

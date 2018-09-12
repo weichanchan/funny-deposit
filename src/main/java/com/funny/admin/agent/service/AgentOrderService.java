@@ -39,10 +39,10 @@ public interface AgentOrderService {
     void handleSuccess(Long id);
 
     /**
-     * todo 根据不同的客服查询不同的订单
      * 查询最新的订单
      *
      * @return
+     * @param params
      */
-    AgentOrderEntity queryLast();
+    AgentOrderEntity queryLast(Map<String, Object> params);
 }

@@ -85,8 +85,8 @@ public class AgentOrderServiceImpl implements AgentOrderService {
     }
 
     @Override
-    public AgentOrderEntity queryLast() {
-        return agentOrderDao.queryLastAgentOrder();
+    public AgentOrderEntity queryLast(Map<String, Object> params) {
+        return agentOrderDao.queryLastAgentOrder(params);
     }
 
 }

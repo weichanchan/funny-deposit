@@ -4,6 +4,7 @@ import com.funny.admin.agent.entity.AgentOrderEntity;
 import com.funny.admin.system.dao.BaseDao;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 代理商订单表
@@ -25,5 +26,11 @@ public interface AgentOrderDao extends BaseDao<AgentOrderEntity> {
     //批量修改订单状态
     List<AgentOrderEntity> updateBatch(int status, int rechargeStatus, Long[] ids);
 
-    AgentOrderEntity queryLastAgentOrder();
+    /**
+     * 查找该客服可以处理的最新的订单
+     *
+     * @param params
+     * @return
+     */
+    AgentOrderEntity queryLastAgentOrder(Map<String, Object> params);
 }

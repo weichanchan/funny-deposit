@@ -32,7 +32,16 @@
 	</select>
 
     <select id="queryLastAgentOrder" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
-		select * from agent_order order by create_time desc limit 0,1
+		select * from agent_order a
+        LEFT JOIN ware_info w ON a.ware_no = w.ware_no
+        LEFT JOIN ware_role wr ON wr.ware_info_id = w.id
+        <if test="roleIds != null">
+            WHERE wr.role_id in
+            <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+                #{roleId}
+            </foreach>
+        </if>
+         order by create_time desc limit 0,1
 	</select>
 
     <select id="queryObjectByJdOrderNo" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
@@ -50,10 +59,12 @@
         agent_order a
         LEFT JOIN ware_info w ON a.ware_no = w.ware_no
         LEFT JOIN ware_role wr ON wr.ware_info_id = w.id
-        WHERE wr.role_id in
-        <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
-            #{roleId}
-        </foreach>
+        <if test="roleIds != null">
+            WHERE wr.role_id in
+            <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+                #{roleId}
+            </foreach>
+        </if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by a.${sidx} ${order}
