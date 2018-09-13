@@ -113,8 +113,8 @@ public class SignUtils {
         try {
             //Md5加密得到sign
             sign = getMD5(sb.toString());
-            System.out.println(sb.toString());
-            System.out.println(sign);
+            LOGGER.debug(sb.toString());
+            LOGGER.debug(sign);
         } catch (IOException e) {
             LOGGER.error("生成签名错误", e);
         }
