@@ -35,7 +35,7 @@
 	</select>
 
     <select id="queryListNum" resultType="com.funny.admin.agent.entity.CardInfoEntity">
-		select * from card_info where ware_no=#{wareNo} limit #{num}
+		select * from card_info where ware_no=#{wareNo} and status=#{status} limit #{num}
 	</select>
 
     <select id="queryListByWareNo" resultType="com.funny.admin.agent.entity.CardInfoEntity">

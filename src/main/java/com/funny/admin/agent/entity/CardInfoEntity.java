@@ -14,21 +14,37 @@ import java.util.Date;
 public class CardInfoEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    //主键id
+    /**
+     * 主键id
+     */
     private Long id;
-    //账号
+    /**
+     * 账号
+     */
     private String accountNo;
-    //密码/激活码
+    /**
+     * 密码/激活码
+     */
     private String password;
-    //关联商品编号
+    /**
+     * 关联商品编号
+     */
     private String wareNo;
-    //关联订单编号
+    /**
+     * 关联订单编号
+     */
     private String agentOrderNo;
-    //状态
+    /**
+     * 状态
+     */
     private Integer status;
-    //有效期
+    /**
+     * 有效期
+     */
     private Date expiryDate;
-    //充值使用时间
+    /**
+     * 充值使用时间
+     */
     private Date rechargeTime;
 
 

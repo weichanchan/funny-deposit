@@ -1,22 +1,17 @@
 package com.funny.admin.agent.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.WareInfoService;
-import com.funny.admin.system.service.SysUserRoleService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.funny.utils.PageUtils;
+import com.funny.utils.PropertiesContent;
 import com.funny.utils.Query;
 import com.funny.utils.R;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -31,9 +26,6 @@ import com.funny.utils.R;
 public class WareInfoController {
     @Autowired
     private WareInfoService wareInfoService;
-
-    @Autowired
-    private SysUserRoleService sysUserRoleService;
 
     /**
      * 列表
@@ -72,7 +64,7 @@ public class WareInfoController {
     @RequiresPermissions("wareinfo:save")
     public R save(@RequestBody WareInfoEntity wareInfo) {
         // TODO: 2018/9/10  代理商id，目前只有一个，先写固定值
-        wareInfo.setAgentId("22501");
+        wareInfo.setAgentId(PropertiesContent.get("agentId"));
         if (wareInfo.getRoleIdList().size() == 0) {
             return R.error("请选择处理该商品订单的客服角色。");
         }

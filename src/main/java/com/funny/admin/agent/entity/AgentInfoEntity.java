@@ -13,13 +13,21 @@ import java.io.Serializable;
 public class AgentInfoEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    //主键id
+    /**
+     * 主键id
+     */
     private Long id;
-    //代理商id
+    /**
+     * 代理商id
+     */
     private String agentId;
-    //商家名
+    /**
+     * 商家名
+     */
     private String agentName;
-    //联系电话
+    /**
+     * 联系电话
+     */
     private String agentPhone;
 
     /**

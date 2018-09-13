@@ -14,40 +14,85 @@ import java.util.Date;
 public class AgentOrderEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    //主键id
+    /**
+     * 主键id
+     */
     private Long id;
-    //代理商订单号
+    /**
+     * 代理商订单号
+     */
     private String agentOrderNo;
-    //京东订单号
+    /**
+     * 京东订单号
+     */
     private String jdOrderNo;
-    //订单类型，1：普通
+    /**
+     * 订单类型，1：普通
+     */
     private Integer type;
-    //清算时间
+    /**
+     * 清算时间
+     */
     private String finTime;
-    //回调通知地址
+    /**
+     * 回调通知地址
+     */
     private String notifyUrl;
-    //充值号码
+    /**
+     * 充值号码
+     */
     private String rechargeNum;
-    //数量
+    /**
+     * 数量
+     */
     private Integer quantity;
-    //商品编码
+    /**
+     * 商品编码
+     */
     private String wareNo;
-    //成本价
+    /**
+     * 成本价
+     */
     private Long costPrice;
-    //特殊属性
+    /**
+     * 特殊属性
+     */
     private String features;
-    //订单状态，1：新创建；2：处理中；3：已处理
+    /**
+     * 订单状态，1：新创建；2：处理中；3：已处理
+     */
     private Integer status;
-    //充值状态，1：充值成功；2：充值失败；3：充值中
+    /**
+     * 充值状态，1：充值成功；2：充值失败；3：充值中
+     */
     private Integer rechargeStatus;
-    //卡密信息
-    private Integer cardInfo;
-    //订单创建时间
+    /**
+     * 卡密信息
+     */
+    private String cardInfo;
+    /**
+     * 订单创建时间
+     */
     private Date createTime;
+    /**
+     * 处理时间
+     */
     private Date handleTime;
+    /**
+     * 签名
+     */
     private String sign;
+    /**
+     * 签名方式
+     */
     private String signType;
+    /**
+     * 访问时间戳
+     */
     private String timestamp;
+    /**
+     * 接口版本
+     */
     private String version;
 
     public AgentOrderEntity() {
@@ -238,14 +283,14 @@ public class AgentOrderEntity implements Serializable {
     /**
      * 设置：卡密信息
      */
-    public void setCardInfo(Integer cardInfo) {
+    public void setCardInfo(String cardInfo) {
         this.cardInfo = cardInfo;
     }
 
     /**
      * 获取：卡密信息
      */
-    public Integer getCardInfo() {
+    public String getCardInfo() {
         return cardInfo;
     }
 

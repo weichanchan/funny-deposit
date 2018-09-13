@@ -18,22 +18,18 @@ public class SignUtils {
 
     private static Logger LOGGER = LoggerFactory.getLogger(SignUtils.class);
 
-    //秘钥
-    public static final String secretKeyOfFunny = "PRIVATEKEY";
-    //版本号
-    private static final String versionNo = "1.0";
-    private static final String appidOfWxh = "xxx";
-
     public static Boolean checkSign(Map params) {
         Boolean flag = false;
         String sign = (String) params.get("sign");
         String timestamp = (String) params.get("timestamp");
         String version = (String) params.get("version");
         //check时间戳的值是否在当前时间戳前后一小时以内
-        String currTimestamp = String.valueOf(new Date().getTime() / 1000); // 当前时间的时间戳
+        // 当前时间的时间戳
+        String currTimestamp = String.valueOf(System.currentTimeMillis() / 1000);
         Long currTimestampNum = Long.parseLong(currTimestamp);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        Long verifyTimestampNum = null; // 时间戳的数值
+        //时间戳的数值
+        Long verifyTimestampNum = null;
         try {
             verifyTimestampNum = simpleDateFormat.parse(timestamp).getTime() / 1000;
         } catch (ParseException e) {
@@ -52,8 +48,8 @@ public class SignUtils {
             }
             param.remove("sign");
             param.remove("signType");
-            String newSign = getSign(param, secretKeyOfFunny);
-            if (sign.equals(newSign) && version.equals(versionNo)) {
+            String newSign = getSign(param, PropertiesContent.get("secretKey"));
+            if (sign.equals(newSign) && version.equals(PropertiesContent.get("versionNo"))) {
                 flag = true;
             }
         }

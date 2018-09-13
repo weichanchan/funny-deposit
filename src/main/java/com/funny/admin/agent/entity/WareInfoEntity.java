@@ -20,15 +20,21 @@ public class WareInfoEntity implements Serializable {
     private String wareNo;
     //代理商价格
     private Long agentPrice;
-    //充值类型，1：直充类型:；2：卡密类型
+    /**
+     * 充值类型，1：直充类型:；2：卡密类型
+     */
     private Integer type;
-    //商品状态，1：可售；2：不可售
+    /**
+     * 商品状态，1：可售；2：不可售
+     */
     private Integer status;
     /**
      * 角色ID列表
      */
     private List<Long> roleIdList;
-    //关联的代理商id
+    /**
+     * 关联的代理商id
+     */
     private String agentId;
 
     /**

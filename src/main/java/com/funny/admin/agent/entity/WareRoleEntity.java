@@ -11,11 +11,17 @@ import java.io.Serializable;
 public class WareRoleEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    //
+    /**
+     * 主键id
+     */
     private Long id;
-    //
+    /**
+     * 角色id
+     */
     private Long roleId;
-    //
+    /**
+     * 关联的商品id
+     */
     private Long wareInfoId;
 
     /**

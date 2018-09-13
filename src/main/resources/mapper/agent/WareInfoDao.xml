@@ -71,7 +71,7 @@
             <if test="agentId != null">`agent_id` = #{agentId}</if>
         </set>
         where id = #{id}
-        <if test="isLock != null and isLock == true">for update</if>
+        <!--<if test="isLock != null and isLock == true">for update</if>-->
     </update>
 
     <delete id="delete">

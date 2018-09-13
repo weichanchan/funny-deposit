@@ -25,7 +25,7 @@ public interface CardInfoDao extends BaseDao<CardInfoEntity> {
     List<CardInfoEntity> queryListNum(Map<String, Object> num);
 
     /**
-     * 商品编号为给定值的卡密信息记录条数
+     * 根据商品编号和数量查询可用的卡密信息记录
      *
      * @param map
      * @return

@@ -44,6 +44,8 @@ public class AgentOrderServiceImpl implements AgentOrderService {
     CardInfoDao cardInfoDao;
     @Autowired
     WareInfoDao wareInfoDao;
+    @Autowired
+    CardInfoService cardInfoService;
 
     @Override
     public AgentOrderEntity queryObject(Long id) {
@@ -104,10 +106,8 @@ public class AgentOrderServiceImpl implements AgentOrderService {
     public void handleSuccess(Long agentOrderId) {
         AgentOrderEntity agentOrderEntity = null;
         logger.debug("开始处理订单【" + agentOrderId + "】");
-//        try {
         agentOrderEntity = agentOrderDao.queryObject(agentOrderId);
 
-        String cardInfoString = "";
         String wareNo = agentOrderEntity.getWareNo();
         WareInfoEntity wareInfoEntity = wareInfoDao.queryObjectByWareNo(wareNo);
         if (wareInfoEntity != null) {
@@ -116,57 +116,33 @@ public class AgentOrderServiceImpl implements AgentOrderService {
             AgentInfoEntity agentInfo = agentInfoDao.queryObjectByAgentId(agentId);
             if (agentInfo == null) {
                 logger.error("商家不存在！");
-                applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, null,AgentOrderNotifyEvent.JD00001));
+                applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, null, AgentOrderNotifyEvent.JD00001));
                 return;
             }
 
+            //直充类型
             Integer quantity = agentOrderEntity.getQuantity();
             if (wareInfoEntity.getType() == 1) {
-                //客服已到到其他平台充值成功
+                //客服到其他平台充值成功
                 updateAgentOrder(agentOrderEntity, 3, 1);
                 logger.info("充值成功！");
-                applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity,""));
+                applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity, ""));
                 return;
             }
 
-            // TODO 这里应该移到下单那里，下单的时候，直接扣卡密库存，获取卡密串，然后发送通知事件
-//            Map<String, Object> queryMap = new HashMap<>();
-//            queryMap.put("wareNo", wareNo);
-//            queryMap.put("num", quantity);
-//            // Query query = new Query(queryMap);
-//            List<CardInfoEntity> cardInfoLists = cardInfoDao.queryListNum(queryMap);
-//            if (cardInfoLists == null || cardInfoLists.size() < quantity) {
-//                //商品不可售
-//                wareInfoEntity.setStatus(2);
-//                wareInfoDao.update(wareInfoEntity);
-//                logger.error("库存不足");
-//                applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity,));
-//                return;
-//            }
-//
-//            String accountNo;
-//            String password;
-//            String expiryDate;
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-//            //卡密类型充值
-//            for (int i = 0; i < cardInfoLists.size(); i++) {
-//                CardInfoEntity cardInfo = cardInfoLists.get(i);
-//                //将卡密状态改为2：已使用，同时存入代理商订单编号
-//                cardInfo.setStatus(2);
-//                cardInfo.setAgentOrderNo(agentOrderEntity.getAgentOrderNo());
-//                cardInfo.setRechargeTime(new Date());
-//                cardInfoDao.update(cardInfo);
-//                accountNo = cardInfo.getWareNo();
-//                password = cardInfo.getPassword();
-//                expiryDate = sdf.format(cardInfo.getExpiryDate());
-//                if (i == 0) {
-//                    cardInfoString += accountNo + "_" + password + "_" + expiryDate;
-//                } else {
-//                    cardInfoString += "|" + accountNo + "_" + password + "_" + expiryDate;
-//                }
-//            }
-//            updateAgentOrder(agentOrderEntity, 3, 2);
-//            applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity));
+            //卡密类型
+            Map<String, Object> queryMap = new HashMap<>();
+            queryMap.put("wareNo", wareNo);
+            queryMap.put("num", quantity);
+            List<CardInfoEntity> cardInfoLists = cardInfoDao.queryListNum(queryMap);
+            for (int i = 0; i < cardInfoLists.size(); i++) {
+                CardInfoEntity cardInfo = cardInfoLists.get(i);
+                cardInfo.setRechargeTime(new Date());
+                cardInfoService.update(cardInfo);
+            }
+            updateAgentOrder(agentOrderEntity, 3, 1);
+            applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity, ""));
+
         }
 
     }
