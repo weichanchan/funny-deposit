@@ -48,6 +48,10 @@ public class AgentOrderNotifyEvent extends ApplicationEvent {
      * 系统异常
      */
     public static final String JD00000 = "JDO_00000";
+    /**
+     * 此商品不可售
+     */
+    public static final String JDI00004 = "JDI_00004";
 
     private AgentOrderEntity agentOrderEntity;
 

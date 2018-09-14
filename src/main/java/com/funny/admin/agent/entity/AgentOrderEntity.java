@@ -59,11 +59,11 @@ public class AgentOrderEntity implements Serializable {
      */
     private String features;
     /**
-     * 订单状态，1：新创建；2：处理中；3：已处理
+     * 订单状态，0：新创建；1：处理成功；2：处理失败；3：处理中
      */
     private Integer status;
     /**
-     * 充值状态，1：充值成功；2：充值失败；3：充值中
+     * 充值状态，0：未充值；1：充值成功；2：充值失败；3：充值中
      */
     private Integer rechargeStatus;
     /**

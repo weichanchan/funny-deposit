@@ -33,15 +33,16 @@ INSERT INTO `sys_menu` VALUES ('27', '1', '参数管理', 'sys/config.html', 'sy
 INSERT INTO `sys_menu` VALUES ('28', '1', '代码生成器', 'sys/generator.html', 'sys:generator:list,sys:generator:code', '1', 'fa fa-rocket', '8');
 INSERT INTO `sys_menu` VALUES ('29', '1', '系统日志', 'sys/log.html', 'sys:log:list', '1', 'fa fa-file-text-o', '7');
 INSERT INTO `sys_menu` VALUES ('30', '1', '文件上传', 'sys/oss.html', 'sys:oss:all', '1', 'fa fa-file-image-o', '6');
-INSERT INTO `sys_menu` VALUES ('31', '0', '代理商管理', NULL, NULL, '0', 'fa fa-cog', '0');
+INSERT INTO `sys_menu` VALUES ('31', '0', '订单管理', NULL, NULL, '0', 'fa fa-cog', '0');
 INSERT INTO `sys_menu` VALUES ('32', '31', '订单管理', 'agent/agentorder.html', NULL, '1', 'fa fa-file-image-o', '6');
 INSERT INTO `sys_menu` VALUES ('33', '32', '查看', NULL, 'agentorder:list,agentorder:info', '2', NULL, '0');
-INSERT INTO `sys_menu` VALUES ('36', '32', '删除', NULL, 'agentorder:delete', '2', NULL, '0');
-INSERT INTO `sys_menu` VALUES ('37', '31', '商品管理', 'agent/wareinfo.html', NULL, '1', 'fa fa-file-image-o', '6');
-INSERT INTO `sys_menu` VALUES ('38', '37', '查看', NULL, 'wareinfo:list,wareinfo:info', '2', NULL, '0');
-INSERT INTO `sys_menu` VALUES ('39', '37', '新增', NULL, 'wareinfo:save', '2', NULL, '0');
-INSERT INTO `sys_menu` VALUES ('40', '37', '修改', NULL, 'wareinfo:update', '2', NULL, '0');
-INSERT INTO `sys_menu` VALUES ('41', '37', '删除', NULL, 'wareinfo:delete', '2', NULL, '0');
-INSERT INTO `sys_menu` VALUES ('42', '0', '查看', NULL, 'cardinfo:list,cardinfo:info', '2', NULL, '0');
+INSERT INTO `sys_menu` VALUES ('34', '32', '删除', NULL, 'agentorder:delete', '2', NULL, '0');
+INSERT INTO `sys_menu` VALUES ('35', '0', '商品管理', NULL, NULL, '0', 'fa fa-cog', '0');
+INSERT INTO `sys_menu` VALUES ('36', '35', '商品管理', 'agent/wareinfo.html', NULL, '1', 'fa fa-file-image-o', '6');
+INSERT INTO `sys_menu` VALUES ('37', '36', '查看', NULL, 'wareinfo:list,wareinfo:info', '2', NULL, '0');
+INSERT INTO `sys_menu` VALUES ('38', '36', '新增', NULL, 'wareinfo:save', '2', NULL, '0');
+INSERT INTO `sys_menu` VALUES ('39', '36', '修改', NULL, 'wareinfo:update', '2', NULL, '0');
+INSERT INTO `sys_menu` VALUES ('40', '36', '删除', NULL, 'wareinfo:delete', '2', NULL, '0');
+INSERT INTO `sys_menu` VALUES ('41', '0', '卡信息查看', NULL, 'cardinfo:list,cardinfo:info', '2', NULL, '0');
 
 

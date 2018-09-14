@@ -8,6 +8,7 @@ import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.api.event.AgentOrderListener;
+import com.funny.utils.AESUtils;
 import com.funny.utils.PropertiesContent;
 import com.funny.utils.SignUtils;
 import com.funny.utils.annotation.IgnoreAuth;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api")
@@ -103,11 +106,12 @@ public class ApiAgentOrderController {
         if (quantity <= 0 || (rechargeType == 1 && quantity > 1)) {
             return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
-        //直充类型商品充值号码不为空
-        // TODO: 2018/9/13  需要判断充值号码是否合法
-        if(rechargeType ==1 && StringUtils.isEmpty(rechargeNum)){
+
+        //直充类型商品充值号码是否合法
+        if(rechargeType ==1 && validatorPhone(rechargeNum)==false){
             return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
+
         //判断商品价格和成本价格是否相等
         agentPrice = wareInfoEntity.getAgentPrice();
         Long costPrice = Long.valueOf((String) params.get("costPrice"));
@@ -163,6 +167,26 @@ public class ApiAgentOrderController {
     }
 
     /**
+     * 校验充值手机号码是否合法
+     * @param rechargeNum
+     */
+    private boolean validatorPhone(String rechargeNum) {
+        String regex="^((13[0-9])|(14[5,7,9])|(15[0-3,5-9])|(17[0,1,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$";
+        if(StringUtils.isEmpty(rechargeNum) || rechargeNum.length()!=11){
+            return false;
+        }
+
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(rechargeNum);
+        boolean isMatch = m.matches();
+        if(isMatch){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 获得指定卡密信息的卡密串
      * @param cardInfo
      * @return
@@ -189,7 +213,7 @@ public class ApiAgentOrderController {
     private AgentOrderEntity saveAgentOrder(String sign, String signType, String timestamp, String version, String jdOrderNo, AgentOrderEntity agentOrderEntity, String wareNo, Integer quantity, String rechargeNum, Long costPrice, Integer type, String finTime, String notifyUrl, String features) {
         agentOrderEntity.setJdOrderNo(jdOrderNo);
         agentOrderEntity.setType(type);
-        // TODO: 2018/9/13  清算时间？
+        // TODO: 2018/9/13  清算时间暂时填当前时间
         agentOrderEntity.setFinTime(finTime);
         agentOrderEntity.setNotifyUrl(notifyUrl);
         agentOrderEntity.setRechargeNum(rechargeNum);
@@ -205,7 +229,7 @@ public class ApiAgentOrderController {
         //默认充值状态：未充值
         agentOrderEntity.setRechargeStatus(0);
         //默认订单状态：新创建
-        agentOrderEntity.setStatus(1);
+        agentOrderEntity.setStatus(0);
         agentOrderEntity.setAgentOrderNo(UUID.randomUUID().toString().replace("-", ""));
         agentOrderService.save(agentOrderEntity);
         return agentOrderEntity;
@@ -341,6 +365,8 @@ public class ApiAgentOrderController {
             map.put("quantity", quantity);
         }
         if (!StringUtils.isEmpty(cardInfo)) {
+            //卡信息加密
+            cardInfo = AESUtils.parseByte2HexStr(cardInfo.getBytes());;
             map.put("cardInfo", cardInfo);
         }
 

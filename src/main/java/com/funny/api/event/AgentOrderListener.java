@@ -40,13 +40,12 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
     public void onApplicationEvent(AgentOrderNotifyEvent agentOrderNotifyEvent) {
         Long agentOrderId = Long.valueOf(agentOrderNotifyEvent.getSource().toString());
         AgentOrderEntity agentOrderEntity = agentOrderService.queryObject(agentOrderId);
-        // TODO 找不到订单报错
 
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>(12);
 
         // 出错时订单通知返回
         if (!StringUtils.isBlank(agentOrderNotifyEvent.getJdReturnCode())) {
-            //TODO 有错误码返回应该直接返回错误信息
+            //有错误码返回应该直接返回错误信息
             map.put("isSuccess", Collections.singletonList("F"));
             map.put("errorCode", Collections.singletonList(agentOrderNotifyEvent.getJdReturnCode()));
             String notifyUrl = agentOrderEntity.getNotifyUrl();
@@ -59,6 +58,7 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
 
         // 处理成功时订单通知返回
         if (!StringUtils.isEmpty(agentOrderNotifyEvent.getCardInfoString())) {
+            //卡信息加密
             String cardInfoString = AESUtils.parseByte2HexStr(agentOrderNotifyEvent.getCardInfoString().getBytes());
             map.put("cardInfo", Collections.singletonList(cardInfoString));
         }

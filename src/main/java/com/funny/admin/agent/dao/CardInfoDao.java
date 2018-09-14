@@ -39,4 +39,11 @@ public interface CardInfoDao extends BaseDao<CardInfoEntity> {
      * @return
      */
     List<CardInfoEntity> queryListByWareNo(Map<String, Object> map);
+
+    /**
+     * 根据代理商订单号查询卡信息
+     * @param agentOrderNo
+     * @return
+     */
+    List<CardInfoEntity> queryListByAgentOrderNo(String agentOrderNo);
 }

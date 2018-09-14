@@ -137,10 +137,20 @@ public class AgentOrderController extends AbstractController {
         return R.ok();
     }
 
-    // TODO: 2018/9/7 处理成功、失败
     @RequestMapping("/handleSuccess/{id}")
     public R handleSuccess(@PathVariable("id") Long id) {
         agentOrderService.handleSuccess(id);
+        return R.ok();
+    }
+
+    /**
+     * 处理失败，固定返回商品不可售给京东
+     * @param id
+     * @return
+     */
+    @RequestMapping("/handleFailed/{id}")
+    public R handleFailed(@PathVariable("id") Long id) {
+        agentOrderService.handleFailed(id);
         return R.ok();
     }
 

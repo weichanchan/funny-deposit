@@ -37,6 +37,11 @@ public class CardInfoServiceImpl implements CardInfoService {
     }
 
 	@Override
+	public List<CardInfoEntity> queryListByAgentOrderNo(String agentOrderNo) {
+		return cardInfoDao.queryListByAgentOrderNo(agentOrderNo);
+	}
+
+	@Override
 	public int queryTotal(Map<String, Object> map){
 		return cardInfoDao.queryTotal(map);
 	}

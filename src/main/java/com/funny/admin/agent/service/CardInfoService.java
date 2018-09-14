@@ -22,6 +22,8 @@ public interface CardInfoService {
 
     List<CardInfoEntity> queryListByWareNo(Map<String, Object> map);
 
+	List<CardInfoEntity> queryListByAgentOrderNo(String agentOrderNo);
+
 	int queryTotal(Map<String, Object> map);
 
 	int queryTotalByWareNo(Map<String, Object> map);

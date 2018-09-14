@@ -42,6 +42,10 @@
 		select * from card_info where ware_no=#{wareNo}
 	</select>
 
+    <select id="queryListByAgentOrderNo" resultType="com.funny.admin.agent.entity.CardInfoEntity">
+		select * from card_info where agent_order_no=#{agentOrderNo}
+	</select>
+
  	<select id="queryColumns" resultType="com.funny.admin.agent.entity.CardInfoEntity">
 		select COLUMN_NAME  from information_schema.COLUMNS where table_name='card_info'
 	</select>

@@ -26,12 +26,14 @@ $(function () {
             {
                 label: '订单状态', name: 'status', index: 'status', width: 80,
                 formatter: function (value, options, row) {
-                    if (value === 1) {
+                    if (value === 0) {
                         return '新创建';
-                    } else if (value === 2) {
-                        return '<font color="gray">处理中</font>'
+                    } else if (value === 1) {
+                        return '<font color="green">处理成功</font>'
+                    } else if (value===2){
+                        return '<font color="red">处理失败</font>';
                     } else {
-                        return '<font color="green">已处理</font>';
+                        return '<font color="gray">处理中</font>';
                     }
                 }
             },
@@ -206,7 +208,7 @@ var vm = new Vue({
                 alert("订单正在处理，请稍后~");
                 return;
             }
-            if(status=="<font color=\"green\">已处理</font>"){
+            if(status=="<font color=\"green\">处理成功</font>" || status=="<font color=\"red\">处理失败</font>"){
                 alert("订单已处理，请不要重复操作！");
                 return;
             }
@@ -229,11 +231,37 @@ var vm = new Vue({
             });
         },
         handleFailed: function (event) {
-            vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
-            $("#jqGrid").jqGrid('setGridParam', {
-                page: page
-            }).trigger("reloadGrid");
+            var id = getSelectedRow();
+            if (id == null) {
+                return;
+            }
+            var rowData = $("#jqGrid").jqGrid("getRowData", id);
+            var status = rowData.status;
+            if(status=="<font color=\"gray\">处理中</font>"){
+                alert("订单正在处理，请稍后~");
+                return;
+            }
+            if(status=="<font color=\"green\">处理成功</font>" || status=="新创建"){
+                alert("请选择处理失败的订单");
+                return;
+            }
+            confirm('确定要处理选中的记录？', function () {
+                $.ajax({
+                    type: "POST",
+                    url: "../agentorder/handleFailed/" + id,
+                    contentType: "application/json",
+                    // dataType:json ,
+                    success: function (r) {
+                        if (r.code == 0) {
+                            alert('发送通知成功！', function (index) {
+                                $("#jqGrid").trigger("reloadGrid");
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            });
         }
     }
 });
