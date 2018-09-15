@@ -192,3 +192,10 @@ var vm = new Vue({
         }
     }
 });
+
+//只能输入两位小数
+function checkDecimal(data) {
+    var re = /([0-9]+\.[0-9]{2})[0-9]*/;
+    var num = data.replace(re,"$1");
+    return num;
+}

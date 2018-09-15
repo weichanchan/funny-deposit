@@ -64,6 +64,9 @@ public class WareInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("wareinfo:save")
     public R save(@RequestBody WareInfoEntity wareInfo) {
+        //将传过来的代理商价格，从单位（元）变成（分）
+        Long agentPrice = wareInfo.getAgentPrice()*100;
+        wareInfo.setAgentPrice(agentPrice);
         // TODO: 2018/9/10  代理商id，目前只有一个，先写固定值
         wareInfo.setAgentId(PropertiesContent.get("agentId"));
         if (wareInfo.getRoleIdList().size() == 0) {
