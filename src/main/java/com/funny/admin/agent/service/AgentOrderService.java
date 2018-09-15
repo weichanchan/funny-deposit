@@ -47,4 +47,6 @@ public interface AgentOrderService {
     AgentOrderEntity queryLast(Map<String, Object> params);
 
     void handleFailed(Long id);
+
+    void startHandle(Long id);
 }

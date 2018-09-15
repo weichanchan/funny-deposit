@@ -1,6 +1,7 @@
 package com.funny.admin.agent.controller;
 
 import com.funny.admin.agent.entity.WareInfoEntity;
+import com.funny.admin.agent.entity.WareInfoVO;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.utils.PageUtils;
 import com.funny.utils.PropertiesContent;
@@ -36,7 +37,7 @@ public class WareInfoController {
         //查询列表数据
         Query query = new Query(params);
 
-        List<WareInfoEntity> wareInfoList = wareInfoService.queryList(query);
+        List<WareInfoVO> wareInfoList = wareInfoService.queryListAvailable(query);
         int total = wareInfoService.queryTotal(query);
 
         PageUtils pageUtil = new PageUtils(wareInfoList, total, query.getLimit(), query.getPage());

@@ -1,7 +1,11 @@
 package com.funny.admin.agent.dao;
 
 import com.funny.admin.agent.entity.WareInfoEntity;
+import com.funny.admin.agent.entity.WareInfoVO;
 import com.funny.admin.system.dao.BaseDao;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 商品信息表
@@ -18,4 +22,6 @@ public interface WareInfoDao extends BaseDao<WareInfoEntity> {
      * @return
      */
     WareInfoEntity queryObjectByWareNo(String wareNo);
+
+    List<WareInfoVO> queryListAvailable(Map<String, Object> map);
 }

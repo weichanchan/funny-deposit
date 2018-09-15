@@ -46,4 +46,6 @@ public interface CardInfoDao extends BaseDao<CardInfoEntity> {
      * @return
      */
     List<CardInfoEntity> queryListByAgentOrderNo(String agentOrderNo);
+
+    int queryTotalNum(Map<String,Object> map);
 }

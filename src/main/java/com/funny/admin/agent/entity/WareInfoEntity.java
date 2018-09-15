@@ -14,11 +14,17 @@ import java.util.List;
 public class WareInfoEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    //主键id
+    /**
+     * 主键id
+     */
     private Long id;
-    //商品编号
+    /**
+     * 商品编号
+     */
     private String wareNo;
-    //代理商价格
+    /**
+     * 代理商价格
+     */
     private Long agentPrice;
     /**
      * 充值类型，1：直充类型:；2：卡密类型

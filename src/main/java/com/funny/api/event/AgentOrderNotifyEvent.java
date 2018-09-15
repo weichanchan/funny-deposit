@@ -52,6 +52,10 @@ public class AgentOrderNotifyEvent extends ApplicationEvent {
      * 此商品不可售
      */
     public static final String JDI00004 = "JDI_00004";
+    /**
+     * 正在充值中
+     */
+    public  static final String JDO00000="JDO_00000";
 
     private AgentOrderEntity agentOrderEntity;
 

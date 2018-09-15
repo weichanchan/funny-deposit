@@ -107,11 +107,6 @@ public class ApiAgentOrderController {
             return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
 
-        //直充类型商品充值号码是否合法
-        if(rechargeType ==1 && validatorPhone(rechargeNum)==false){
-            return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-        }
-
         //判断商品价格和成本价格是否相等
         agentPrice = wareInfoEntity.getAgentPrice();
         Long costPrice = Long.valueOf((String) params.get("costPrice"));
@@ -167,26 +162,6 @@ public class ApiAgentOrderController {
     }
 
     /**
-     * 校验充值手机号码是否合法
-     * @param rechargeNum
-     */
-    private boolean validatorPhone(String rechargeNum) {
-        String regex="^((13[0-9])|(14[5,7,9])|(15[0-3,5-9])|(17[0,1,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$";
-        if(StringUtils.isEmpty(rechargeNum) || rechargeNum.length()!=11){
-            return false;
-        }
-
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(rechargeNum);
-        boolean isMatch = m.matches();
-        if(isMatch){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * 获得指定卡密信息的卡密串
      * @param cardInfo
      * @return
@@ -226,10 +201,10 @@ public class ApiAgentOrderController {
         agentOrderEntity.setSignType(signType);
         agentOrderEntity.setTimestamp(timestamp);
         agentOrderEntity.setVersion(version);
-        //默认充值状态：未充值
-        agentOrderEntity.setRechargeStatus(0);
-        //默认订单状态：新创建
-        agentOrderEntity.setStatus(0);
+        //默认充值状态：充值中
+        agentOrderEntity.setRechargeStatus(3);
+        //默认订单状态：处理中
+        agentOrderEntity.setStatus(3);
         agentOrderEntity.setAgentOrderNo(UUID.randomUUID().toString().replace("-", ""));
         agentOrderService.save(agentOrderEntity);
         return agentOrderEntity;
@@ -315,7 +290,8 @@ public class ApiAgentOrderController {
         WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareNo);
         Integer wareType = wareInfoEntity.getType();
         if (wareType != 1) {
-            cardInfo = agentOrder.getCardInfo();
+            // TODO: 2018/9/15  卡信息加密不正确
+            cardInfo = AESUtils.encrypt(agentOrder.getCardInfo(), PropertiesContent.get("secretKey"));
         }
         return getReturnMap("T", "", agentOrderNo, jdOrderNo, status, time, quantity, cardInfo, signType, sdf.format(new Date()), version);
 
@@ -342,7 +318,6 @@ public class ApiAgentOrderController {
                              Integer quantity, String cardInfo, String signType,
                              String timestamp, String version) {
         Map<String, Object> map = new HashMap<>();
-        // TODO: 2018/9/13  返回参数有点问题 
         map.put("isSuccess", isSuccess);
         if (!StringUtils.isEmpty(errorCode)) {
             map.put("errorCode", errorCode);
@@ -365,8 +340,6 @@ public class ApiAgentOrderController {
             map.put("quantity", quantity);
         }
         if (!StringUtils.isEmpty(cardInfo)) {
-            //卡信息加密
-            cardInfo = AESUtils.parseByte2HexStr(cardInfo.getBytes());;
             map.put("cardInfo", cardInfo);
         }
 

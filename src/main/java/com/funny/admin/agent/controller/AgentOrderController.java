@@ -124,16 +124,9 @@ public class AgentOrderController extends AbstractController {
      *
      * @param id
      */
-    @RequestMapping("/handleAgentOrder/{id}")
-    @RequiresPermissions("agentorder:update")
-    public R handleAgentOrder(@PathVariable("id") Long id) {
-        //  Long id = (Long) params.get("id");
-        AgentOrderEntity agentOrderEntity = agentOrderService.queryObject(id);
-        if (agentOrderEntity != null) {
-            agentOrderEntity.setStatus(2);
-            agentOrderEntity.setRechargeStatus(3);
-            agentOrderService.update(agentOrderEntity);
-        }
+    @RequestMapping("/startHandle/{id}")
+    public R startHandle(@PathVariable("id") Long id) {
+        agentOrderService.startHandle(id);
         return R.ok();
     }
 

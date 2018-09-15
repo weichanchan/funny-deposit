@@ -59,7 +59,7 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         // 处理成功时订单通知返回
         if (!StringUtils.isEmpty(agentOrderNotifyEvent.getCardInfoString())) {
             //卡信息加密
-            String cardInfoString = AESUtils.parseByte2HexStr(agentOrderNotifyEvent.getCardInfoString().getBytes());
+            String cardInfoString = AESUtils.encrypt(agentOrderEntity.getCardInfo(), PropertiesContent.get("secretKey"));
             map.put("cardInfo", Collections.singletonList(cardInfoString));
         }
         map.put("isSuccess", Collections.singletonList("T"));

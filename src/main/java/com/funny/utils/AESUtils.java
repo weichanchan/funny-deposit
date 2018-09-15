@@ -1,5 +1,6 @@
 package com.funny.utils;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -69,23 +70,29 @@ public class AESUtils {
             //2.根据ecnodeRules规则初始化密钥生成器
             //生成一个128位的随机源,根据传入的字节数组
             kgen.init(128, new SecureRandom(key.getBytes()));
+            //加密没关系，SecureRandom是生成安全随机数序列，key.getBytes()是种子，
+            // 只要种子相同，序列就一样，所以解密只要有password就行
             //3.产生原始对称密钥
             SecretKey secretKey = kgen.generateKey();
             //4.获得原始对称密钥的字节数组
+            //返回基本编码格式的密钥，如果此密钥不支持编码，则返回null。
             byte[] enCodeFormat = secretKey.getEncoded();
             //5.根据字节数组生成AES密钥
             SecretKeySpec keySpec = new SecretKeySpec(enCodeFormat, KEY_AES);
             //6.根据指定算法AES自成密码器
-            Cipher cipher = Cipher.getInstance(KEY_AES);// 创建密码器
+            // 创建密码器
+            Cipher cipher = Cipher.getInstance(KEY_AES);
             //7.初始化密码器，第一个参数为加密(Encrypt_mode)或者解密解密(Decrypt_mode)操作，第二个参数为使用的KEY
-            cipher.init(mode, keySpec);// 初始化
+            cipher.init(mode, keySpec);
+            //加密
             byte[] result = cipher.doFinal(content);
-            if (encrypt) {
+            return Base64.encodeBase64String(result);//通过Base64转码返回
+            /*if (encrypt) {
                 //将二进制转换成16进制
                 return parseByte2HexStr(result);
             } else {
                 return new String(result, defaultCharset);
-            }
+            }*/
         } catch (Exception e) {
             logger.error("AES 密文处理异常", e);
         }

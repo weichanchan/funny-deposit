@@ -1,6 +1,7 @@
 package com.funny.admin.agent.service;
 
 import com.funny.admin.agent.entity.WareInfoEntity;
+import com.funny.admin.agent.entity.WareInfoVO;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,8 @@ public interface WareInfoService {
     WareInfoEntity queryObjectByWareNo(String wareNo);
 
     List<WareInfoEntity> queryList(Map<String, Object> map);
+
+    List<WareInfoVO> queryListAvailable(Map<String, Object> map);
 
     int queryTotal(Map<String, Object> map);
 

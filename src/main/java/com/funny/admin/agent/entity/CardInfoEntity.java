@@ -35,7 +35,7 @@ public class CardInfoEntity implements Serializable {
      */
     private String agentOrderNo;
     /**
-     * 状态
+     * 状态:,1:未售出；2：已售出
      */
     private Integer status;
     /**
@@ -43,7 +43,7 @@ public class CardInfoEntity implements Serializable {
      */
     private Date expiryDate;
     /**
-     * 充值使用时间
+     * 售出时间
      */
     private Date rechargeTime;
 

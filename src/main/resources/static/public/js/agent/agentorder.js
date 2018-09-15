@@ -26,9 +26,7 @@ $(function () {
             {
                 label: '订单状态', name: 'status', index: 'status', width: 80,
                 formatter: function (value, options, row) {
-                    if (value === 0) {
-                        return '新创建';
-                    } else if (value === 1) {
+                    if (value === 1) {
                         return '<font color="green">处理成功</font>'
                     } else if (value===2){
                         return '<font color="red">处理失败</font>';
@@ -40,9 +38,7 @@ $(function () {
             {
                 label: '充值状态', name: 'rechargeStatus', index: 'recharge_status', width: 80,
                 formatter: function (value, options, row) {
-                    if (value === 0) {
-                        return '未充值';
-                    } else if (value === 1) {
+                    if (value === 1) {
                         return '<font color="green">充值成功</font>';
                     } else if (value === 2){
                         return '<font color="red">充值失败</font>'
@@ -182,7 +178,7 @@ var vm = new Vue({
             confirm('确定要处理选中的记录？', function () {
                 $.ajax({
                     type: "POST",
-                    url: "../agentorder/handleAgentOrder/" + id,
+                    url: "../agentorder/startHandle/" + id,
                     contentType: "application/json",
                     // dataType:json ,
                     success: function (r) {
@@ -204,10 +200,7 @@ var vm = new Vue({
             }
             var rowData = $("#jqGrid").jqGrid("getRowData", id);
             var status = rowData.status;
-            if(status=="<font color=\"gray\">处理中</font>"){
-                alert("订单正在处理，请稍后~");
-                return;
-            }
+
             if(status=="<font color=\"green\">处理成功</font>" || status=="<font color=\"red\">处理失败</font>"){
                 alert("订单已处理，请不要重复操作！");
                 return;
@@ -237,11 +230,8 @@ var vm = new Vue({
             }
             var rowData = $("#jqGrid").jqGrid("getRowData", id);
             var status = rowData.status;
-            if(status=="<font color=\"gray\">处理中</font>"){
-                alert("订单正在处理，请稍后~");
-                return;
-            }
-            if(status=="<font color=\"green\">处理成功</font>" || status=="新创建"){
+
+            if(status=="<font color=\"green\">处理成功</font>" || status=="<font color=\"gray\">处理中</font>"){
                 alert("请选择处理失败的订单");
                 return;
             }

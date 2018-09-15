@@ -156,8 +156,6 @@ public class AgentOrderServiceImpl implements AgentOrderService {
         }
         updateAgentOrder(agentOrderEntity, 1, 1);
         applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity, ""));
-
-
     }
 
     /**
@@ -181,6 +179,13 @@ public class AgentOrderServiceImpl implements AgentOrderService {
     public void handleFailed(Long id) {
         logger.error("商品不可售");
         applicationContext.publishEvent(new AgentOrderNotifyEvent(id, null, null, null, AgentOrderNotifyEvent.JDI00004));
+        return;
+    }
+
+    @Override
+    public void startHandle(Long id) {
+        logger.error("充值中");
+        applicationContext.publishEvent(new AgentOrderNotifyEvent(id, null, null, null, AgentOrderNotifyEvent.JDO00000));
         return;
     }
 

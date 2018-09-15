@@ -17,11 +17,11 @@ $(function () {
             {label: '关联订单id', name: 'agentOrderNo', index: 'agent_order_no', width: 80},
             {label: '状态', name: 'status', index: 'status', width: 80,
                 formatter: function (value, options, row) {
-                    return value === 1 ? '新创建' : '已使用';
+                    return value === 1 ? '未售出' : '已售出';
                 }
             },
             {label: '有效期', name: 'expiryDate', index: 'expiry_date', width: 80},
-            {label: '使用时间', name: 'rechargeTime', index: 'recharge_time', width: 80}
+            {label: '售出时间', name: 'rechargeTime', index: 'recharge_time', width: 80}
         ],
         viewrecords: true,
         height: 385,

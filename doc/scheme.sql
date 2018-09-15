@@ -23,7 +23,7 @@ CREATE TABLE `agent_order` (
   `cost_price` bigint(20) NOT NULL COMMENT '成本价',
   `features` varchar(255) DEFAULT NULL COMMENT '特殊属性',
   `status` int(1) DEFAULT '3' COMMENT '订单状态，1：新创建；2：处理中；3：已处理',
-  `recharge_status` int(1) NOT NULL DEFAULT '0' COMMENT '充值状态，0：未充值；1：充值成功；2：充值失败；3：充值中',
+  `recharge_status` int(1) NOT NULL DEFAULT '0' COMMENT '充值状态，1：充值成功；2：充值失败；3：充值中',
   `card_info` text COMMENT '卡密信息',
   `create_time` datetime NOT NULL COMMENT '订单创建时间',
   `handle_time` datetime DEFAULT NULL COMMENT '处理订单时间',
@@ -42,7 +42,7 @@ CREATE TABLE `card_info` (
   `password` varchar(125) NOT NULL COMMENT '密码/激活码',
   `ware_no` varchar(64) NOT NULL COMMENT '关联商品id',
   `agent_order_no` varchar(64) DEFAULT NULL COMMENT '关联订单编号',
-  `status` int(1) DEFAULT NULL COMMENT '状态，0：创建未完成；1：新创建；2：已使用',
+  `status` int(1) DEFAULT '1' COMMENT '状态，1：未售出；2：已出售',
   `expiry_date` datetime NOT NULL COMMENT '有效期',
   `recharge_time` datetime DEFAULT NULL COMMENT '充值使用时间',
   PRIMARY KEY (`id`)

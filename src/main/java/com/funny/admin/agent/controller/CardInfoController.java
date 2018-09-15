@@ -99,6 +99,8 @@ public class CardInfoController {
             cardInfo.setWareNo(wareNo);
             cardInfo.setPassword(pwdList[i]);
             cardInfo.setExpiryDate(date);
+            //初始状态为：未售出
+            cardInfo.setStatus(1);
             cardInfoService.save(cardInfo);
             list.add(cardInfo);
         }

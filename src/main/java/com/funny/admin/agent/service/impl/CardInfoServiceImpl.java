@@ -47,6 +47,11 @@ public class CardInfoServiceImpl implements CardInfoService {
 	}
 
 	@Override
+	public int queryTotalNum(Map<String, Object> map) {
+		return cardInfoDao.queryTotalNum(map);
+	}
+
+	@Override
 	public int queryTotalByWareNo(Map<String, Object> map) {
 		return cardInfoDao.queryTotalByWareNo(map);
 	}

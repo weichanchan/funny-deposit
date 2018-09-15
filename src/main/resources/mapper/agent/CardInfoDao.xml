@@ -35,7 +35,10 @@
 	</select>
 
     <select id="queryListNum" resultType="com.funny.admin.agent.entity.CardInfoEntity">
-		select * from card_info where ware_no=#{wareNo} and status=#{status} limit #{num}
+		select * from card_info where ware_no=#{wareNo} and status=#{status}
+        <if test="num != null">
+            limit #{num}
+        </if>
 	</select>
 
     <select id="queryListByWareNo" resultType="com.funny.admin.agent.entity.CardInfoEntity">
@@ -56,6 +59,13 @@
 
  	<select id="queryTotalByWareNo" resultType="int">
 		select count(*) from card_info where ware_no=#{wareNo}
+	</select>
+
+ 	<select id="queryTotalNum" resultType="int">
+		select count(*) from card_info where ware_no=#{wareNo} and status=#{status}
+        <if test="num != null">
+            limit #{num}
+        </if>
 	</select>
 
 	<insert id="save" parameterType="com.funny.admin.agent.entity.CardInfoEntity" useGeneratedKeys="true" keyProperty="id">

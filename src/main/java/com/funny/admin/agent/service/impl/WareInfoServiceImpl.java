@@ -3,6 +3,7 @@ package com.funny.admin.agent.service.impl;
 import com.funny.admin.agent.dao.WareInfoDao;
 import com.funny.admin.agent.dao.WareRoleDao;
 import com.funny.admin.agent.entity.WareInfoEntity;
+import com.funny.admin.agent.entity.WareInfoVO;
 import com.funny.admin.agent.entity.WareRoleEntity;
 import com.funny.admin.agent.service.WareInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,11 @@ public class WareInfoServiceImpl implements WareInfoService {
     @Override
     public List<WareInfoEntity> queryList(Map<String, Object> map) {
         return wareInfoDao.queryList(map);
+    }
+
+    @Override
+    public List<WareInfoVO> queryListAvailable(Map<String, Object> map) {
+        return wareInfoDao.queryListAvailable(map);
     }
 
     @Override

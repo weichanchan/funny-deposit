@@ -26,6 +26,8 @@ public interface CardInfoService {
 
 	int queryTotal(Map<String, Object> map);
 
+	int queryTotalNum(Map<String, Object> map);
+
 	int queryTotalByWareNo(Map<String, Object> map);
 
 	void save(CardInfoEntity cardInfo);

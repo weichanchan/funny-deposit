@@ -37,6 +37,22 @@
         </if>
     </select>
 
+    <select id="queryListAvailable" resultType="com.funny.admin.agent.entity.WareInfoVO">
+        select w.*, count(c.id) available from ware_info w left join card_info c
+        on w.ware_no = c.ware_no and c.status=1 group by w.ware_no
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
     <select id="queryTotal" resultType="int">
 		select count(*) from ware_info 
 	</select>
