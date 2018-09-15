@@ -34,6 +34,7 @@ public class WareInfoVO {
      */
     private String agentId;
     private Integer available;
+    private Integer cardInfoTotal;
 
     public Long getId() {
         return id;
@@ -97,5 +98,13 @@ public class WareInfoVO {
 
     public void setAvailable(Integer available) {
         this.available = available;
+    }
+
+    public Integer getCardInfoTotal() {
+        return cardInfoTotal;
+    }
+
+    public void setCardInfoTotal(Integer cardInfoTotal) {
+        this.cardInfoTotal = cardInfoTotal;
     }
 }

@@ -3,6 +3,7 @@ package com.funny.api.event;
 import com.funny.admin.agent.entity.AgentOrderEntity;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.utils.AESUtils;
+import com.funny.utils.EncryptUtil;
 import com.funny.utils.PropertiesContent;
 import com.funny.utils.SignUtils;
 import org.apache.commons.lang.StringUtils;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -29,6 +32,9 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
 
     @Autowired
     AgentOrderService agentOrderService;
+
+    @Autowired
+    RestTemplate template;
 
     /**
      * 本监听仅做 Http 通知使用，这里最多查询数据库，不应该修改数据库里面的内容
@@ -49,8 +55,6 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
             map.put("isSuccess", Collections.singletonList("F"));
             map.put("errorCode", Collections.singletonList(agentOrderNotifyEvent.getJdReturnCode()));
             String notifyUrl = agentOrderEntity.getNotifyUrl();
-            //TODO 不要每次都new一个restTemplate,可以在spring配置文件那里配置一个，然后autoWrit到每个地方使用。
-            RestTemplate template = new RestTemplate();
             ResponseEntity<Map> response = template.postForEntity(notifyUrl, map, Map.class);
             logger.info(response.toString());
             return;
@@ -59,11 +63,12 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         // 处理成功时订单通知返回
         if (!StringUtils.isEmpty(agentOrderNotifyEvent.getCardInfoString())) {
             //卡信息加密
-            String cardInfoString = AESUtils.encrypt(agentOrderEntity.getCardInfo(), PropertiesContent.get("secretKey"));
+            String cardInfoString = null;
+            cardInfoString = EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), PropertiesContent.get("secretKey"));
             map.put("cardInfo", Collections.singletonList(cardInfoString));
         }
-        map.put("isSuccess", Collections.singletonList("T"));
-        map.put("signType", Collections.singletonList(agentOrderEntity.getSignType()));
+//        map.put("isSuccess", Collections.singletonList("T"));
+
         map.put("timestamp", Collections.singletonList(agentOrderEntity.getTimestamp()));
         map.put("version", Collections.singletonList(agentOrderEntity.getVersion()));
 
@@ -81,9 +86,14 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
 
         String sign = SignUtils.getSign(map.toSingleValueMap(), PropertiesContent.get("secretKey"));
         map.put("sign", Collections.singletonList(sign));
+        map.put("signType", Collections.singletonList(agentOrderEntity.getSignType()));
+        try {
+            map.put("cardInfo", Collections.singletonList( URLEncoder.encode(EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), PropertiesContent.get("secretKey")),"UTF-8")));
+            logger.debug(map.get("cardInfo").iterator().next().toString());
+        } catch (UnsupportedEncodingException e) {
+            logger.error("cardInfo url编码失败");
+        }
         String notifyUrl = agentOrderEntity.getNotifyUrl();
-        //TODO 不要每次都new一个restTemplate,可以在spring配置文件那里配置一个，然后autoWrit到每个地方使用。
-        RestTemplate template = new RestTemplate();
         ResponseEntity<Map> response = template.postForEntity(notifyUrl, map, Map.class);
         logger.info(response.toString());
     }

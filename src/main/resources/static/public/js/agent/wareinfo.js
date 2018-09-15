@@ -25,7 +25,8 @@ $(function () {
                         '<font color="red">不可售</font>';
                 }
             },
-            {label: '商品库存', name: 'available', index: 'available', width: 80},
+            {label: '商品总数', name: 'cardInfoTotal', index: 'cardInfoTotal', width: 80},
+            {label: '商品库存', name: 'available', index: 'available', width: 80}
         ],
         viewrecords: true,
         height: 385,

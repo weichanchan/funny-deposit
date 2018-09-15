@@ -8,6 +8,7 @@ import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.api.event.AgentOrderListener;
+import com.funny.api.event.AgentOrderNotifyEvent;
 import com.funny.utils.AESUtils;
 import com.funny.utils.PropertiesContent;
 import com.funny.utils.SignUtils;
@@ -57,7 +58,7 @@ public class ApiAgentOrderController {
         String version = (String) params.get("version");
         String agentOrderNo = null;
         Long agentPrice = null;
-        Map map = new HashMap();
+        Map map;
 
         //响应时间戳
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -115,13 +116,13 @@ public class ApiAgentOrderController {
             return getReturnMap("F", "JDI_00005", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
 
-        Integer type =Integer.valueOf((String) params.get("type"));
+        Integer type = Integer.valueOf((String) params.get("type"));
         String finTime = (String) params.get("finTime");
         String notifyUrl = (String) params.get("notifyUrl");
         String features = (String) params.get("features");
 
         //直充类型，且参数合法
-        if(rechargeType==1){
+        if (rechargeType == 1) {
             saveAgentOrder(sign, signType, timestamp, version, jdOrderNo, agentOrderEntity, wareNo, quantity, rechargeNum, costPrice, type, finTime, notifyUrl, features);
             return getReturnMap("T", "", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
@@ -145,10 +146,11 @@ public class ApiAgentOrderController {
         for (int i = 0; i < cardInfoLists.size(); i++) {
             CardInfoEntity cardInfo = cardInfoLists.get(i);
             //将卡密状态改为2：已使用，同时存入代理商订单编号
+            cardInfo.setRechargeTime(new Date());
             cardInfo.setStatus(2);
             cardInfo.setAgentOrderNo(agentOrderEntity.getAgentOrderNo());
             cardInfoService.update(cardInfo);
-            if(i==0){
+            if (i == 0) {
                 cardInfoString += getCardInfoString(cardInfo);
             } else {
                 cardInfoString += "|" + getCardInfoString(cardInfo);
@@ -156,33 +158,37 @@ public class ApiAgentOrderController {
         }
         //设置卡密串
         agentOrderEntity.setCardInfo(cardInfoString);
+        agentOrderEntity.setStatus(3);
+        agentOrderEntity.setRechargeStatus(1);
         agentOrderService.update(agentOrderEntity);
+        applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderEntity.getId(), agentOrderEntity, cardInfoString, wareInfoEntity, ""));
 
         return getReturnMap("T", "", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
     }
 
     /**
      * 获得指定卡密信息的卡密串
+     *
      * @param cardInfo
      * @return
      */
     private String getCardInfoString(CardInfoEntity cardInfo) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String accountNo = cardInfo.getAccountNo();
-        if(!StringUtils.isEmpty(accountNo)){
+        if (!StringUtils.isEmpty(accountNo)) {
             accountNo += "_";
         } else {
-            accountNo = "";
+            accountNo = "lckj_";
         }
         String password = cardInfo.getPassword();
-        if(!StringUtils.isEmpty(password)){
+        if (!StringUtils.isEmpty(password)) {
             password += "_";
         } else {
-            password = "";
+            password = "lckj_";
         }
         String expiryDate = sdf.format(cardInfo.getExpiryDate());
 
-        return accountNo +password + expiryDate;
+        return accountNo + password + expiryDate;
     }
 
     private AgentOrderEntity saveAgentOrder(String sign, String signType, String timestamp, String version, String jdOrderNo, AgentOrderEntity agentOrderEntity, String wareNo, Integer quantity, String rechargeNum, Long costPrice, Integer type, String finTime, String notifyUrl, String features) {
