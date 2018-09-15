@@ -18,7 +18,7 @@ public class SignUtils {
 
     private static Logger LOGGER = LoggerFactory.getLogger(SignUtils.class);
 
-    public static Boolean checkSign(Map params) {
+    public static Boolean checkSign(Map params, String secretkey, String versionNo) {
         Boolean flag = false;
         String sign = (String) params.get("sign");
         String timestamp = (String) params.get("timestamp");
@@ -48,8 +48,8 @@ public class SignUtils {
             }
             param.remove("sign");
             param.remove("signType");
-            String newSign = getSign(param, PropertiesContent.get("secretKey"));
-            if (sign.equals(newSign) && version.equals(PropertiesContent.get("versionNo"))) {
+            String newSign = getSign(param, secretkey);
+            if (sign.equals(newSign) && version.equals(versionNo)) {
                 flag = true;
             }
         }

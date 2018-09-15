@@ -2,10 +2,7 @@ package com.funny.api.event;
 
 import com.funny.admin.agent.entity.AgentOrderEntity;
 import com.funny.admin.agent.service.AgentOrderService;
-import com.funny.utils.AESUtils;
-import com.funny.utils.EncryptUtil;
-import com.funny.utils.PropertiesContent;
-import com.funny.utils.SignUtils;
+import com.funny.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +33,9 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
     @Autowired
     RestTemplate template;
 
+    @Autowired
+    ConfigUtils configUtils;
+
     /**
      * 本监听仅做 Http 通知使用，这里最多查询数据库，不应该修改数据库里面的内容
      *
@@ -64,16 +64,15 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         if (!StringUtils.isEmpty(agentOrderNotifyEvent.getCardInfoString())) {
             //卡信息加密
             String cardInfoString = null;
-            cardInfoString = EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), PropertiesContent.get("secretKey"));
+            cardInfoString = EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), configUtils.getSecretKey());
             map.put("cardInfo", Collections.singletonList(cardInfoString));
         }
-//        map.put("isSuccess", Collections.singletonList("T"));
 
         map.put("timestamp", Collections.singletonList(agentOrderEntity.getTimestamp()));
         map.put("version", Collections.singletonList(agentOrderEntity.getVersion()));
 
         map.put("agentId", Collections.singletonList(agentOrderNotifyEvent.getWareInfoEntity().getAgentId()));
-        map.put("bussType", Collections.singletonList(PropertiesContent.get("bussType")));
+        map.put("bussType", Collections.singletonList(configUtils.getBussType()));
         //京东指定业务编号
         map.put("jdOrderNo", Collections.singletonList(agentOrderEntity.getJdOrderNo()));
         map.put("agentOrderNo", Collections.singletonList(agentOrderEntity.getAgentOrderNo()));
@@ -84,12 +83,13 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         map.put("time", Collections.singletonList(time));
         map.put("quantity", Collections.singletonList(agentOrderEntity.getQuantity()));
 
-        String sign = SignUtils.getSign(map.toSingleValueMap(), PropertiesContent.get("secretKey"));
+        String sign = SignUtils.getSign(map.toSingleValueMap(), configUtils.getSecretKey());
         map.put("sign", Collections.singletonList(sign));
         map.put("signType", Collections.singletonList(agentOrderEntity.getSignType()));
         if(agentOrderEntity.getCardInfo() != null) {
             try {
-                map.put("cardInfo", Collections.singletonList(URLEncoder.encode(EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), PropertiesContent.get("secretKey")), "UTF-8")));
+                //map.put("cardInfo", Collections.singletonList(URLEncoder.encode(EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), PropertiesContent.get("secretKey")), "UTF-8")));
+                map.put("cardInfo", Collections.singletonList(URLEncoder.encode(EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), configUtils.getSecretKey()), "UTF-8")));
                 logger.debug(map.get("cardInfo").iterator().next().toString());
             } catch (UnsupportedEncodingException e) {
                 logger.error("cardInfo url编码失败");

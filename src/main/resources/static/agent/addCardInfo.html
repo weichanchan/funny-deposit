@@ -39,31 +39,31 @@
         <div class="panel-heading">手动添加数据</div>
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">激活码1：</div>
+                <div class="col-sm-2 control-label">激活码1:</div>
                 <div class="col-sm-10" >
                     <input type="text" class="form-control" v-model="pwd1" placeholder="激活码" required="required"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">激活码2</div>
+                <div class="col-sm-2 control-label">激活码2:</div>
                 <div class="col-sm-10" >
                     <input type="text" class="form-control" v-model="pwd2" placeholder="激活码"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">激活码3</div>
+                <div class="col-sm-2 control-label">激活码3:</div>
                 <div class="col-sm-10" >
                     <input type="text" class="form-control" v-model="pwd3" placeholder="激活码"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">激活码4</div>
+                <div class="col-sm-2 control-label">激活码4:</div>
                 <div class="col-sm-10" >
                     <input type="text" class="form-control" v-model="pwd4" placeholder="激活码"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">激活码5</div>
+                <div class="col-sm-2 control-label">激活码5:</div>
                 <div class="col-sm-10" >
                     <input type="text" class="form-control" v-model="pwd5" placeholder="激活码"/>
                 </div>
@@ -117,6 +117,9 @@
                         if (r.code === 0) {
                             alert('操作成功', function (index) {
                                 //todo 关闭窗口时，把信息传回原页面
+                                window.opener.location.reload();
+                                //刷新父窗口，关闭子窗口
+                                window.opener=null;
                                 window.close();
                             });
                         } else {

@@ -3,14 +3,13 @@ package com.funny.api;
 import com.funny.admin.agent.entity.AgentOrderEntity;
 import com.funny.admin.agent.entity.CardInfoEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
-import com.funny.admin.agent.service.AgentInfoService;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.api.event.AgentOrderListener;
 import com.funny.api.event.AgentOrderNotifyEvent;
 import com.funny.utils.AESUtils;
-import com.funny.utils.PropertiesContent;
+import com.funny.utils.ConfigUtils;
 import com.funny.utils.SignUtils;
 import com.funny.utils.annotation.IgnoreAuth;
 import org.apache.commons.lang.StringUtils;
@@ -24,8 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api")
@@ -40,6 +37,8 @@ public class ApiAgentOrderController {
     private WareInfoService wareInfoService;
     @Autowired
     private CardInfoService cardInfoService;
+    @Autowired
+    private ConfigUtils configUtils;
 
     /**
      * 提交充值&提取卡密
@@ -67,7 +66,7 @@ public class ApiAgentOrderController {
         String jdOrderNo = (String) params.get("jdOrderNo");
 
         //校验签名
-        boolean b = SignUtils.checkSign(params);
+        boolean b = SignUtils.checkSign(params, configUtils.getSecretKey(), configUtils.getVersionNo());
         if (b == false) {
             isSuccess = "F";
             // 签名验证不正确（可退款）
@@ -156,11 +155,12 @@ public class ApiAgentOrderController {
                 cardInfoString += "|" + getCardInfoString(cardInfo);
             }
         }
+
         //设置卡密串
         agentOrderEntity.setCardInfo(cardInfoString);
-        agentOrderEntity.setStatus(3);
-        agentOrderEntity.setRechargeStatus(1);
         agentOrderService.update(agentOrderEntity);
+
+        logger.info("下单成功！");
         applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderEntity.getId(), agentOrderEntity, cardInfoString, wareInfoEntity, ""));
 
         return getReturnMap("T", "", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
@@ -249,7 +249,7 @@ public class ApiAgentOrderController {
         map.put("timestamp", timestamp);
         map.put("version", version);
         map.remove("code");
-        sign = SignUtils.getSign(map, PropertiesContent.get("secretKey"));
+        sign = SignUtils.getSign(map, configUtils.getSecretKey());
         map.put("sign", sign);
         map.put("signType", signType);
         map.put("errorCode", errorCode);
@@ -275,7 +275,7 @@ public class ApiAgentOrderController {
         timestamp = sdf.format(new Date());
         Map<String, Object> map = new HashMap(15);
         //校验签名
-        boolean b = SignUtils.checkSign(params);
+        boolean b = SignUtils.checkSign(params, configUtils.getSecretKey(), configUtils.getVersionNo());
         if (b == false) {
             // 签名验证不正确
             return getReturnMap("F", "JDI_00002", null, null, null, null, null, null, signType, timestamp, version);
@@ -297,7 +297,7 @@ public class ApiAgentOrderController {
         Integer wareType = wareInfoEntity.getType();
         if (wareType != 1) {
             // TODO: 2018/9/15  卡信息加密不正确
-            cardInfo = AESUtils.encrypt(agentOrder.getCardInfo(), PropertiesContent.get("secretKey"));
+            cardInfo = AESUtils.encrypt(agentOrder.getCardInfo(), configUtils.getSecretKey());
         }
         return getReturnMap("T", "", agentOrderNo, jdOrderNo, status, time, quantity, cardInfo, signType, sdf.format(new Date()), version);
 
@@ -351,7 +351,7 @@ public class ApiAgentOrderController {
 
         map.put("timestamp", timestamp);
         map.put("version", version);
-        String sign = SignUtils.getSign(map, PropertiesContent.get("secretKey"));
+        String sign = SignUtils.getSign(map, configUtils.getSecretKey());
         map.put("sign", sign);
         map.put("signType", signType);
         map.put("errorCode", errorCode);

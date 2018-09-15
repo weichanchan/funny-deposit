@@ -33,7 +33,13 @@ public class WareInfoVO {
      * 关联的代理商id
      */
     private String agentId;
+    /**
+     * 商品库存
+     */
     private Integer available;
+    /**
+     * 商品卡信息总数
+     */
     private Integer cardInfoTotal;
 
     public Long getId() {

@@ -3,10 +3,7 @@ package com.funny.admin.agent.controller;
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.entity.WareInfoVO;
 import com.funny.admin.agent.service.WareInfoService;
-import com.funny.utils.PageUtils;
-import com.funny.utils.PropertiesContent;
-import com.funny.utils.Query;
-import com.funny.utils.R;
+import com.funny.utils.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +24,8 @@ import java.util.Map;
 public class WareInfoController {
     @Autowired
     private WareInfoService wareInfoService;
+    @Autowired
+    private ConfigUtils configUtils;
 
     /**
      * 列表
@@ -68,7 +67,7 @@ public class WareInfoController {
         Long agentPrice = wareInfo.getAgentPrice()*100;
         wareInfo.setAgentPrice(agentPrice);
         // TODO: 2018/9/10  代理商id，目前只有一个，先写固定值
-        wareInfo.setAgentId(PropertiesContent.get("agentId"));
+        wareInfo.setAgentId(configUtils.getAgentId());
         if (wareInfo.getRoleIdList().size() == 0) {
             return R.error("请选择处理该商品订单的客服角色。");
         }

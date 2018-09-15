@@ -6,15 +6,12 @@ import com.funny.admin.agent.dao.CardInfoDao;
 import com.funny.admin.agent.dao.WareInfoDao;
 import com.funny.admin.agent.entity.AgentInfoEntity;
 import com.funny.admin.agent.entity.AgentOrderEntity;
-import com.funny.admin.agent.entity.CardInfoEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
-import com.funny.admin.agent.service.AgentInfoService;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.CardInfoService;
-import com.funny.admin.agent.service.WareInfoService;
 import com.funny.api.event.AgentOrderListener;
 import com.funny.api.event.AgentOrderNotifyEvent;
-import com.funny.utils.PropertiesContent;
+import com.funny.utils.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +42,8 @@ public class AgentOrderServiceImpl implements AgentOrderService {
     WareInfoDao wareInfoDao;
     @Autowired
     CardInfoService cardInfoService;
+    @Autowired
+    ConfigUtils configUtils;
 
     @Override
     public AgentOrderEntity queryObject(Long id) {
@@ -131,31 +128,15 @@ public class AgentOrderServiceImpl implements AgentOrderService {
             return;
         }
 
-        if(!PropertiesContent.get("agentId").equals(agentId)){
+        if(!configUtils.getAgentId().equals(agentId)){
             logger.error("代理商ID不正确！");
             applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, null, AgentOrderNotifyEvent.JD00007));
             return;
         }
 
-        //直充类型
-        Integer quantity = agentOrderEntity.getQuantity();
-        if (wareInfoEntity.getType() == 1) {
-            //客服到其他平台充值成功
-            updateAgentOrder(agentOrderEntity, 3, 1);
-            logger.info("充值成功！");
-            applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity, ""));
-            return;
-        }
-
-//        //卡密类型,根据代理商订单号提取卡信息并修改充值使用时间
-//        List<CardInfoEntity> cardInfoLists = cardInfoDao.queryListByAgentOrderNo(agentOrderEntity.getAgentOrderNo());
-//        for (int i = 0; i < cardInfoLists.size(); i++) {
-//            CardInfoEntity cardInfo = cardInfoLists.get(i);
-//            cardInfo.setRechargeTime(new Date());
-//            cardInfoService.update(cardInfo);
-//        }
-//        updateAgentOrder(agentOrderEntity, 3, 1);
-//        applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity, ""));
+        updateAgentOrder(agentOrderEntity, 3, 1);
+        logger.info("充值成功！");
+        applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity, ""));
     }
 
     /**
