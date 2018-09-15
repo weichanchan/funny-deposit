@@ -87,11 +87,13 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         String sign = SignUtils.getSign(map.toSingleValueMap(), PropertiesContent.get("secretKey"));
         map.put("sign", Collections.singletonList(sign));
         map.put("signType", Collections.singletonList(agentOrderEntity.getSignType()));
-        try {
-            map.put("cardInfo", Collections.singletonList( URLEncoder.encode(EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), PropertiesContent.get("secretKey")),"UTF-8")));
-            logger.debug(map.get("cardInfo").iterator().next().toString());
-        } catch (UnsupportedEncodingException e) {
-            logger.error("cardInfo url编码失败");
+        if(agentOrderEntity.getCardInfo() != null) {
+            try {
+                map.put("cardInfo", Collections.singletonList(URLEncoder.encode(EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), PropertiesContent.get("secretKey")), "UTF-8")));
+                logger.debug(map.get("cardInfo").iterator().next().toString());
+            } catch (UnsupportedEncodingException e) {
+                logger.error("cardInfo url编码失败");
+            }
         }
         String notifyUrl = agentOrderEntity.getNotifyUrl();
         ResponseEntity<Map> response = template.postForEntity(notifyUrl, map, Map.class);

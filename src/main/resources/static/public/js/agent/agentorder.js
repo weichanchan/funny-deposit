@@ -27,23 +27,29 @@ $(function () {
                 label: '订单状态', name: 'status', index: 'status', width: 80,
                 formatter: function (value, options, row) {
                     if (value === 1) {
-                        return '<font color="green">处理成功</font>'
+                        return '<font color="red">新创建</font>'
                     } else if (value===2){
-                        return '<font color="red">处理失败</font>';
+                        return '<font color="yellow">处理中</font>';
+                    } else if (value===3){
+                        return '<font color="gray">已处理</font>';
                     } else {
-                        return '<font color="gray">处理中</font>';
+                        return '<font color="red">错误状态</font>';
                     }
                 }
             },
             {
                 label: '充值状态', name: 'rechargeStatus', index: 'recharge_status', width: 80,
                 formatter: function (value, options, row) {
-                    if (value === 1) {
-                        return '<font color="green">充值成功</font>';
-                    } else if (value === 2){
-                        return '<font color="red">充值失败</font>'
+                    if (value === 0) {
+                        return '<font color="red">未充值</font>';
+                    } else if (value === 1){
+                        return '<font color="green">充值成功</font>'
+                    } else if(value == 3) {
+                        return '<font color="yellow">充值中</font>';
+                    } else if(value == 2){
+                        return '<font color="red">充值失败</font>';
                     } else {
-                        return '<font color="gray">充值中</font>';
+                        return '<font color="red">错误状态</font>';
                     }
                 }
             },

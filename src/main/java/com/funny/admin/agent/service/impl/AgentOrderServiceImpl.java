@@ -141,21 +141,21 @@ public class AgentOrderServiceImpl implements AgentOrderService {
         Integer quantity = agentOrderEntity.getQuantity();
         if (wareInfoEntity.getType() == 1) {
             //客服到其他平台充值成功
-            updateAgentOrder(agentOrderEntity, 1, 1);
+            updateAgentOrder(agentOrderEntity, 3, 1);
             logger.info("充值成功！");
             applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity, ""));
             return;
         }
 
-        //卡密类型,根据代理商订单号提取卡信息并修改充值使用时间
-        List<CardInfoEntity> cardInfoLists = cardInfoDao.queryListByAgentOrderNo(agentOrderEntity.getAgentOrderNo());
-        for (int i = 0; i < cardInfoLists.size(); i++) {
-            CardInfoEntity cardInfo = cardInfoLists.get(i);
-            cardInfo.setRechargeTime(new Date());
-            cardInfoService.update(cardInfo);
-        }
-        updateAgentOrder(agentOrderEntity, 1, 1);
-        applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity, ""));
+//        //卡密类型,根据代理商订单号提取卡信息并修改充值使用时间
+//        List<CardInfoEntity> cardInfoLists = cardInfoDao.queryListByAgentOrderNo(agentOrderEntity.getAgentOrderNo());
+//        for (int i = 0; i < cardInfoLists.size(); i++) {
+//            CardInfoEntity cardInfo = cardInfoLists.get(i);
+//            cardInfo.setRechargeTime(new Date());
+//            cardInfoService.update(cardInfo);
+//        }
+//        updateAgentOrder(agentOrderEntity, 3, 1);
+//        applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, wareInfoEntity, ""));
     }
 
     /**
@@ -177,6 +177,11 @@ public class AgentOrderServiceImpl implements AgentOrderService {
 
     @Override
     public void handleFailed(Long id) {
+        AgentOrderEntity agentOrderEntity = agentOrderDao.queryObject(id);
+        agentOrderEntity.setStatus(3);
+        agentOrderEntity.setRechargeStatus(2);
+        agentOrderEntity.setHandleTime(new Date());
+        agentOrderDao.update(agentOrderEntity);
         logger.error("商品不可售");
         applicationContext.publishEvent(new AgentOrderNotifyEvent(id, null, null, null, AgentOrderNotifyEvent.JDI00004));
         return;
@@ -184,9 +189,14 @@ public class AgentOrderServiceImpl implements AgentOrderService {
 
     @Override
     public void startHandle(Long id) {
-        logger.error("充值中");
-        applicationContext.publishEvent(new AgentOrderNotifyEvent(id, null, null, null, AgentOrderNotifyEvent.JDO00000));
-        return;
+        AgentOrderEntity agentOrderEntity = agentOrderDao.queryObject(id);
+        agentOrderEntity.setStatus(2);
+        agentOrderEntity.setRechargeStatus(3);
+        agentOrderEntity.setHandleTime(new Date());
+        agentOrderDao.update(agentOrderEntity);
+//        logger.error("充值中");
+//        applicationContext.publishEvent(new AgentOrderNotifyEvent(id, null, null, null, AgentOrderNotifyEvent.JDO00000));
+//        return;
     }
 
 }

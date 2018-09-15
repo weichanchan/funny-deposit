@@ -207,10 +207,10 @@ public class ApiAgentOrderController {
         agentOrderEntity.setSignType(signType);
         agentOrderEntity.setTimestamp(timestamp);
         agentOrderEntity.setVersion(version);
-        //默认充值状态：充值中
-        agentOrderEntity.setRechargeStatus(3);
-        //默认订单状态：处理中
-        agentOrderEntity.setStatus(3);
+        //默认订单状态：未充值
+        agentOrderEntity.setRechargeStatus(0);
+        //默认充值状态：新创建
+        agentOrderEntity.setStatus(1);
         agentOrderEntity.setAgentOrderNo(UUID.randomUUID().toString().replace("-", ""));
         agentOrderService.save(agentOrderEntity);
         return agentOrderEntity;
