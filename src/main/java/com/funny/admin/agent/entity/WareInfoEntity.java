@@ -23,6 +23,10 @@ public class WareInfoEntity implements Serializable {
      */
     private String wareNo;
     /**
+     * 商品名
+     */
+    private String wareName;
+    /**
      * 代理商价格
      */
     private Long agentPrice;
@@ -133,5 +137,13 @@ public class WareInfoEntity implements Serializable {
 
     public void setRoleIdList(List<Long> roleIdList) {
         this.roleIdList = roleIdList;
+    }
+
+    public String getWareName() {
+        return wareName;
+    }
+
+    public void setWareName(String wareName) {
+        this.wareName = wareName;
     }
 }

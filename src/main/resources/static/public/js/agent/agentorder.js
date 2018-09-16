@@ -1,17 +1,22 @@
 $(function () {
+    var wareType = T.p('wareType');
+    var param = "";
+    if(wareType != undefined){
+        param = "?wareType=" + wareType;
+    }
     $("#jqGrid").jqGrid({
-        url: '../agentorder/list',
+        url: '../agentorder/list' + param,
         datatype: "json",
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true, hidden:true},
-            {label: '代理商订单号', name: 'agentOrderNo', index: 'agent_order_no', width: 80},
+            // {label: '代理商订单号', name: 'agentOrderNo', index: 'agent_order_no', width: 80},
             {label: '京东订单号', name: 'jdOrderNo', index: 'jd_order_no', width: 80},
-            {
-                label: '订单类型', name: 'type', index: 'type', width: 70,
-                formatter: function (value, options, row) {
-                    return value === 1 ? '普通' : '其他';
-                }
-            },
+            // {
+            //     label: '订单类型', name: 'type', index: 'type', width: 70,
+            //     formatter: function (value, options, row) {
+            //         return value === 1 ? '普通' : '其他';
+            //     }
+            // },
             // {label: '清算时间', name: 'finTime', index: 'fin_time', width: 80},
             // {label: '回调通知地址', name: 'notifyUrl', index: 'notify_url', width: 120},
             {label: '充值号码', name: 'rechargeNum', index: 'recharge_num', width: 80},

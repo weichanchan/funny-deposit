@@ -5,6 +5,7 @@ $(function () {
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
             {label: '商品编号', name: 'wareNo', index: 'ware_no', width: 80},
+            {label: '商品名', name: 'wareName', index: 'ware_name', width: 80},
             {label: '代理商id', name: 'agentId', index: 'agent_id', width: 80},
             {label: '代理商价格(元)', name: 'agentPrice', index: 'agent_price', width: 80,
                 formatter: function (value, options, row) {
@@ -100,6 +101,9 @@ var vm = new Vue({
             this.getRoleList();
         },
         saveOrUpdate: function (event) {
+            //将代理商价格，从单位（元）变成（分）
+            vm.wareInfo.agentPrice =vm.wareInfo.agentPrice*100;
+            alert(vm.wareInfo.agentPrice)
             var url = vm.wareInfo.id == null ? "../wareinfo/save" : "../wareinfo/update";
             $.ajax({
                 type: "POST",
@@ -144,6 +148,8 @@ var vm = new Vue({
         getInfo: function (id) {
             $.get("../wareinfo/info/" + id, function (r) {
                 vm.wareInfo = r.wareInfo;
+                //将代理商价格，从单位（分）变成（元）显示
+                vm.wareInfo.agentPrice =(vm.wareInfo.agentPrice / 100).toFixed(2);
             });
         },
         reload: function (event) {

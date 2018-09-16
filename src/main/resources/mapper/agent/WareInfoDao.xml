@@ -7,6 +7,7 @@
     <resultMap type="com.funny.admin.agent.entity.WareInfoEntity" id="wareInfoMap">
         <result property="id" column="id"/>
         <result property="wareNo" column="ware_no"/>
+        <result property="wareName" column="ware_name"/>
         <result property="agentPrice" column="agent_price"/>
         <result property="type" column="type"/>
         <result property="status" column="status"/>
@@ -74,7 +75,8 @@
 		insert into ware_info
 		(
 			`ware_no`, 
-			`agent_price`, 
+			`ware_name`,
+			`agent_price`,
 			`type`,
 			`status`,
 			`agent_id`
@@ -82,7 +84,8 @@
 		values
 		(
 			#{wareNo}, 
-			#{agentPrice}, 
+			#{wareName},
+			#{agentPrice},
 			#{type},
 			#{status},
 			#{agentId}
@@ -93,6 +96,7 @@
         update ware_info
         <set>
             <if test="wareNo != null">`ware_no` = #{wareNo},</if>
+            <if test="wareName != null">`ware_name` = #{wareName},</if>
             <if test="agentPrice != null">`agent_price` = #{agentPrice},</if>
             <if test="type != null">`type` = #{type},</if>
             <if test="status != null">`status` = #{status},</if>

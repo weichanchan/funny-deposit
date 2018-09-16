@@ -14,6 +14,10 @@ public class WareInfoVO {
      */
     private String wareNo;
     /**
+     * 商品名
+     */
+    private String wareName;
+    /**
      * 代理商价格
      */
     private Long agentPrice;
@@ -112,5 +116,13 @@ public class WareInfoVO {
 
     public void setCardInfoTotal(Integer cardInfoTotal) {
         this.cardInfoTotal = cardInfoTotal;
+    }
+
+    public String getWareName() {
+        return wareName;
+    }
+
+    public void setWareName(String wareName) {
+        this.wareName = wareName;
     }
 }

@@ -106,7 +106,10 @@ public class ApiAgentOrderController {
         if (quantity <= 0 || (rechargeType == 1 && quantity > 1)) {
             return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
-
+        //直充类型商品充值号码不为空
+        if(rechargeType ==1 && StringUtils.isEmpty(rechargeNum)){
+            return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
+        }
         //判断商品价格和成本价格是否相等
         agentPrice = wareInfoEntity.getAgentPrice();
         Long costPrice = Long.valueOf((String) params.get("costPrice"));
