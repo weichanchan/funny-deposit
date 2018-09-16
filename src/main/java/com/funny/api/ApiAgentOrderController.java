@@ -6,8 +6,8 @@ import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.WareInfoService;
-import com.funny.api.event.AgentOrderListener;
-import com.funny.api.event.AgentOrderNotifyEvent;
+import com.funny.api.event.notify.AgentOrderListener;
+import com.funny.api.event.notify.AgentOrderNotifyEvent;
 import com.funny.utils.AESUtils;
 import com.funny.utils.ConfigUtils;
 import com.funny.utils.SignUtils;
@@ -161,6 +161,8 @@ public class ApiAgentOrderController {
 
         //设置卡密串
         agentOrderEntity.setCardInfo(cardInfoString);
+        agentOrderEntity.setStatus(3);
+        agentOrderEntity.setRechargeStatus(1);
         agentOrderService.update(agentOrderEntity);
 
         logger.info("下单成功！");

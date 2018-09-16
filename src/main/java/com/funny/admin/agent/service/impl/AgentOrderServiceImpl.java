@@ -1,18 +1,13 @@
 package com.funny.admin.agent.service.impl;
 
-import com.funny.admin.agent.dao.AgentInfoDao;
-import com.funny.admin.agent.dao.AgentOrderDao;
-import com.funny.admin.agent.dao.CardInfoDao;
-import com.funny.admin.agent.dao.WareInfoDao;
-import com.funny.admin.agent.entity.AgentInfoEntity;
-import com.funny.admin.agent.entity.AgentOrderEntity;
-import com.funny.admin.agent.entity.AgentOrderVO;
-import com.funny.admin.agent.entity.WareInfoEntity;
+import com.funny.admin.agent.dao.*;
+import com.funny.admin.agent.entity.*;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.CardInfoService;
-import com.funny.api.event.AgentOrderListener;
-import com.funny.api.event.AgentOrderNotifyEvent;
+import com.funny.api.event.notify.AgentOrderListener;
+import com.funny.api.event.notify.AgentOrderNotifyEvent;
 import com.funny.utils.ConfigUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +40,8 @@ public class AgentOrderServiceImpl implements AgentOrderService {
     CardInfoService cardInfoService;
     @Autowired
     ConfigUtils configUtils;
+    @Autowired
+    NotifyResendRecordDao notifyResendRecordDao;
 
     @Override
     public AgentOrderEntity queryObject(Long id) {
@@ -179,6 +176,36 @@ public class AgentOrderServiceImpl implements AgentOrderService {
 //        logger.error("充值中");
 //        applicationContext.publishEvent(new AgentOrderNotifyEvent(id, null, null, null, AgentOrderNotifyEvent.JDO00000));
 //        return;
+    }
+
+    @Override
+    public void newResend(AgentOrderEntity agentOrderEntity, String notifyUrl) {
+        NotifyResendRecordEntity notifyResendRecordEntity = new NotifyResendRecordEntity();
+        notifyResendRecordEntity.setAgentOrderId(agentOrderEntity.getId());
+        notifyResendRecordEntity.setCount(1);
+        notifyResendRecordEntity.setNextTime(org.apache.commons.lang.time.DateUtils.addMinutes(new Date(),1));
+        notifyResendRecordEntity.setNotifyUrl(notifyUrl);
+        notifyResendRecordEntity.setCreationTime(new Date());
+        notifyResendRecordDao.save(notifyResendRecordEntity);
+    }
+
+    @Override
+    public void resend(NotifyResendRecordEntity notifyResendRecordEntity) {
+        notifyResendRecordEntity.setCount(notifyResendRecordEntity.getCount() + 1);
+
+        if(notifyResendRecordEntity.getCount() >= 5){
+            notifyResendRecordEntity.setFailTime(new Date());
+            notifyResendRecordDao.update(notifyResendRecordEntity);
+            return;
+        }
+
+        notifyResendRecordEntity.setNextTime(DateUtils.addMinutes(notifyResendRecordEntity.getNextTime(),notifyResendRecordEntity.getCount() * notifyResendRecordEntity.getCount()));
+        notifyResendRecordDao.update(notifyResendRecordEntity);
+    }
+
+    @Override
+    public List<NotifyResendRecordEntity> findResendTask() {
+        return notifyResendRecordDao.queryResendList();
     }
 
 }
