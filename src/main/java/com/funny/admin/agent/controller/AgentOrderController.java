@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.funny.admin.agent.entity.AgentOrderEntity;
+import com.funny.admin.agent.entity.AgentOrderVO;
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.WareInfoService;
@@ -57,19 +58,19 @@ public class AgentOrderController extends AbstractController {
         //查询列表数据
         Query query = new Query(params);
 
-        List<AgentOrderEntity> agentOrderList = agentOrderService.queryList(query);
+        List<AgentOrderVO> agentOrderList = agentOrderService.queryList1(query);
         List<AgentOrderEntity> agentOrderEntityList = new ArrayList<AgentOrderEntity>();
         //将清算时间格式"yyyyMMddHHmmss"转化为"yyyy-MM-dd HH:mm:ss"
-        String reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
+/*        String reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
         for (AgentOrderEntity agentOrderEntity : agentOrderList) {
             String fTime = agentOrderEntity.getFinTime();
             fTime = fTime.replaceAll(reg, "$1-$2-$3 $4:$5:$6");
             agentOrderEntity.setFinTime(fTime);
             agentOrderEntityList.add(agentOrderEntity);
-        }
+        }*/
         int total = agentOrderService.queryTotal(query);
 
-        PageUtils pageUtil = new PageUtils(agentOrderEntityList, total, query.getLimit(), query.getPage());
+        PageUtils pageUtil = new PageUtils(agentOrderList, total, query.getLimit(), query.getPage());
 
         return R.ok().put("page", pageUtil);
     }

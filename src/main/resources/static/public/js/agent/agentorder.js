@@ -1,6 +1,7 @@
 $(function () {
     var wareType = T.p('wareType');
     var param = "";
+    vm.wareType = wareType;
     if(wareType != undefined){
         param = "?wareType=" + wareType;
     }
@@ -9,19 +10,11 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true, hidden:true},
-            // {label: '代理商订单号', name: 'agentOrderNo', index: 'agent_order_no', width: 80},
             {label: '京东订单号', name: 'jdOrderNo', index: 'jd_order_no', width: 80},
-            // {
-            //     label: '订单类型', name: 'type', index: 'type', width: 70,
-            //     formatter: function (value, options, row) {
-            //         return value === 1 ? '普通' : '其他';
-            //     }
-            // },
-            // {label: '清算时间', name: 'finTime', index: 'fin_time', width: 80},
-            // {label: '回调通知地址', name: 'notifyUrl', index: 'notify_url', width: 120},
             {label: '充值号码', name: 'rechargeNum', index: 'recharge_num', width: 80},
             {label: '数量', name: 'quantity', index: 'quantity', width: 50},
             {label: '商品编码', name: 'wareNo', index: 'ware_no', width: 80},
+            {label: '商品名', name: 'wareName', index: 'wareName', width: 80},
             {
                 label: '成本价(元)', name: 'costPrice', index: 'cost_price', width: 80,
                 formatter: function (value, options, row) {
@@ -57,9 +50,7 @@ $(function () {
                         return '<font color="red">错误状态</font>';
                     }
                 }
-            },
-            // {label: '特殊属性', name: 'features', index: 'features', width: 80},
-            // { label: '订单创建时间', name: 'createTime', index: 'create_time', width: 80 }
+            }
         ],
         viewrecords: true,
         height: 385,
@@ -95,7 +86,11 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
-        agentOrder: {}
+        agentOrder: {},
+        q:{
+            jdOrderNo:""
+        },
+        wareType:""
     },
     methods: {
         query: function () {
@@ -167,7 +162,11 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                page: page
+                page: page,
+                postData:{
+                    "jdOrderNo":vm.q.jdOrderNo,
+                    "wareType":vm.wareType
+                }
             }).trigger("reloadGrid");
         },
         newOrderWarning:function(){

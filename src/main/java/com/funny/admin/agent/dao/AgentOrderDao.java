@@ -1,6 +1,7 @@
 package com.funny.admin.agent.dao;
 
 import com.funny.admin.agent.entity.AgentOrderEntity;
+import com.funny.admin.agent.entity.AgentOrderVO;
 import com.funny.admin.system.dao.BaseDao;
 
 import java.util.List;
@@ -55,4 +56,6 @@ public interface AgentOrderDao extends BaseDao<AgentOrderEntity> {
      * @return
      */
     AgentOrderEntity queryLastAgentOrder(Map<String, Object> params);
+
+    List<AgentOrderVO> queryList1(Map<String, Object> map);
 }

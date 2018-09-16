@@ -1,6 +1,7 @@
 package com.funny.admin.agent.service;
 
 import com.funny.admin.agent.entity.AgentOrderEntity;
+import com.funny.admin.agent.entity.AgentOrderVO;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public interface AgentOrderService {
 
     AgentOrderEntity queryObjectByAgentOrderNo(String agentOrderNo);
 
-    List<AgentOrderEntity> queryList(Map<String, Object> map);
+    List<AgentOrderVO> queryList1(Map<String, Object> map);
 
     int queryTotal(Map<String, Object> map);
 

@@ -32,7 +32,7 @@
 	</select>
 
     <select id="queryLastAgentOrder" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
-		select * from agent_order a
+        select * from agent_order a
         LEFT JOIN ware_info w ON a.ware_no = w.ware_no
         LEFT JOIN ware_role wr ON wr.ware_info_id = w.id
         <if test="roleIds != null">
@@ -41,8 +41,8 @@
                 #{roleId}
             </foreach>
         </if>
-         order by create_time desc limit 0,1
-	</select>
+        order by create_time desc limit 0,1
+    </select>
 
     <select id="queryObjectByJdOrderNo" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
 		select * from agent_order where jd_order_no = #{value}
@@ -52,18 +52,25 @@
 		select * from agent_order where agent_order_no = #{value}
 	</select>
 
-    <select id="queryList" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
+    <select id="queryList1" resultType="com.funny.admin.agent.entity.AgentOrderVO">
         SELECT
-        *
+        a.id, a.jd_order_no, a.recharge_num, a.quantity, a.ware_no, a.cost_price, a.status, a.recharge_status, w.ware_name
         FROM
         agent_order a
         LEFT JOIN ware_info w ON a.ware_no = w.ware_no
         LEFT JOIN ware_role wr ON wr.ware_info_id = w.id
+        WHERE 1=1
         <if test="roleIds != null">
-            WHERE wr.role_id in
+            and wr.role_id in
             <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
                 #{roleId}
             </foreach>
+        </if>
+        <if test="wareType !=null">
+            and w.type = #{wareType}
+        </if>
+        <if test="jdOrderNo != null">
+            and a.jd_order_no like concat('%',#{jdOrderNo},'%')
         </if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
@@ -79,8 +86,25 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-		select count(*) from agent_order 
-	</select>
+        select count(*)
+        FROM
+        agent_order a
+        LEFT JOIN ware_info w ON a.ware_no = w.ware_no
+        LEFT JOIN ware_role wr ON wr.ware_info_id = w.id
+        WHERE 1=1
+        <if test="roleIds != null">
+            and wr.role_id in
+            <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+                #{roleId}
+            </foreach>
+        </if>
+        <if test="wareType !=null">
+            and w.type = #{wareType}
+        </if>
+        <if test="jdOrderNo != null">
+            and a.jd_order_no like concat('%',#{jdOrderNo},'%')
+        </if>
+    </select>
 
     <select id="getMaxId" resultType="long">
 		select Max(id) maxId from agent_order

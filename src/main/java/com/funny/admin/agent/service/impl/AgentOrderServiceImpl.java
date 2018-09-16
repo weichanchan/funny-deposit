@@ -6,6 +6,7 @@ import com.funny.admin.agent.dao.CardInfoDao;
 import com.funny.admin.agent.dao.WareInfoDao;
 import com.funny.admin.agent.entity.AgentInfoEntity;
 import com.funny.admin.agent.entity.AgentOrderEntity;
+import com.funny.admin.agent.entity.AgentOrderVO;
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.CardInfoService;
@@ -61,8 +62,8 @@ public class AgentOrderServiceImpl implements AgentOrderService {
     }
 
     @Override
-    public List<AgentOrderEntity> queryList(Map<String, Object> map) {
-        return agentOrderDao.queryList(map);
+    public List<AgentOrderVO> queryList1(Map<String, Object> map) {
+        return agentOrderDao.queryList1(map);
     }
 
     @Override
