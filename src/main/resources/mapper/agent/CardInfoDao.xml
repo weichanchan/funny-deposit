@@ -53,6 +53,13 @@
 		select COLUMN_NAME  from information_schema.COLUMNS where table_name='card_info'
 	</select>
 
+	<select id="queryListByPwds" resultType="com.funny.admin.agent.entity.CardInfoEntity">
+        select password from card_info where ware_no=#{wareNo} and password in
+        <foreach item="password" collection="pwdList" open="(" separator="," close=")">
+            #{password}
+        </foreach>
+	</select>
+
  	<select id="queryTotal" resultType="int">
 		select count(*) from card_info
 	</select>

@@ -75,5 +75,10 @@ public class CardInfoServiceImpl implements CardInfoService {
 	public void deleteBatch(Long[] ids){
 		cardInfoDao.deleteBatch(ids);
 	}
-	
+
+	@Override
+	public List<CardInfoEntity> queryListExisted(Map<String, Object> map) {
+		return cardInfoDao.queryListByPwds(map);
+	}
+
 }

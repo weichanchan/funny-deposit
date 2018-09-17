@@ -53,6 +53,9 @@
         GROUP BY
         ware_no
         ) c ON w.ware_no = c.ware_no
+        <if test="wareNo != null">
+            where w.ware_no like concat('%',#{wareNo},'%')
+        </if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
@@ -67,7 +70,10 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-		select count(*) from ware_info 
+		select count(*) from ware_info
+        <if test="wareNo != null">
+            where ware_no like concat('%',#{wareNo},'%')
+        </if>
 	</select>
 
     <insert id="save" parameterType="com.funny.admin.agent.entity.WareInfoEntity" useGeneratedKeys="true"

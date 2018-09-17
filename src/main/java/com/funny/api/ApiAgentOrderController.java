@@ -166,6 +166,9 @@ public class ApiAgentOrderController {
         logger.info("下单成功！");
         applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderEntity.getId(), agentOrderEntity, cardInfoString, wareInfoEntity, ""));
 
+        Map map2 =  getReturnMap("T", "", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
+
+        System.out.println("RESULT: "+map2.toString());
         return getReturnMap("T", "", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
     }
 

@@ -1,5 +1,10 @@
 package com.funny.admin.agent.entity;
 
+import com.funny.utils.validator.group.AddGroup;
+import com.funny.utils.validator.group.UpdateGroup;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,6 +26,7 @@ public class WareInfoEntity implements Serializable {
     /**
      * 商品编号
      */
+    @NotBlank(message="商品编号不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String wareNo;
     /**
      * 商品名
@@ -29,14 +35,17 @@ public class WareInfoEntity implements Serializable {
     /**
      * 代理商价格
      */
+    @NotNull(message="代理商价格不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private Long agentPrice;
     /**
      * 充值类型，1：直充类型:；2：卡密类型
      */
+    @NotNull(message="充值类型不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private Integer type;
     /**
      * 商品状态，1：可售；2：不可售
      */
+    @NotNull(message="商品状态不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private Integer status;
     /**
      * 角色ID列表

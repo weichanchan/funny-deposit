@@ -48,4 +48,10 @@ public interface CardInfoDao extends BaseDao<CardInfoEntity> {
     List<CardInfoEntity> queryListByAgentOrderNo(String agentOrderNo);
 
     int queryTotalNum(Map<String,Object> map);
+    /**
+     * 查询序列号是否已存在
+     * @param map
+     * @return
+     */
+    List<CardInfoEntity> queryListByPwds(Map<String, Object> map);
 }

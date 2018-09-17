@@ -17,9 +17,9 @@ public interface SysGeneratorService {
 	int queryTotal(Map<String, Object> map);
 	
 	Map<String, String> queryTable(String tableName);
-	
+
 	List<Map<String, String>> queryColumns(String tableName);
-	
+
 	/**
 	 * 生成代码
 	 */

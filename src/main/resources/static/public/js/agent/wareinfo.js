@@ -73,10 +73,17 @@ var vm = new Vue({
         wareInfo:{
             status:1,
             roleIdList:[]
+        },
+        q:{
+            wareNo:""
         }
     },
     methods: {
         query: function () {
+            vm.reload();
+        },
+        reset: function () {
+            vm.q.wareNo = "";
             vm.reload();
         },
         add: function () {
@@ -103,7 +110,6 @@ var vm = new Vue({
         saveOrUpdate: function (event) {
             //将代理商价格，从单位（元）变成（分）
             vm.wareInfo.agentPrice =vm.wareInfo.agentPrice*100;
-            alert(vm.wareInfo.agentPrice)
             var url = vm.wareInfo.id == null ? "../wareinfo/save" : "../wareinfo/update";
             $.ajax({
                 type: "POST",
@@ -156,7 +162,10 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                page: page
+                page: page,
+                postData:{
+                    "wareNo": vm.q.wareNo
+                }
             }).trigger("reloadGrid");
         },
         addCardInfo: function () {

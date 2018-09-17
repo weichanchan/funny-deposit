@@ -78,7 +78,6 @@ public class CardInfoController {
         List<CardInfoEntity> list = new ArrayList<>();
         Map map = new HashMap();
 
-        String wareNo = null;
         if (wareId == null) {
             return R.error("添加失败！");
         }
@@ -87,13 +86,28 @@ public class CardInfoController {
         if (wareInfoEntity == null) {
             return R.error();
         }
-        wareNo = wareInfoEntity.getWareNo();
+        String wareNo = wareInfoEntity.getWareNo();
 
         String[] pwdList = pwds.split(",");
         if (pwdList == null || pwdList.length == 0) {
             return R.error("需要至少一个激活码");
         }
 
+        //判断序列号是否有重复
+        Map param = new HashMap();
+        map.put("wareNo", wareNo);
+        map.put("pwdList", pwdList);
+        List<CardInfoEntity> cardInfoExisted = cardInfoService.queryListExisted(map);
+        if(cardInfoExisted != null && cardInfoExisted.size()>0){
+            String msg = "序列号：";
+            CardInfoEntity cardInfoEntity;
+            for(int i=0;i<cardInfoExisted.size();i++){
+                cardInfoEntity = cardInfoExisted.get(i);
+                msg += "【"+cardInfoEntity.getPassword()+"】";
+            }
+            msg += "在该商品中已存在，请重新输入！";
+            return R.error(msg);
+        }
         for (int i = 0; i < pwdList.length; i++) {
             cardInfo = new CardInfoEntity();
             cardInfo.setWareNo(wareNo);

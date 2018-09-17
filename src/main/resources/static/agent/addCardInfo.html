@@ -72,7 +72,6 @@
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="add" value="手动保存"/> &nbsp;&nbsp;
                 <a class="btn btn-primary" id="upload" style="a"><i class="fa fa-plus"></i>&nbsp;从Excel自动导入</a>
-                <!--&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="importExcel" value="从excel导入"/>-->
             </div>
         </form>
     </div>
@@ -108,7 +107,7 @@
                 $.ajax({
                     type: "GET",
                     url: "../cardinfo/save",
-                    contentType: "application/json?wareId=" + wareId + "&pwds=" + pwdList,
+                    contentType: "application/json?wareId=" + wareId + "&pwds=" + encodeURI(encodeURI(pwdList)),
                     data: {
                         "wareId": wareId,
                         "pwds": pwdList
@@ -161,6 +160,5 @@
         return re.test(str);
     }
 </script>
-<!--<script src="../public/js/agent/wareinfo.js"></script>-->
 </body>
 </html>

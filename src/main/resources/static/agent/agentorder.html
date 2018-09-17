@@ -26,12 +26,13 @@
             <div class="form-group col-sm-2">
                 <input type="text" class="form-control" v-model="q.jdOrderNo" @keyup.enter="query" placeholder="京东订单号">
             </div>
-            <a class="btn btn-default" @click="query">查询</a>
+            <a class="btn btn-default" @click="query"><i class="fa fa-search">&nbsp;查询</i></a>
+            <a class="btn btn-default" @click="reset"><i class="fa fa-refresh">&nbsp;重置</i></a>
             <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="startHandle"><i
                     class="fa fa-play"></i>&nbsp;开始处理</a>
-            <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="handleSuccess" style="background-color: green"><i
+            <a v-if="hasPermission('agentorder:delete')" class="btn btn-success" @click="handleSuccess"><i
                     class=""></i>&nbsp;处理成功</a>
-            <a v-if="hasPermission('agentorder:delete')" class="btn btn-primary" @click="handleFailed" style="background-color: red"><i
+            <a v-if="hasPermission('agentorder:delete')" class="btn btn-danger" @click="handleFailed"><i
                     class=""></i>&nbsp;处理失败</a>
         </div>
         <table id="jqGrid"></table>

@@ -4,6 +4,9 @@ import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.entity.WareInfoVO;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.utils.*;
+import com.funny.utils.validator.ValidatorUtils;
+import com.funny.utils.validator.group.AddGroup;
+import com.funny.utils.validator.group.UpdateGroup;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +66,14 @@ public class WareInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("wareinfo:save")
     public R save(@RequestBody WareInfoEntity wareInfo) {
+        //校验商品信息
+        ValidatorUtils.validateEntity(wareInfo, AddGroup.class);
+
+        WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareInfo.getWareNo());
+        if(wareInfoEntity != null){
+            return R.error("该商品编号已存在，请重新输入！");
+        }
+
         // TODO: 2018/9/10  代理商id，目前只有一个，先写固定值
         wareInfo.setAgentId(configUtils.getAgentId());
         if (wareInfo.getRoleIdList().size() == 0) {
@@ -79,6 +90,8 @@ public class WareInfoController {
     @RequestMapping("/update")
     @RequiresPermissions("wareinfo:update")
     public R update(@RequestBody WareInfoEntity wareInfo) {
+        //校验商品信息
+        ValidatorUtils.validateEntity(wareInfo, UpdateGroup.class);
         wareInfoService.update(wareInfo);
 
         return R.ok();

@@ -96,6 +96,10 @@ var vm = new Vue({
         query: function () {
             vm.reload();
         },
+        reset: function () {
+            vm.q.jdOrderNo = "";
+            vm.reload();
+        },
         add: function () {
             vm.showList = false;
             vm.title = "新增";
