@@ -1,4 +1,4 @@
-package com.funny.api.event;
+package com.funny.api.event.notify;
 
 import com.funny.admin.agent.entity.AgentOrderEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;

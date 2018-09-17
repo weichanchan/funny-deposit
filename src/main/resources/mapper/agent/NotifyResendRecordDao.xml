@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.funny.admin.agent.dao.NotifyResendRecordDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.funny.admin.agent.entity.NotifyResendRecordEntity" id="notifyResendRecordMap">
+        <result property="id" column="id"/>
+        <result property="notifyUrl" column="notify_url"/>
+        <result property="nextTime" column="next_time"/>
+        <result property="count" column="count"/>
+        <result property="failTime" column="fail_time"/>
+        <result property="creationTime" column="creation_time"/>
+        <result property="agentOrderId" column="agent_order_id"/>
+    </resultMap>
+
+    <select id="queryObject" resultType="com.funny.admin.agent.entity.NotifyResendRecordEntity">
+        select
+        `id`,
+        `notify_url`,
+        `next_time`,
+        `count`,
+        `fail_time`,
+        `creation_time`,
+        `agent_order_id`
+        from notify_resend_record where id = #{id}
+        <if test="isLock != null and isLock == true">for update</if>
+    </select>
+
+    <select id="queryList" resultType="com.funny.admin.agent.entity.NotifyResendRecordEntity">
+        select
+        `id`,
+        `notify_url`,
+        `next_time`,
+        `count`,
+        `fail_time`,
+        `creation_time`,
+        `agent_order_id`
+        from notify_resend_record
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryResendList" resultType="com.funny.admin.agent.entity.NotifyResendRecordEntity">
+		        select
+		            `id`,
+		            `notify_url`,
+		            `next_time`,
+		            `count`,
+		            `fail_time`,
+		            `creation_time`,
+		            `agent_order_id`
+				from notify_resend_record
+                where fail_time is null
+	</select>
+
+    <select id="queryTotal" resultType="int">
+		select count(*) from notify_resend_record 
+	</select>
+
+    <insert id="save" parameterType="com.funny.admin.agent.entity.NotifyResendRecordEntity">
+		insert into notify_resend_record
+		(
+			`id`, 
+			`notify_url`, 
+			`next_time`, 
+			`count`, 
+			`fail_time`, 
+			`creation_time`, 
+			`agent_order_id`
+		)
+		values
+		(
+			#{id}, 
+			#{notifyUrl}, 
+			#{nextTime}, 
+			#{count}, 
+			#{failTime}, 
+			#{creationTime}, 
+			#{agentOrderId}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.funny.admin.agent.entity.NotifyResendRecordEntity">
+        update notify_resend_record
+        <set>
+            <if test="notifyUrl != null">`notify_url` = #{notifyUrl},</if>
+            <if test="nextTime != null">`next_time` = #{nextTime},</if>
+            <if test="count != null">`count` = #{count},</if>
+            <if test="failTime != null">`fail_time` = #{failTime},</if>
+            <if test="creationTime != null">`creation_time` = #{creationTime},</if>
+            <if test="agentOrderId != null">`agent_order_id` = #{agentOrderId}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+		delete from notify_resend_record where id = #{value}
+	</delete>
+
+    <delete id="deleteBatch">
+        delete from notify_resend_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

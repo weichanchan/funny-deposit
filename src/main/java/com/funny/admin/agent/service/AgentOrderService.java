@@ -2,6 +2,7 @@ package com.funny.admin.agent.service;
 
 import com.funny.admin.agent.entity.AgentOrderEntity;
 import com.funny.admin.agent.entity.AgentOrderVO;
+import com.funny.admin.agent.entity.NotifyResendRecordEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -50,4 +51,10 @@ public interface AgentOrderService {
     void handleFailed(Long id);
 
     void startHandle(Long id);
+
+    void newResend(AgentOrderEntity agentOrderEntity, String notifyUrl);
+
+    void resend(NotifyResendRecordEntity notifyResendRecordEntity);
+
+    List<NotifyResendRecordEntity> findResendTask();
 }
