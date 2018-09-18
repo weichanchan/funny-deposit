@@ -182,6 +182,7 @@ public class CardInfoController {
 
         for (int i = 0; i < list.size(); i++) {
             cardInfoEntity = list.get(i);
+            cardInfoEntity.setStatus(1);
             cardInfoEntity.setWareNo(wareNo);
             cardInfoEntity.setExpiryDate(getExpiryDate());
             cardInfoService.save(cardInfoEntity);

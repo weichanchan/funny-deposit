@@ -296,18 +296,22 @@ public class ApiAgentOrderController {
         }
 
         String agentOrderNo = agentOrder.getAgentOrderNo();
-        Integer status = agentOrder.getStatus();
+        Integer rechargeStatus = agentOrder.getRechargeStatus();
         String time = sdf.format(new Date());
         Integer quantity = agentOrder.getQuantity();
         String cardInfo = null;
         String wareNo = agentOrder.getWareNo();
         WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareNo);
         Integer wareType = wareInfoEntity.getType();
+        //如果是直充类型，且充值状态为未充值，则返回状态设置为充值中
+        if (wareType ==1 && rechargeStatus == 0){
+            rechargeStatus = 3;
+        }
         if (wareType != 1) {
             // TODO: 2018/9/15  卡信息加密不正确
             cardInfo = AESUtils.encrypt(agentOrder.getCardInfo(), configUtils.getSecretKey());
         }
-        return getReturnMap("T", "", agentOrderNo, jdOrderNo, status, time, quantity, cardInfo, signType, sdf.format(new Date()), version);
+        return getReturnMap("T", "", agentOrderNo, jdOrderNo, rechargeStatus, time, quantity, cardInfo, signType, sdf.format(new Date()), version);
 
     }
 
