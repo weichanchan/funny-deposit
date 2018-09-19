@@ -10,6 +10,7 @@ import com.funny.api.event.notify.AgentOrderListener;
 import com.funny.api.event.notify.AgentOrderNotifyEvent;
 import com.funny.utils.AESUtils;
 import com.funny.utils.ConfigUtils;
+import com.funny.utils.EncryptUtil;
 import com.funny.utils.SignUtils;
 import com.funny.utils.annotation.IgnoreAuth;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -123,6 +126,12 @@ public class ApiAgentOrderController {
         String notifyUrl = (String) params.get("notifyUrl");
         String features = (String) params.get("features");
 
+        try {
+            //特殊属性解密
+            features = EncryptUtil.decryptBase64(URLDecoder.decode(features,"UTF-8"),configUtils.getSecretKey());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         //直充类型，且参数合法
         if (rechargeType == 1) {
             saveAgentOrder(sign, signType, timestamp, version, jdOrderNo, agentOrderEntity, wareNo, quantity, rechargeNum, costPrice, type, finTime, notifyUrl, features);
@@ -168,9 +177,6 @@ public class ApiAgentOrderController {
         logger.info("下单成功！");
         applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderEntity.getId(), agentOrderEntity, cardInfoString, wareInfoEntity, ""));
 
-        Map map2 =  getReturnMap("T", "", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-
-        System.out.println("RESULT: "+map2.toString());
         return getReturnMap("T", "", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
     }
 
