@@ -110,7 +110,7 @@ public class ApiAgentOrderController {
             return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
         //直充类型商品充值号码不为空
-        if(rechargeType ==1 && StringUtils.isEmpty(rechargeNum)){
+        if (rechargeType == 1 && StringUtils.isEmpty(rechargeNum)) {
             return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
         }
         //判断商品价格和成本价格是否相等
@@ -128,7 +128,7 @@ public class ApiAgentOrderController {
 
         try {
             //特殊属性解密
-            features = EncryptUtil.decryptBase64(URLDecoder.decode(features,"UTF-8"),configUtils.getSecretKey());
+            features = EncryptUtil.decryptBase64(URLDecoder.decode(features, "UTF-8"), configUtils.getSecretKey());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -310,11 +310,10 @@ public class ApiAgentOrderController {
         WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareNo);
         Integer wareType = wareInfoEntity.getType();
         //如果是直充类型，且充值状态为未充值，则返回状态设置为充值中
-        if (wareType ==1 && rechargeStatus == 0){
+        if (wareType == 1 && rechargeStatus == 0) {
             rechargeStatus = 3;
         }
         if (wareType != 1) {
-            // TODO: 2018/9/15  卡信息加密不正确
             cardInfo = AESUtils.encrypt(agentOrder.getCardInfo(), configUtils.getSecretKey());
         }
         return getReturnMap("T", "", agentOrderNo, jdOrderNo, rechargeStatus, time, quantity, cardInfo, signType, sdf.format(new Date()), version);

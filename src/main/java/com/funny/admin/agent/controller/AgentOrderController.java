@@ -1,32 +1,23 @@
 package com.funny.admin.agent.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import com.funny.admin.agent.entity.AgentOrderEntity;
+import com.funny.admin.agent.entity.AgentOrderVO;
+import com.funny.admin.agent.service.AgentOrderService;
+import com.funny.admin.agent.service.WareInfoService;
+import com.funny.admin.common.AbstractController;
+import com.funny.admin.system.service.SysUserRoleService;
+import com.funny.utils.PageUtils;
+import com.funny.utils.Query;
+import com.funny.utils.R;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.funny.admin.agent.entity.AgentOrderEntity;
-import com.funny.admin.agent.entity.AgentOrderVO;
-import com.funny.admin.agent.entity.WareInfoEntity;
-import com.funny.admin.agent.service.AgentOrderService;
-import com.funny.admin.agent.service.WareInfoService;
-import com.funny.admin.common.AbstractController;
-import com.funny.admin.system.dao.SysUserRoleDao;
-import com.funny.admin.system.service.SysUserRoleService;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.funny.utils.PageUtils;
-import com.funny.utils.Query;
-import com.funny.utils.R;
 
 
 /**
@@ -52,8 +43,14 @@ public class AgentOrderController extends AbstractController {
     @RequestMapping("/list")
     @RequiresPermissions("agentorder:list")
     public R list(@RequestParam Map<String, Object> params) {
-        if(getUser().getUserId() != 1L){
-            params.put("roleIds",sysUserRoleService.queryRoleIdList(getUserId()));
+        if (getUser().getUserId() != 1L) {
+            params.put("roleIds", sysUserRoleService.queryRoleIdList(getUserId()));
+        }
+
+        String jdOrderNo = (String) params.get("jdOrderNo");
+        //根据查询条件是否为空，重置page，解决列表页面翻页后查询不到数据的问题
+        if (!StringUtils.isEmpty(jdOrderNo)) {
+            params.put("page", 1);
         }
         //查询列表数据
         Query query = new Query(params);
@@ -94,13 +91,13 @@ public class AgentOrderController extends AbstractController {
     @RequiresPermissions("agentorder:info")
     public R infoNew() {
         Map<String, Object> params = new HashMap<>(16);
-        if(getUser().getUserId() != 1L){
-            params.put("roleIds",sysUserRoleService.queryRoleIdList(getUserId()));
+        if (getUser().getUserId() != 1L) {
+            params.put("roleIds", sysUserRoleService.queryRoleIdList(getUserId()));
         }
         AgentOrderEntity agentOrder = agentOrderService.queryLast(params);
         Long now = System.currentTimeMillis();
         now = now - 7000;
-        if(agentOrder.getCreateTime().getTime() >= now){
+        if (agentOrder.getCreateTime().getTime() >= now) {
             return R.ok();
         }
         return R.ok().put("code", -1);
@@ -139,6 +136,7 @@ public class AgentOrderController extends AbstractController {
 
     /**
      * 处理失败，固定返回商品不可售给京东
+     *
      * @param id
      * @return
      */

@@ -7,6 +7,7 @@ import com.funny.utils.*;
 import com.funny.utils.validator.ValidatorUtils;
 import com.funny.utils.validator.group.AddGroup;
 import com.funny.utils.validator.group.UpdateGroup;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,11 @@ public class WareInfoController {
     @RequestMapping("/list")
     @RequiresPermissions("wareinfo:list")
     public R list(@RequestParam Map<String, Object> params) {
+        String wareNo = (String) params.get("wareNo");
+        //根据查询条件是否为空，重置page，解决列表页面翻页后查询不到数据的问题
+        if (!StringUtils.isEmpty(wareNo)) {
+            params.put("page", 1);
+        }
         //查询列表数据
         Query query = new Query(params);
 
@@ -70,7 +76,7 @@ public class WareInfoController {
         ValidatorUtils.validateEntity(wareInfo, AddGroup.class);
 
         WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareInfo.getWareNo());
-        if(wareInfoEntity != null){
+        if (wareInfoEntity != null) {
             return R.error("该商品编号已存在，请重新输入！");
         }
 
