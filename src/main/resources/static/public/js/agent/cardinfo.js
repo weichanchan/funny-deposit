@@ -17,7 +17,7 @@ $(function () {
             {label: '关联订单id', name: 'agentOrderNo', index: 'agent_order_no', width: 80},
             {label: '状态', name: 'status', index: 'status', width: 80,
                 formatter: function (value, options, row) {
-                    return value === 1 ? '未售出' : '已售出';
+                    return value == 1 ? '<font color="green">未售出</font>' : '已售出';
                 }
             },
             {label: '有效期', name: 'expiryDate', index: 'expiry_date', width: 80},

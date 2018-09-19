@@ -115,7 +115,6 @@
                     success: function (r) {
                         if (r.code === 0) {
                             alert('操作成功', function (index) {
-                                //todo 关闭窗口时，把信息传回原页面
                                 window.opener.location.reload();
                                 //刷新父窗口，关闭子窗口
                                 window.opener=null;
@@ -144,8 +143,12 @@
         },
         onComplete: function (file, r) {
             if (r.code == 0) {
-                alert("导入成功！");
-                window.close();
+                alert('导入成功！', function (index) {
+                    window.opener.location.reload();
+                    //刷新父窗口，关闭子窗口
+                    window.opener = null;
+                    window.close();
+                });
             } else {
                 alert(r.msg);
             }
