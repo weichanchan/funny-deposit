@@ -109,7 +109,7 @@ var vm = new Vue({
         },
         saveOrUpdate: function (event) {
             //将代理商价格，从单位（元）变成（分）
-            vm.wareInfo.agentPrice =vm.wareInfo.agentPrice*100;
+            // vm.wareInfo.agentPrice =vm.wareInfo.agentPrice*100;
             var url = vm.wareInfo.id == null ? "../wareinfo/save" : "../wareinfo/update";
             $.ajax({
                 type: "POST",
@@ -155,7 +155,7 @@ var vm = new Vue({
             $.get("../wareinfo/info/" + id, function (r) {
                 vm.wareInfo = r.wareInfo;
                 //将代理商价格，从单位（分）变成（元）显示
-                vm.wareInfo.agentPrice =(vm.wareInfo.agentPrice / 100).toFixed(2);
+                // vm.wareInfo.agentPrice =(vm.wareInfo.agentPrice / 100).toFixed(2);
             });
         },
         reload: function (event) {
@@ -211,6 +211,6 @@ var vm = new Vue({
 //只能输入两位小数
 function checkDecimal(data) {
     var re = /([0-9]+\.[0-9]{2})[0-9]*/;
-    var num = data.replace(re,"$1");
+    var num = data.replace(/\D/g,'');
     return num;
 }
