@@ -27,7 +27,7 @@ $(function () {
                     if (value === 1) {
                         return '<font color="red">新创建</font>'
                     } else if (value===2){
-                        return '<font color="yellow">处理中</font>';
+                        return '<font color="#1e90ff">处理中</font>';
                     } else if (value===3){
                         return '<font color="gray">已处理</font>';
                     } else {
@@ -43,7 +43,7 @@ $(function () {
                     } else if (value === 1){
                         return '<font color="green">充值成功</font>'
                     } else if(value == 3) {
-                        return '<font color="yellow">充值中</font>';
+                        return '<font color="#1e90ff">充值中</font>';
                     } else if(value == 2){
                         return '<font color="red">充值失败</font>';
                     } else {

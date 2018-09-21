@@ -31,8 +31,10 @@
             <a v-if="hasPermission('wareinfo:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
             <a v-if="hasPermission('wareinfo:update')" class="btn btn-primary" @click="update"><i
                     class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a v-if="hasPermission('wareinfo:delete')" class="btn btn-primary" @click="del"><i
-                    class="fa fa-trash-o"></i>&nbsp;删除</a>
+            <!--<a v-if="hasPermission('wareinfo:delete')" class="btn btn-primary" @click="del"><i
+                    class="fa fa-trash-o"></i>&nbsp;删除</a>-->
+            <a v-if="hasPermission('wareinfo:update')" class="btn btn-primary" @click="offShelves"><i
+                    class="fa fa-arrow-circle-o-down"></i>&nbsp;下架</a>
             <a v-if="hasPermission('wareinfo:delete')" class="btn btn-primary" @click="addCardInfo"><i
                     class="fa fa-plus"></i>&nbsp;添加卡密信息</a>
             <a class="btn btn-info" @click="cardinfo"><i class="fa fa-bars"></i>&nbsp;查看卡密信息</a>

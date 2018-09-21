@@ -33,5 +33,7 @@ public interface WareInfoService {
 
     void deleteBatch(Long[] ids);
 
+    void offShelves(Long[] ids);
+
     List<Long> queryRoleIdList(Long id);
 }

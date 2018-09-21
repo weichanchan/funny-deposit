@@ -112,6 +112,15 @@
         <!--<if test="isLock != null and isLock == true">for update</if>-->
     </update>
 
+    <update id="offShelves">
+        update ware_info
+        set `status` = 2
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
     <delete id="delete">
 		delete from ware_info where id = #{value}
 	</delete>

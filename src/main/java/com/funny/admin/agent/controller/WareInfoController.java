@@ -114,4 +114,14 @@ public class WareInfoController {
         return R.ok();
     }
 
+    /**
+     * 下架
+     */
+    @RequestMapping("/offShelves")
+    @RequiresPermissions("wareinfo:update")
+    public R offShelves(@RequestBody Long[] ids){
+        wareInfoService.offShelves(ids);
+        return R.ok();
+    }
+
 }

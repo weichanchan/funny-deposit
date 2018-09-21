@@ -83,6 +83,11 @@ public class WareInfoServiceImpl implements WareInfoService {
     }
 
     @Override
+    public void offShelves(Long[] ids) {
+        wareInfoDao.offShelves(ids);
+    }
+
+    @Override
     public List<Long> queryRoleIdList(Long id) {
         return wareRoleDao.queryRoleIdList(id);
     }

@@ -24,4 +24,10 @@ public interface WareInfoDao extends BaseDao<WareInfoEntity> {
     WareInfoEntity queryObjectByWareNo(String wareNo);
 
     List<WareInfoVO> queryListAvailable(Map<String, Object> map);
+
+    /**
+     * 商品下架
+     * @param ids
+     */
+    void offShelves(Long[] ids);
 }

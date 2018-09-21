@@ -158,6 +158,27 @@ var vm = new Vue({
                 // vm.wareInfo.agentPrice =(vm.wareInfo.agentPrice / 100).toFixed(2);
             });
         },
+        offShelves: function(){
+            var ids = getSelectedRows();
+            if (ids == null) {
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "../wareinfo/offShelves",
+                contentType:"application/json",
+                data: JSON.stringify(ids),
+                success: function (r) {
+                    if (r.code === 0) {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+                    } else {
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
         reload: function (event) {
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
