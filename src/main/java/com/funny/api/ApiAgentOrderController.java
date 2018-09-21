@@ -314,7 +314,7 @@ public class ApiAgentOrderController {
             rechargeStatus = 3;
         }
         if (wareType != 1) {
-            cardInfo = AESUtils.encrypt(agentOrder.getCardInfo(), configUtils.getSecretKey());
+            cardInfo = EncryptUtil.encryptBase64(agentOrder.getCardInfo(), configUtils.getSecretKey());
         }
         return getReturnMap("T", "", agentOrderNo, jdOrderNo, rechargeStatus, time, quantity, cardInfo, signType, sdf.format(new Date()), version);
 
