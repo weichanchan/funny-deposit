@@ -86,6 +86,8 @@ public class CardInfoController {
         if (wareInfoEntity == null) {
             return R.error();
         }
+        wareInfoEntity.setStatus(1);
+        wareInfoService.update(wareInfoEntity);
         String wareNo = wareInfoEntity.getWareNo();
 
         String[] pwdList = pwds.split(",");
@@ -177,6 +179,8 @@ public class CardInfoController {
             if (wareInfoEntity == null) {
                 return R.error();
             }
+            wareInfoEntity.setStatus(1);
+            wareInfoService.update(wareInfoEntity);
             wareNo = wareInfoEntity.getWareNo();
         }
 
