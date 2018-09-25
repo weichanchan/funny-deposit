@@ -21,7 +21,7 @@ spring:
 # 配置自定义参数
 optional:
     params:
-        agentId: 22501
-        bussType: 13758
+        agentId: 48281
+        bussType: 6
         secretKey: "01234567890123456789012345678912"
         versionNo: 1.0

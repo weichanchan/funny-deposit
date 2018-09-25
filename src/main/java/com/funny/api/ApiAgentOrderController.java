@@ -93,13 +93,13 @@ public class ApiAgentOrderController {
             WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareNo);
             if (wareInfoEntity == null) {
                 //没有对应商品（可退款）
-                return getReturnMap("F", "JDI_00003", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+                return getReturnMap("F", "JDI_00003", null, jdOrderNo, null, sign, signType, timestamp, version);
             }
 
             //商品状态
             if (wareInfoEntity.getStatus() == 2) {
                 //此商品不可售（可退款）
-                return getReturnMap("F", "JDI_00004", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+                return getReturnMap("F", "JDI_00004", null, jdOrderNo, null, sign, signType, timestamp, version);
             }
 
             //商品类型
@@ -108,18 +108,18 @@ public class ApiAgentOrderController {
             //直充类型商品只能买一个
             Integer rechargeType = wareInfoEntity.getType();
             if (quantity <= 0 || (rechargeType == 1 && quantity > 1)) {
-                return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+                return getReturnMap("F", "JDI_00001", null, jdOrderNo, null, sign, signType, timestamp, version);
             }
             //直充类型商品充值号码不为空
             if (rechargeType == 1 && StringUtils.isEmpty(rechargeNum)) {
-                return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+                return getReturnMap("F", "JDI_00001", null, jdOrderNo, null, sign, signType, timestamp, version);
             }
             //判断商品价格和成本价格是否相等
             agentPrice = wareInfoEntity.getAgentPrice();
             Long costPrice = Long.valueOf((String) params.get("costPrice"));
             if (!agentPrice.equals(costPrice)) {
                 // 成本价不正确（可退款）
-                return getReturnMap("F", "JDI_00005", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
+                return getReturnMap("F", "JDI_00005", null, jdOrderNo, agentPrice, sign, signType, timestamp, version);
             }
 
             Integer type = Integer.valueOf((String) params.get("type"));
@@ -149,7 +149,7 @@ public class ApiAgentOrderController {
             List<CardInfoEntity> cardInfoLists = cardInfoService.queryListNum(queryMap);
             if (cardInfoLists == null || cardInfoLists.size() < quantity) {
                 logger.error("库存不足");
-                return getReturnMap("F", "JDI_00004", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+                return getReturnMap("F", "JDI_00004", null, jdOrderNo, null, sign, signType, timestamp, version);
             }
 
             saveAgentOrder(sign, signType, timestamp, version, jdOrderNo, agentOrderEntity, wareNo, quantity, rechargeNum, costPrice, type, finTime, notifyUrl, features);
@@ -290,6 +290,7 @@ public class ApiAgentOrderController {
         String sign = (String) params.get("sign");
         String signType = (String) params.get("signType");
         String version = (String) params.get("version");
+        String jdOrderNo = (String) params.get("jdOrderNo");
         String timestamp = "";
         //响应时间戳
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -299,13 +300,13 @@ public class ApiAgentOrderController {
         boolean b = SignUtils.checkSign(params, configUtils.getSecretKey(), configUtils.getVersionNo());
         if (b == false) {
             // 签名验证不正确
-            return getReturnMap("F", "JDI_00002", null, null, null, null, null, null, signType, timestamp, version);
+            return getReturnMap("F", "JDI_00002", null, jdOrderNo, null, null, null, null, signType, timestamp, version);
         }
 
-        String jdOrderNo = (String) params.get("jdOrderNo");
+
         AgentOrderEntity agentOrder = agentOrderService.queryObjectByJdOrderNo(jdOrderNo);
         if (agentOrder == null) {
-            return getReturnMap("F", "JDI_00007", null, null, null, null, null, null, signType, timestamp, version);
+            return getReturnMap("F", "JDI_00007", null, jdOrderNo, null, null, null, null, signType, timestamp, version);
         }
 
         String agentOrderNo = agentOrder.getAgentOrderNo();
