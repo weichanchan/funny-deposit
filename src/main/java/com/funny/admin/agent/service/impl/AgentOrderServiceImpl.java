@@ -118,19 +118,19 @@ public class AgentOrderServiceImpl implements AgentOrderService {
             return;
         }
 
-        String agentId = wareInfoEntity.getAgentId();
-        AgentInfoEntity agentInfo = agentInfoDao.queryObjectByAgentId(agentId);
-        if (agentInfo == null) {
-            logger.error("商家不存在！");
-            applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, null, AgentOrderNotifyEvent.JD00001));
-            return;
-        }
-
-        if(!configUtils.getAgentId().equals(agentId)){
-            logger.error("代理商ID不正确！");
-            applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, null, AgentOrderNotifyEvent.JD00007));
-            return;
-        }
+//        String agentId = wareInfoEntity.getAgentId();
+//        AgentInfoEntity agentInfo = agentInfoDao.queryObjectByAgentId(agentId);
+//        if (agentInfo == null) {
+//            logger.error("商家不存在！");
+//            applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, null, AgentOrderNotifyEvent.JD00001));
+//            return;
+//        }
+//
+//        if(!configUtils.getAgentId().equals(agentId)){
+//            logger.error("代理商ID不正确！");
+//            applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderId, agentOrderEntity, null, null, AgentOrderNotifyEvent.JD00007));
+//            return;
+//        }
 
         updateAgentOrder(agentOrderEntity, 3, 1);
         logger.info("充值成功！");

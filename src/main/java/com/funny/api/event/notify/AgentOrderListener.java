@@ -117,8 +117,8 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
             param += key + "=" + map.get(key) + "&";
         }
         param = param.substring(0, param.length() - 1);
-        ResponseEntity<String> response = template.postForEntity(notifyUrl + "/kamiNotify" + param, null, String.class);
-        logger.debug(notifyUrl + "/kamiNotify" + param);
+        ResponseEntity<String> response = template.postForEntity(notifyUrl + param, null, String.class);
+        logger.debug(notifyUrl + param);
         try {
             logger.debug(response.getBody());
             Map result = objectMapper.readValue(response.getBody(), Map.class);
@@ -130,7 +130,7 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
             logger.error(response.getBody(), e);
         }
         // 记录重复记录到数据库重复
-        agentOrderService.newResend(agentOrderEntity, notifyUrl + "/kamiNotify" + param);
+        agentOrderService.newResend(agentOrderEntity, notifyUrl + param);
     }
 
 }

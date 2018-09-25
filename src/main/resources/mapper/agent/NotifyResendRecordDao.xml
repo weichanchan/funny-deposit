@@ -60,7 +60,7 @@
 		            `creation_time`,
 		            `agent_order_id`
 				from notify_resend_record
-                where fail_time is null
+                where fail_time is null  <![CDATA[AND next_time <= NOW()]]>
 	</select>
 
     <select id="queryTotal" resultType="int">

@@ -54,6 +54,7 @@ public class ResendTask {
 	
 	public void watch(){
 		List<NotifyResendRecordEntity> notifyResendRecordEntities = agentOrderService.findResendTask();
+		logger.debug("开始回调重试");
 		for (NotifyResendRecordEntity notifyResendRecordEntity: notifyResendRecordEntities) {
 			ResponseEntity<String> response = template.postForEntity(notifyResendRecordEntity.getNotifyUrl(), null, String.class);
 			Map result;
@@ -62,6 +63,7 @@ public class ResendTask {
 				result = objectMapper.readValue(response.getBody(), Map.class);
 				String flag = (String) result.get("isSuccess");
 				if ("T".equals(flag)) {
+					agentOrderService.delete(notifyResendRecordEntity.getId());
 					return;
 				}
 			} catch (IOException e) {
