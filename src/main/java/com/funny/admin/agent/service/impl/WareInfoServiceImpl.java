@@ -61,7 +61,7 @@ public class WareInfoServiceImpl implements WareInfoService {
 
     private void saveWareRoles(WareInfoEntity wareInfo) {
         List<Long> roleIds = wareInfo.getRoleIdList();
-        if(roleIds.size()==0){
+        if(roleIds==null || roleIds.size()==0){
             return;
         }
         for (Long roleId : roleIds) {
