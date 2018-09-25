@@ -88,7 +88,7 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         map.put("timestamp", agentOrderEntity.getTimestamp());
         map.put("version", agentOrderEntity.getVersion());
 
-        map.put("agentId", agentOrderNotifyEvent.getWareInfoEntity().getAgentId());
+        map.put("agentId",configUtils.getAgentId());
         map.put("bussType", configUtils.getBussType());
         //京东指定业务编号
         map.put("jdOrderNo", agentOrderEntity.getJdOrderNo());
@@ -118,14 +118,15 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         }
         param = param.substring(0, param.length() - 1);
         ResponseEntity<String> response = template.postForEntity(notifyUrl + "/kamiNotify" + param, null, String.class);
+        logger.debug(notifyUrl + "/kamiNotify" + param);
         try {
-            Map result = objectMapper.readValue(response.getBody(), Map.class);
             logger.debug(response.getBody());
+            Map result = objectMapper.readValue(response.getBody(), Map.class);
             String flag = (String) result.get("isSuccess");
             if ("T".equals(flag)) {
                 return;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(response.getBody(), e);
         }
         // 记录重复记录到数据库重复
