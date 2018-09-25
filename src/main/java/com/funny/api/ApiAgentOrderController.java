@@ -58,126 +58,134 @@ public class ApiAgentOrderController {
         String signType = (String) params.get("signType");
         String timestamp = null;
         String version = (String) params.get("version");
-        String agentOrderNo = null;
+
         Long agentPrice = null;
         Map map;
-
-        //响应时间戳
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        timestamp = sdf.format(new Date());
-
-        String jdOrderNo = (String) params.get("jdOrderNo");
-
-        //校验签名
-        boolean b = SignUtils.checkSign(params, configUtils.getSecretKey(), configUtils.getVersionNo());
-        if (b == false) {
-            isSuccess = "F";
-            // 签名验证不正确（可退款）
-            errorCode = "JDI_00002";
-            map = getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-            return map;
-        }
-
-        //根据京东订单号防重，如果已存在，返回订单信息
-        AgentOrderEntity agentOrderEntity = agentOrderService.queryObjectByJdOrderNo(jdOrderNo);
-        if (agentOrderEntity != null) {
-            agentOrderNo = agentOrderEntity.getAgentOrderNo();
-            return getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-        }
-
-        agentOrderEntity = new AgentOrderEntity();
-
-        //对应商品
-        String wareNo = (String) params.get("wareNo");
-        WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareNo);
-        if (wareInfoEntity == null) {
-            //没有对应商品（可退款）
-            return getReturnMap("F", "JDI_00003", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-        }
-
-        //商品状态
-        if (wareInfoEntity.getStatus() == 2) {
-            //此商品不可售（可退款）
-            return getReturnMap("F", "JDI_00004", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-        }
-
-        //商品类型
-        Integer quantity = Integer.valueOf((String) params.get("quantity"));
-        String rechargeNum = (String) params.get("rechargeNum");
-        //直充类型商品只能买一个
-        Integer rechargeType = wareInfoEntity.getType();
-        if (quantity <= 0 || (rechargeType == 1 && quantity > 1)) {
-            return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-        }
-        //直充类型商品充值号码不为空
-        if (rechargeType == 1 && StringUtils.isEmpty(rechargeNum)) {
-            return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-        }
-        //判断商品价格和成本价格是否相等
-        agentPrice = wareInfoEntity.getAgentPrice();
-        Long costPrice = Long.valueOf((String) params.get("costPrice"));
-        if (!agentPrice.equals(costPrice)) {
-            // 成本价不正确（可退款）
-            return getReturnMap("F", "JDI_00005", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-        }
-
-        Integer type = Integer.valueOf((String) params.get("type"));
-        String finTime = (String) params.get("finTime");
-        String notifyUrl = (String) params.get("notifyUrl");
-        String features = (String) params.get("features");
-
         try {
-            //特殊属性解密
-            features = EncryptUtil.decryptBase64(URLDecoder.decode(features, "UTF-8"), configUtils.getSecretKey());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        //直充类型，且参数合法
-        if (rechargeType == 1) {
-            saveAgentOrder(sign, signType, timestamp, version, jdOrderNo, agentOrderEntity, wareNo, quantity, rechargeNum, costPrice, type, finTime, notifyUrl, features);
-            return getReturnMap("T", "", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-        }
 
-        //卡密类型
-        Map<String, Object> queryMap = new HashMap<>();
-        queryMap.put("wareNo", wareNo);
-        queryMap.put("num", quantity);
-        queryMap.put("status", 1);
-        List<CardInfoEntity> cardInfoLists = cardInfoService.queryListNum(queryMap);
-        if (cardInfoLists == null || cardInfoLists.size() < quantity) {
-            logger.error("库存不足");
-            return getReturnMap("F", "JDI_00004", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
-        }
+            //响应时间戳
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            timestamp = sdf.format(new Date());
 
-        saveAgentOrder(sign, signType, timestamp, version, jdOrderNo, agentOrderEntity, wareNo, quantity, rechargeNum, costPrice, type, finTime, notifyUrl, features);
-        agentOrderEntity = agentOrderService.queryObjectByJdOrderNo(jdOrderNo);
+            String jdOrderNo = (String) params.get("jdOrderNo");
 
-        String cardInfoString = "";
-        //卡密类型充值，获取卡密串
-        for (int i = 0; i < cardInfoLists.size(); i++) {
-            CardInfoEntity cardInfo = cardInfoLists.get(i);
-            //将卡密状态改为2：已使用，同时存入代理商订单编号
-            cardInfo.setRechargeTime(new Date());
-            cardInfo.setStatus(2);
-            cardInfo.setAgentOrderNo(agentOrderEntity.getAgentOrderNo());
-            cardInfoService.update(cardInfo);
-            if (i == 0) {
-                cardInfoString += getCardInfoString(cardInfo);
-            } else {
-                cardInfoString += "|" + getCardInfoString(cardInfo);
+            //校验签名
+            boolean b = SignUtils.checkSign(params, configUtils.getSecretKey(), configUtils.getVersionNo());
+            if (b == false) {
+                isSuccess = "F";
+                // 签名验证不正确（可退款）
+                errorCode = "JDI_00002";
+                map = getReturnMap(isSuccess, errorCode, null, jdOrderNo, null, sign, signType, timestamp, version);
+                return map;
             }
+            String agentOrderNo = UUID.randomUUID().toString().replace("-", "");
+            //根据京东订单号防重，如果已存在，返回订单信息
+            AgentOrderEntity agentOrderEntity = agentOrderService.queryObjectByJdOrderNo(jdOrderNo);
+            if (agentOrderEntity != null) {
+                agentOrderNo = agentOrderEntity.getAgentOrderNo();
+                return getReturnMap(isSuccess, errorCode, agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+            }
+
+            agentOrderEntity = new AgentOrderEntity();
+            agentOrderEntity.setAgentOrderNo(agentOrderNo);
+            //对应商品
+            String wareNo = (String) params.get("wareNo");
+            WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareNo);
+            if (wareInfoEntity == null) {
+                //没有对应商品（可退款）
+                return getReturnMap("F", "JDI_00003", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+            }
+
+            //商品状态
+            if (wareInfoEntity.getStatus() == 2) {
+                //此商品不可售（可退款）
+                return getReturnMap("F", "JDI_00004", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+            }
+
+            //商品类型
+            Integer quantity = Integer.valueOf((String) params.get("quantity"));
+            String rechargeNum = (String) params.get("rechargeNum");
+            //直充类型商品只能买一个
+            Integer rechargeType = wareInfoEntity.getType();
+            if (quantity <= 0 || (rechargeType == 1 && quantity > 1)) {
+                return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+            }
+            //直充类型商品充值号码不为空
+            if (rechargeType == 1 && StringUtils.isEmpty(rechargeNum)) {
+                return getReturnMap("F", "JDI_00001", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+            }
+            //判断商品价格和成本价格是否相等
+            agentPrice = wareInfoEntity.getAgentPrice();
+            Long costPrice = Long.valueOf((String) params.get("costPrice"));
+            if (!agentPrice.equals(costPrice)) {
+                // 成本价不正确（可退款）
+                return getReturnMap("F", "JDI_00005", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
+            }
+
+            Integer type = Integer.valueOf((String) params.get("type"));
+            String finTime = (String) params.get("finTime");
+            String notifyUrl = (String) params.get("notifyUrl");
+            String features = (String) params.get("features");
+
+            if(features != null) {
+                try {
+                    //特殊属性解密
+                    features = EncryptUtil.decryptBase64(URLDecoder.decode(features, "UTF-8"), configUtils.getSecretKey());
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+            //直充类型，且参数合法
+            if (rechargeType == 1) {
+                saveAgentOrder(sign, signType, timestamp, version, jdOrderNo, agentOrderEntity, wareNo, quantity, rechargeNum, costPrice, type, finTime, notifyUrl, features);
+                return getReturnMap("T", "", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+            }
+
+            //卡密类型
+            Map<String, Object> queryMap = new HashMap<>();
+            queryMap.put("wareNo", wareNo);
+            queryMap.put("num", quantity);
+            queryMap.put("status", 1);
+            List<CardInfoEntity> cardInfoLists = cardInfoService.queryListNum(queryMap);
+            if (cardInfoLists == null || cardInfoLists.size() < quantity) {
+                logger.error("库存不足");
+                return getReturnMap("F", "JDI_00004", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+            }
+
+            saveAgentOrder(sign, signType, timestamp, version, jdOrderNo, agentOrderEntity, wareNo, quantity, rechargeNum, costPrice, type, finTime, notifyUrl, features);
+            agentOrderEntity = agentOrderService.queryObjectByJdOrderNo(jdOrderNo);
+
+            String cardInfoString = "";
+            //卡密类型充值，获取卡密串
+            for (int i = 0; i < cardInfoLists.size(); i++) {
+                CardInfoEntity cardInfo = cardInfoLists.get(i);
+                //将卡密状态改为2：已使用，同时存入代理商订单编号
+                cardInfo.setRechargeTime(new Date());
+                cardInfo.setStatus(2);
+                cardInfo.setAgentOrderNo(agentOrderEntity.getAgentOrderNo());
+                cardInfoService.update(cardInfo);
+                if (i == 0) {
+                    cardInfoString += getCardInfoString(cardInfo);
+                } else {
+                    cardInfoString += "|" + getCardInfoString(cardInfo);
+                }
+            }
+
+            //设置卡密串
+            agentOrderEntity.setCardInfo(cardInfoString);
+            agentOrderEntity.setStatus(3);
+            agentOrderEntity.setRechargeStatus(1);
+            agentOrderService.update(agentOrderEntity);
+
+            logger.info("下单成功！");
+            applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderEntity.getId(), agentOrderEntity, cardInfoString, wareInfoEntity, ""));
+
+            return getReturnMap("T", "", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
+        } catch (Exception e){
+            logger.error("下单错误",e);
+            return getReturnMap("F", "JDI_00010", null, null, null,  sign, signType, timestamp, version);
         }
 
-        //设置卡密串
-        agentOrderEntity.setCardInfo(cardInfoString);
-        agentOrderEntity.setStatus(3);
-        agentOrderEntity.setRechargeStatus(1);
-        agentOrderService.update(agentOrderEntity);
-
-        logger.info("下单成功！");
-        applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderEntity.getId(), agentOrderEntity, cardInfoString, wareInfoEntity, ""));
-
-        return getReturnMap("T", "", agentOrderNo, jdOrderNo, agentPrice, sign, signType, timestamp, version);
     }
 
     /**
@@ -225,7 +233,6 @@ public class ApiAgentOrderController {
         agentOrderEntity.setRechargeStatus(0);
         //默认充值状态：新创建
         agentOrderEntity.setStatus(1);
-        agentOrderEntity.setAgentOrderNo(UUID.randomUUID().toString().replace("-", ""));
         agentOrderService.save(agentOrderEntity);
         return agentOrderEntity;
     }

@@ -161,8 +161,9 @@ public class AgentOrderServiceImpl implements AgentOrderService {
         agentOrderEntity.setRechargeStatus(2);
         agentOrderEntity.setHandleTime(new Date());
         agentOrderDao.update(agentOrderEntity);
+        WareInfoEntity wareInfoEntity = wareInfoDao.queryObjectByWareNo(agentOrderEntity.getWareNo());
         logger.error("商品不可售");
-        applicationContext.publishEvent(new AgentOrderNotifyEvent(id, null, null, null, AgentOrderNotifyEvent.JDI00004));
+        applicationContext.publishEvent(new AgentOrderNotifyEvent(id, agentOrderEntity, null, wareInfoEntity, null));
         return;
     }
 

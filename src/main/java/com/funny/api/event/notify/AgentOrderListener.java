@@ -51,33 +51,33 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         Map<String, Object> map = new HashMap<>(12);
 
         // 出错时订单通知返回
-        if (!StringUtils.isBlank(agentOrderNotifyEvent.getJdReturnCode())) {
-            //有错误码返回应该直接返回错误信息
-            map.put("isSuccess", "F");
-            map.put("errorCode", agentOrderNotifyEvent.getJdReturnCode());
-            String notifyUrl = agentOrderEntity.getNotifyUrl();
-            String param = "?";
-            for (String key : map.keySet()) {
-                param += key + "=" + map.get(key) + "&";
-            }
-            param = param.substring(0, param.length() - 1);
-            ResponseEntity<String> response = template.postForEntity(notifyUrl + "/kamiNotify" + param, map, String.class);
-            try {
-                Map result = objectMapper.readValue(response.getBody(), Map.class);
-                logger.debug(response.getBody().toString());
-                String flag = (String) result.get("isSuccess");
-                if ("T".equals(flag)) {
-                    return;
-                }
-            } catch (IOException e) {
-                logger.error(response.getBody(), e);
-            }
-            // 记录重复记录到数据库重复
-            agentOrderService.newResend(agentOrderEntity, notifyUrl + "/kamiNotify" + param);
-            return;
-        }
+//        if (!StringUtils.isBlank(agentOrderNotifyEvent.getJdReturnCode())) {
+//            //有错误码返回应该直接返回错误信息
+//            map.put("isSuccess", "F");
+//            map.put("errorCode", agentOrderNotifyEvent.getJdReturnCode());
+//            String notifyUrl = agentOrderEntity.getNotifyUrl();
+//            String param = "?";
+//            for (String key : map.keySet()) {
+//                param += key + "=" + map.get(key) + "&";
+//            }
+//            param = param.substring(0, param.length() - 1);
+//            ResponseEntity<String> response = template.postForEntity(notifyUrl + "/kamiNotify" + param, map, String.class);
+//            try {
+//                Map result = objectMapper.readValue(response.getBody(), Map.class);
+//                logger.debug(response.getBody().toString());
+//                String flag = (String) result.get("isSuccess");
+//                if ("T".equals(flag)) {
+//                    return;
+//                }
+//            } catch (IOException e) {
+//                logger.error(response.getBody(), e);
+//            }
+//            // 记录重复记录到数据库重复
+//            agentOrderService.newResend(agentOrderEntity, notifyUrl + "/kamiNotify" + param);
+//            return;
+//        }
 
-        // 处理成功时订单通知返回
+        // 订单通知返回
         if (!StringUtils.isEmpty(agentOrderNotifyEvent.getCardInfoString())) {
             //卡信息加密
             String cardInfoString = null;
@@ -128,7 +128,7 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         } catch (IOException e) {
             logger.error(response.getBody(), e);
         }
-// 记录重复记录到数据库重复
+        // 记录重复记录到数据库重复
         agentOrderService.newResend(agentOrderEntity, notifyUrl + "/kamiNotify" + param);
     }
 
