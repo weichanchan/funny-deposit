@@ -200,7 +200,7 @@ public class AgentOrderServiceImpl implements AgentOrderService {
             return;
         }
 
-        notifyResendRecordEntity.setNextTime(DateUtils.addMinutes(notifyResendRecordEntity.getNextTime(),notifyResendRecordEntity.getCount() * notifyResendRecordEntity.getCount()));
+        notifyResendRecordEntity.setNextTime(DateUtils.addMinutes(notifyResendRecordEntity.getCreationTime(),notifyResendRecordEntity.getCount() * notifyResendRecordEntity.getCount()));
         notifyResendRecordDao.update(notifyResendRecordEntity);
     }
 

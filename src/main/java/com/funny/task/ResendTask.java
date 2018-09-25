@@ -66,7 +66,7 @@ public class ResendTask {
 					agentOrderService.delete(notifyResendRecordEntity.getId());
 					return;
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				logger.error(response.getBody(), e);
 			}
 			// 进行下一次重试
