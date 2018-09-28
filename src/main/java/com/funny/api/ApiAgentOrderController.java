@@ -8,7 +8,6 @@ import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.api.event.notify.AgentOrderListener;
 import com.funny.api.event.notify.AgentOrderNotifyEvent;
-import com.funny.utils.AESUtils;
 import com.funny.utils.ConfigUtils;
 import com.funny.utils.EncryptUtil;
 import com.funny.utils.SignUtils;
@@ -50,14 +49,12 @@ public class ApiAgentOrderController {
      */
     @IgnoreAuth
     @RequestMapping("/beginDistill")
-    public Map beginDistill(@RequestParam Map<String, Object> params) {
+    public Map beginDistill(String sign, String signType, String timestamp, String version, String jdOrderNo,
+                            Integer type, String finTime, String notifyUrl, String rechargeNum, Integer quantity, String wareNo,
+                            Long costPrice, String features) {
         //充值请求结果
         String isSuccess = "T";
         String errorCode = "";
-        String sign = (String) params.get("sign");
-        String signType = (String) params.get("signType");
-        String timestamp = null;
-        String version = (String) params.get("version");
 
         Long agentPrice = null;
         Map map;
@@ -67,8 +64,20 @@ public class ApiAgentOrderController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             timestamp = sdf.format(new Date());
 
-            String jdOrderNo = (String) params.get("jdOrderNo");
-
+            Map<String, Object> params = new HashMap<>();
+            params.put("sign", sign);
+            params.put("signType", signType);
+            params.put("timestamp", timestamp);
+            params.put("version", version);
+            params.put("jdOrderNo", jdOrderNo);
+            params.put("type", type.toString());
+            params.put("finTime", finTime);
+            params.put("notifyUrl", notifyUrl);
+            params.put("rechargeNum", rechargeNum);
+            params.put("quantity", quantity.toString());
+            params.put("wareNo", wareNo);
+            params.put("costPrice", costPrice.toString());
+            params.put("features", features);
             //校验签名
             boolean b = SignUtils.checkSign(params, configUtils.getSecretKey(), configUtils.getVersionNo());
             if (b == false) {
@@ -89,7 +98,6 @@ public class ApiAgentOrderController {
             agentOrderEntity = new AgentOrderEntity();
             agentOrderEntity.setAgentOrderNo(agentOrderNo);
             //对应商品
-            String wareNo = (String) params.get("wareNo");
             WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(wareNo);
             if (wareInfoEntity == null) {
                 //没有对应商品（可退款）
@@ -102,9 +110,6 @@ public class ApiAgentOrderController {
                 return getReturnMap("F", "JDI_00004", null, jdOrderNo, null, sign, signType, timestamp, version);
             }
 
-            //商品类型
-            Integer quantity = Integer.valueOf((String) params.get("quantity"));
-            String rechargeNum = (String) params.get("rechargeNum");
             //直充类型商品只能买一个
             Integer rechargeType = wareInfoEntity.getType();
             if (quantity <= 0 || (rechargeType == 1 && quantity > 1)) {
@@ -116,18 +121,12 @@ public class ApiAgentOrderController {
             }
             //判断商品价格和成本价格是否相等
             agentPrice = wareInfoEntity.getAgentPrice();
-            Long costPrice = Long.valueOf((String) params.get("costPrice"));
             if (!agentPrice.equals(costPrice)) {
                 // 成本价不正确（可退款）
                 return getReturnMap("F", "JDI_00005", null, jdOrderNo, agentPrice, sign, signType, timestamp, version);
             }
 
-            Integer type = Integer.valueOf((String) params.get("type"));
-            String finTime = (String) params.get("finTime");
-            String notifyUrl = (String) params.get("notifyUrl");
-            String features = (String) params.get("features");
-
-            if(features != null) {
+            if (features != null) {
                 try {
                     //特殊属性解密
                     features = EncryptUtil.decryptBase64(URLDecoder.decode(features, "UTF-8"), configUtils.getSecretKey());
@@ -181,9 +180,9 @@ public class ApiAgentOrderController {
             applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderEntity.getId(), agentOrderEntity, cardInfoString, wareInfoEntity, ""));
 
             return getReturnMap("T", "", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
-        } catch (Exception e){
-            logger.error("下单错误",e);
-            return getReturnMap("F", "JDI_00010", null, null, null,  sign, signType, timestamp, version);
+        } catch (Exception e) {
+            logger.error("下单错误", e);
+            return getReturnMap("F", "JDI_00010", null, null, null, sign, signType, timestamp, version);
         }
 
     }
@@ -213,7 +212,10 @@ public class ApiAgentOrderController {
         return accountNo + password + expiryDate;
     }
 
-    private AgentOrderEntity saveAgentOrder(String sign, String signType, String timestamp, String version, String jdOrderNo, AgentOrderEntity agentOrderEntity, String wareNo, Integer quantity, String rechargeNum, Long costPrice, Integer type, String finTime, String notifyUrl, String features) {
+    private AgentOrderEntity saveAgentOrder(String sign, String signType, String timestamp, String version,
+                                            String jdOrderNo, AgentOrderEntity agentOrderEntity, String wareNo, Integer quantity,
+                                            String rechargeNum, Long costPrice, Integer type, String finTime,
+                                            String notifyUrl, String features) {
         agentOrderEntity.setJdOrderNo(jdOrderNo);
         agentOrderEntity.setType(type);
         // TODO: 2018/9/13  清算时间暂时填当前时间
