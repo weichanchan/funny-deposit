@@ -189,6 +189,16 @@ var vm = new Vue({
                 return;
             }
             var rowData = $("#jqGrid").jqGrid("getRowData", id);
+            var status = rowData.status;
+
+            if(status=="<font color=\"gray\">已处理</font>" || status=="<font color=\"red\">错误状态</font>"){
+                alert("订单已处理，请不要重复操作！");
+                return;
+            }
+            if(status == "<font color=\"#1e90ff\">处理中</font>"){
+                alert("订单正在处理，请稍后~")
+                return;
+            }
             confirm('确定要处理选中的记录？', function () {
                 $.ajax({
                     type: "POST",
@@ -215,7 +225,7 @@ var vm = new Vue({
             var rowData = $("#jqGrid").jqGrid("getRowData", id);
             var status = rowData.status;
 
-            if(status=="<font color=\"green\">处理成功</font>" || status=="<font color=\"red\">处理失败</font>"){
+            if(status=="<font color=\"gray\">已处理</font>" || status=="<font color=\"red\">错误状态</font>"){
                 alert("订单已处理，请不要重复操作！");
                 return;
             }
@@ -245,8 +255,8 @@ var vm = new Vue({
             var rowData = $("#jqGrid").jqGrid("getRowData", id);
             var status = rowData.status;
 
-            if(status=="<font color=\"green\">处理成功</font>" || status=="<font color=\"gray\">处理中</font>"){
-                alert("请选择处理失败的订单");
+            if(status=="<font color=\"gray\">已处理</font>" || status=="<font color=\"red\">错误状态</font>"){
+                alert("订单已处理，请不要重复操作！");
                 return;
             }
             confirm('确定要处理选中的记录？', function () {

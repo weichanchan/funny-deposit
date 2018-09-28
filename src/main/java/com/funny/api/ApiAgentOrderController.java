@@ -3,6 +3,7 @@ package com.funny.api;
 import com.funny.admin.agent.entity.AgentOrderEntity;
 import com.funny.admin.agent.entity.CardInfoEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
+import com.funny.admin.agent.entity.WareInfoVO;
 import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.WareInfoService;
@@ -171,6 +172,13 @@ public class ApiAgentOrderController {
                 }
             }
 
+            //根据商品编号查询商品库存
+            WareInfoVO wareInfoVO = wareInfoService.queryObjectAvailable(wareNo);
+            //库存为0，设置商品不可售
+            if(wareInfoVO.getAvailable()==0){
+                wareInfoEntity.setStatus(2);
+                wareInfoService.update(wareInfoEntity);
+            }
             //设置卡密串
             agentOrderEntity.setCardInfo(cardInfoString);
             agentOrderEntity.setStatus(3);

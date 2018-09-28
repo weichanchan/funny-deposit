@@ -92,4 +92,9 @@ public class WareInfoServiceImpl implements WareInfoService {
         return wareRoleDao.queryRoleIdList(id);
     }
 
+    @Override
+    public WareInfoVO queryObjectAvailable(String wareNo) {
+        return wareInfoDao.queryObjectAvailable(wareNo);
+    }
+
 }

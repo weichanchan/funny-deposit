@@ -69,6 +69,24 @@
         </if>
     </select>
 
+    <select id="queryObjectAvailable" resultType="com.funny.admin.agent.entity.WareInfoVO">
+        SELECT
+        *
+        FROM
+        ware_info w
+        LEFT JOIN (
+        SELECT
+        COUNT(*) AS card_info_total,
+        COUNT(IF(STATUS = 1, TRUE, NULL)) AS available,
+        ware_no
+        FROM
+        card_info
+        GROUP BY
+        ware_no
+        ) c ON w.ware_no = c.ware_no
+        where w.ware_no = #{value}
+    </select>
+
     <select id="queryTotal" resultType="int">
 		select count(*) from ware_info
         <if test="wareNo != null">
