@@ -80,7 +80,10 @@ public class WareInfoController {
             return R.error("该商品编号已存在，请重新输入！");
         }
 
-        // TODO: 2018/9/10  代理商id，目前只有一个，先写固定值
+        //如果是卡密类商品，库存为0，新建时状态为不可售
+        if(wareInfo.getType() == 2){
+            wareInfo.setStatus(2);
+        }
         wareInfo.setAgentId(configUtils.getAgentId());
         if (wareInfo.getRoleIdList().size() == 0) {
             return R.error("请选择处理该商品订单的客服角色。");
@@ -121,6 +124,16 @@ public class WareInfoController {
     @RequiresPermissions("wareinfo:update")
     public R offShelves(@RequestBody Long[] ids){
         wareInfoService.offShelves(ids);
+        return R.ok();
+    }
+
+    /**
+     * 商品上/下架
+     */
+    @RequestMapping("/shelves")
+    @RequiresPermissions("wareinfo:update")
+    public R shelves(@RequestBody Map<String, Object> map){
+        wareInfoService.shelves(map);
         return R.ok();
     }
 

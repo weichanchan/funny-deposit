@@ -35,6 +35,8 @@
                     class="fa fa-trash-o"></i>&nbsp;删除</a>-->
             <a v-if="hasPermission('wareinfo:update')" class="btn btn-primary" @click="offShelves"><i
                     class="fa fa-arrow-circle-o-down"></i>&nbsp;下架</a>
+            <a v-if="hasPermission('wareinfo:update')" class="btn btn-primary" @click="onShelves"><i
+                    class="fa fa-arrow-circle-o-up"></i>&nbsp;上架</a>
             <a v-if="hasPermission('wareinfo:delete')" class="btn btn-primary" @click="addCardInfo"><i
                     class="fa fa-plus"></i>&nbsp;添加卡密信息</a>
             <a class="btn btn-info" @click="cardinfo"><i class="fa fa-bars"></i>&nbsp;查看卡密信息</a>

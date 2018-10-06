@@ -92,4 +92,9 @@ public class WareInfoServiceImpl implements WareInfoService {
         return wareRoleDao.queryRoleIdList(id);
     }
 
+    @Override
+    public void shelves(Map<String, Object> map) {
+        wareInfoDao.shelves(map);
+    }
+
 }

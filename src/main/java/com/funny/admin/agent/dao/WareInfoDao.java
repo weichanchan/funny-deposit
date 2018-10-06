@@ -30,4 +30,10 @@ public interface WareInfoDao extends BaseDao<WareInfoEntity> {
      * @param ids
      */
     void offShelves(Long[] ids);
+
+    /**
+     * 商品上下架
+     * @param map
+     */
+    void shelves(Map<String,Object> map);
 }

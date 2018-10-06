@@ -36,4 +36,6 @@ public interface WareInfoService {
     void offShelves(Long[] ids);
 
     List<Long> queryRoleIdList(Long id);
+
+    void shelves(Map<String,Object> map);
 }
