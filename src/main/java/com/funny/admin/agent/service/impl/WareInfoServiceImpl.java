@@ -93,6 +93,11 @@ public class WareInfoServiceImpl implements WareInfoService {
     }
 
     @Override
+    public WareInfoVO queryObjectAvailable(String wareNo) {
+        return wareInfoDao.queryObjectAvailable(wareNo);
+    }
+
+    @Override
     public void shelves(Map<String, Object> map) {
         wareInfoDao.shelves(map);
     }

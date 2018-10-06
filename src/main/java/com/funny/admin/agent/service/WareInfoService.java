@@ -37,5 +37,7 @@ public interface WareInfoService {
 
     List<Long> queryRoleIdList(Long id);
 
+    WareInfoVO queryObjectAvailable(String wareNo);
+
     void shelves(Map<String,Object> map);
 }
