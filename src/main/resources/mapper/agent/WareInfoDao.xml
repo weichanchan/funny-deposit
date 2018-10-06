@@ -139,6 +139,17 @@
         </foreach>
     </update>
 
+    <update id="shelves">
+        update ware_info
+        <set>
+            <if test="status != null">`status` = #{status}</if>
+        </set>
+        where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
     <delete id="delete">
 		delete from ware_info where id = #{value}
 	</delete>

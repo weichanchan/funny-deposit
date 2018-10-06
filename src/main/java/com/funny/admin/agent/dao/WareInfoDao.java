@@ -32,9 +32,8 @@ public interface WareInfoDao extends BaseDao<WareInfoEntity> {
     void offShelves(Long[] ids);
 
     /**
-     * 根据商品编号查询商品库存
-     * @param wareNo
-     * @return
+     * 商品上下架
+     * @param map
      */
-    WareInfoVO queryObjectAvailable(String wareNo);
+    void shelves(Map<String,Object> map);
 }

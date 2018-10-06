@@ -163,7 +163,18 @@ var vm = new Vue({
             if (ids == null) {
                 return;
             }
-            $.ajax({
+            var data;
+            var status;
+            for(var i=0;i<ids.length;i++){
+                data = $("#jqGrid").jqGrid("getRowData", ids[i]);
+                status = data.status;
+                if(status=='<font color="red">不可售</font>'){
+                    alert("存在已下架商品，请重新选择！");
+                    return;
+                }
+            }
+            shelves(ids, 2);
+/*            $.ajax({
                 type: "POST",
                 url: "../wareinfo/offShelves",
                 contentType:"application/json",
@@ -177,7 +188,30 @@ var vm = new Vue({
                         alert(r.msg);
                     }
                 }
-            });
+            });*/
+        },
+        onShelves: function(){
+            var ids = getSelectedRows();
+            if (ids == null) {
+                return;
+            }
+            var data;
+            var available;
+            var status;
+            for(var i=0;i<ids.length;i++){
+                data = $("#jqGrid").jqGrid("getRowData", ids[i]);
+                available = data.available;
+                if(available==0||available==null){
+                    alert("请选择库存不为0的卡密类商品！");
+                    return;
+                }
+                status = data.status;
+                if(status=='<font color="green">可售</font>'){
+                    alert("存在已上架商品，请重新选择！");
+                    return;
+                }
+            }
+            shelves(ids, 1);
         },
         reload: function (event) {
             vm.showList = true;
@@ -234,4 +268,26 @@ function checkDecimal(data) {
     var re = /([0-9]+\.[0-9]{2})[0-9]*/;
     var num = data.replace(/\D/g,'');
     return num;
+}
+
+//商品上下架
+function shelves(ids, status){
+    $.ajax({
+        type: "POST",
+        url: "../wareinfo/shelves",
+        contentType:"application/json",
+        data: JSON.stringify({
+            "ids" : ids,
+            "status" : status
+        }),
+        success: function (r) {
+            if (r.code === 0) {
+                alert('操作成功', function (index) {
+                    vm.reload();
+                });
+            } else {
+                alert(r.msg);
+            }
+        }
+    });
 }
