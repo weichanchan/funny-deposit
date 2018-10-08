@@ -60,11 +60,6 @@ public class ApiAgentOrderController {
         Long agentPrice = null;
         Map map;
         try {
-
-            //响应时间戳
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-            timestamp = sdf.format(new Date());
-
             Map<String, Object> params = new HashMap<>();
             params.put("sign", sign);
             params.put("signType", signType);
