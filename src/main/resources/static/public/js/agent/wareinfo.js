@@ -54,19 +54,12 @@ $(function () {
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
         }
     });
-    $("#accountPwd").click(function () {
-        var s = $("#accountPwd").is(":checked");
-        if (s) {
-            showCardInfo = true;
-        }
-    })
 });
 
 var vm = new Vue({
     el: '#rrapp',
     data: {
         showList: true,
-        showCardInfo: true,
         title: null,
         cardInfo: {},
         roleList: [],
@@ -108,8 +101,6 @@ var vm = new Vue({
             this.getRoleList();
         },
         saveOrUpdate: function (event) {
-            //将代理商价格，从单位（元）变成（分）
-            // vm.wareInfo.agentPrice =vm.wareInfo.agentPrice*100;
             var url = vm.wareInfo.id == null ? "../wareinfo/save" : "../wareinfo/update";
             $.ajax({
                 type: "POST",
@@ -127,35 +118,9 @@ var vm = new Vue({
                 }
             });
         },
-        del: function (event) {
-            var ids = getSelectedRows();
-            if (ids == null) {
-                return;
-            }
-
-            confirm('确定要删除选中的记录？', function () {
-                $.ajax({
-                    type: "POST",
-                    url: "../wareinfo/delete",
-                    contentType: "application/json",
-                    data: JSON.stringify(ids),
-                    success: function (r) {
-                        if (r.code == 0) {
-                            alert('操作成功', function (index) {
-                                $("#jqGrid").trigger("reloadGrid");
-                            });
-                        } else {
-                            alert(r.msg);
-                        }
-                    }
-                });
-            });
-        },
         getInfo: function (id) {
             $.get("../wareinfo/info/" + id, function (r) {
                 vm.wareInfo = r.wareInfo;
-                //将代理商价格，从单位（分）变成（元）显示
-                // vm.wareInfo.agentPrice =(vm.wareInfo.agentPrice / 100).toFixed(2);
             });
         },
         offShelves: function(){
@@ -174,21 +139,6 @@ var vm = new Vue({
                 }
             }
             shelves(ids, 2);
-/*            $.ajax({
-                type: "POST",
-                url: "../wareinfo/offShelves",
-                contentType:"application/json",
-                data: JSON.stringify(ids),
-                success: function (r) {
-                    if (r.code === 0) {
-                        alert('操作成功', function (index) {
-                            vm.reload();
-                        });
-                    } else {
-                        alert(r.msg);
-                    }
-                }
-            });*/
         },
         onShelves: function(){
             var ids = getSelectedRows();
@@ -198,10 +148,12 @@ var vm = new Vue({
             var data;
             var available;
             var status;
+            var type;
             for(var i=0;i<ids.length;i++){
                 data = $("#jqGrid").jqGrid("getRowData", ids[i]);
                 available = data.available;
-                if(available==0||available==null){
+                type = data.type;
+                if(type=="卡密类型"&&(available==0||available==null)){
                     alert("请选择库存不为0的卡密类商品！");
                     return;
                 }

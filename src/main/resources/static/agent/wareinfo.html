@@ -31,8 +31,6 @@
             <a v-if="hasPermission('wareinfo:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
             <a v-if="hasPermission('wareinfo:update')" class="btn btn-primary" @click="update"><i
                     class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <!--<a v-if="hasPermission('wareinfo:delete')" class="btn btn-primary" @click="del"><i
-                    class="fa fa-trash-o"></i>&nbsp;删除</a>-->
             <a v-if="hasPermission('wareinfo:update')" class="btn btn-primary" @click="offShelves"><i
                     class="fa fa-arrow-circle-o-down"></i>&nbsp;下架</a>
             <a v-if="hasPermission('wareinfo:update')" class="btn btn-primary" @click="onShelves"><i
@@ -82,7 +80,7 @@
                     </label>
                 </div>
             </div>
-            <div class="form-group">
+            <!--<div class="form-group" id="wareInfoStatus">
                 <div class="col-sm-2 control-label">商品状态</div>
                 <div class="col-sm-10">
                     <label class="radio-inline">
@@ -92,7 +90,7 @@
                         <input type="radio" name="status" value="2" v-model="wareInfo.status"/> 不可售
                     </label>
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
                 <div class="col-sm-2 control-label">处理角色</div>
                 <div class="col-sm-10">

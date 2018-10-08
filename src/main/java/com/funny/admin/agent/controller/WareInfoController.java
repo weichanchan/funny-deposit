@@ -80,10 +80,8 @@ public class WareInfoController {
             return R.error("该商品编号已存在，请重新输入！");
         }
 
-        //如果是卡密类商品，库存为0，新建时状态为不可售
-        if(wareInfo.getType() == 2){
-            wareInfo.setStatus(2);
-        }
+        //设置商品新建时状态为不可售
+        wareInfo.setStatus(2);
         wareInfo.setAgentId(configUtils.getAgentId());
         if (wareInfo.getRoleIdList().size() == 0) {
             return R.error("请选择处理该商品订单的客服角色。");
