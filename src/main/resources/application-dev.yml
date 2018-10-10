@@ -25,7 +25,3 @@ optional:
         bussType: 6
         secretKey: "01234567890123456789012345678912"
         versionNo: 1.0
-server:
-  http:
-    port: 80
-  port: 443
