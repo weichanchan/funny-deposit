@@ -23,7 +23,7 @@ optional:
     params:
         agentId: 48281
         bussType: 6
-        secretKey: "01234567890123456789012345678912"
+        secretKey: "kd7ESeY9izjXggYdCBXjDAR825rTzUvL"
         versionNo: 1.0
 server:
   http:
