@@ -1,7 +1,7 @@
 spring:
     datasource:
 #        url: jdbc:mysql://localhost:3306/funny-deposit?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-        url: jdbc:mysql://120.77.83.236:3306/funny_deposit?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+        url: jdbc:mysql://120.77.83.236:3306/funny_deposit_test?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
         username: root
 #        password: 123456
         password: 20180907_Deposit
