@@ -50,35 +50,8 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
 
         Map<String, Object> map = new HashMap<>(12);
 
-        // 出错时订单通知返回
-//        if (!StringUtils.isBlank(agentOrderNotifyEvent.getJdReturnCode())) {
-//            //有错误码返回应该直接返回错误信息
-//            map.put("isSuccess", "F");
-//            map.put("errorCode", agentOrderNotifyEvent.getJdReturnCode());
-//            String notifyUrl = agentOrderEntity.getNotifyUrl();
-//            String param = "?";
-//            for (String key : map.keySet()) {
-//                param += key + "=" + map.get(key) + "&";
-//            }
-//            param = param.substring(0, param.length() - 1);
-//            ResponseEntity<String> response = template.postForEntity(notifyUrl + "/kamiNotify" + param, map, String.class);
-//            try {
-//                Map result = objectMapper.readValue(response.getBody(), Map.class);
-//                logger.debug(response.getBody().toString());
-//                String flag = (String) result.get("isSuccess");
-//                if ("T".equals(flag)) {
-//                    return;
-//                }
-//            } catch (IOException e) {
-//                logger.error(response.getBody(), e);
-//            }
-//            // 记录重复记录到数据库重复
-//            agentOrderService.newResend(agentOrderEntity, notifyUrl + "/kamiNotify" + param);
-//            return;
-//        }
-
         // 订单通知返回
-        if (!StringUtils.isEmpty(agentOrderNotifyEvent.getCardInfoString())) {
+        if (!StringUtils.isEmpty(agentOrderEntity.getCardInfo())) {
             //卡信息加密
             String cardInfoString = null;
             cardInfoString = EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), configUtils.getSecretKey());
@@ -99,10 +72,6 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         String time = sdf1.format(new Date());
         map.put("time", time);
         map.put("quantity", agentOrderEntity.getQuantity());
-
-        String sign = SignUtils.getSign(map, configUtils.getSecretKey());
-        map.put("sign", sign);
-        map.put("signType", agentOrderEntity.getSignType());
         if (agentOrderEntity.getCardInfo() != null) {
             try {
                 map.put("cardInfo", URLEncoder.encode(EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), configUtils.getSecretKey()), "UTF-8"));
@@ -111,6 +80,9 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
                 logger.error("cardInfo url编码失败");
             }
         }
+        String sign = SignUtils.getSign(map, configUtils.getSecretKey());
+        map.put("sign", sign);
+        map.put("signType", agentOrderEntity.getSignType());
         String notifyUrl = agentOrderEntity.getNotifyUrl();
         String param = "?";
         for (String key : map.keySet()) {

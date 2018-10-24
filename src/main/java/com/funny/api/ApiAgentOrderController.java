@@ -180,7 +180,7 @@ public class ApiAgentOrderController {
             agentOrderService.update(agentOrderEntity);
 
             logger.info("下单成功！");
-            applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderEntity.getId(), agentOrderEntity, cardInfoString, wareInfoEntity, ""));
+            applicationContext.publishEvent(new AgentOrderNotifyEvent(agentOrderEntity.getId(), agentOrderEntity, "", wareInfoEntity, ""));
 
             return getReturnMap("T", "", agentOrderNo, jdOrderNo, null, sign, signType, timestamp, version);
         } catch (Exception e) {
