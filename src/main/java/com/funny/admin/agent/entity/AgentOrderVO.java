@@ -40,11 +40,16 @@ public class AgentOrderVO {
      * 充值状态，0：未充值；1：充值成功；2：充值失败；3：充值中
      */
     private Integer rechargeStatus;
-
     /**
      * 处理时间
      */
     private Date handleTime;
+
+    /**
+     * 下单时间
+     * @return
+     */
+    private Date createTime;
 
     public Long getId() {
         return id;
@@ -124,5 +129,13 @@ public class AgentOrderVO {
 
     public void setHandleTime(Date handleTime) {
         this.handleTime = handleTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

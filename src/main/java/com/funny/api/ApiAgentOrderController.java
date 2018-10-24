@@ -177,6 +177,7 @@ public class ApiAgentOrderController {
             agentOrderEntity.setCardInfo(cardInfoString);
             agentOrderEntity.setStatus(3);
             agentOrderEntity.setRechargeStatus(1);
+            agentOrderEntity.setHandleTime(new Date());
             agentOrderService.update(agentOrderEntity);
 
             logger.info("下单成功！");
