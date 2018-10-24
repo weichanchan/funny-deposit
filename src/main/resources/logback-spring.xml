@@ -4,11 +4,29 @@
     <logger name="org.springframework.web" level="INFO"/>
     <logger name="org.springboot.sample" level="TRACE" />
 
+    <!-- 按时间滚动的策略显示日志 -->
+    <appender name="FILE-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>../logs/funny.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/funny-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d [%t] %-5p [%c:%L] - %m%n</pattern>
+        </encoder>
+    </appender>
+
     <!-- 开发、测试环境、生产环境 -->
     <springProfile name="dev,test,pro">
         <logger name="org.springframework.web" level="INFO"/>
         <logger name="org.springboot.sample" level="INFO" />
         <logger name="com.funny" level="DEBUG" />
     </springProfile>
+
+    <root level="INFO">
+        <appender-ref ref="FILE-APPENDER" />
+    </root>
 
 </configuration>
