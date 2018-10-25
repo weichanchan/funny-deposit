@@ -16,13 +16,13 @@ $(function () {
             {label: '商品编码', name: 'wareNo', index: 'ware_no', width: 80},
             {label: '商品名', name: 'wareName', index: 'wareName', width: 80},
             {
-                label: '成本价(元)', name: 'costPrice', index: 'cost_price', width: 80,
+                label: '成本价(元)', name: 'costPrice', index: 'cost_price', width: 60,
                 formatter: function (value, options, row) {
                     return (value / 100).toFixed(2);
                 }
             },
             {
-                label: '订单状态', name: 'status', index: 'status', width: 80,
+                label: '订单状态', name: 'status', index: 'status', width: 60,
                 formatter: function (value, options, row) {
                     if (value === 1) {
                         return '<font color="red">新创建</font>'
@@ -36,7 +36,7 @@ $(function () {
                 }
             },
             {
-                label: '充值状态', name: 'rechargeStatus', index: 'recharge_status', width: 80,
+                label: '充值状态', name: 'rechargeStatus', index: 'recharge_status', width: 60,
                 formatter: function (value, options, row) {
                     if (value === 0) {
                         return '<font color="red">未充值</font>';
@@ -50,7 +50,9 @@ $(function () {
                         return '<font color="red">错误状态</font>';
                     }
                 }
-            }
+            },
+            { label: '下单时间', name: 'createTime', index: 'create_time', width: 80 },
+            { label: '处理时间', name: 'handleTime', index: 'handle_time', width: 80 },
         ],
         viewrecords: true,
         height: 385,

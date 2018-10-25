@@ -54,7 +54,8 @@
 
     <select id="queryList1" resultType="com.funny.admin.agent.entity.AgentOrderVO">
         SELECT
-        a.id, a.jd_order_no, a.recharge_num, a.quantity, a.ware_no, a.cost_price, a.status, a.recharge_status, w.ware_name
+        a.id, a.jd_order_no, a.recharge_num, a.quantity, a.ware_no, a.cost_price, a.status, a.recharge_status,
+        w.ware_name, a.create_time, a.handle_time
         FROM
         agent_order a
         LEFT JOIN ware_info w ON a.ware_no = w.ware_no
