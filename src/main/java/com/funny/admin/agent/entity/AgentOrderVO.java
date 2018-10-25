@@ -51,6 +51,11 @@ public class AgentOrderVO {
      */
     private Date createTime;
 
+    /**
+     * 特殊字段
+     */
+    private String features;
+
     public Long getId() {
         return id;
     }
@@ -137,5 +142,13 @@ public class AgentOrderVO {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(String features) {
+        this.features = features;
     }
 }

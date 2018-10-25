@@ -25,3 +25,5 @@ optional:
         bussType: 6
         secretKey: "01234567890123456789012345678912"
         versionNo: 1.0
+deposit:
+    login: /login1.html

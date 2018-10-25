@@ -1,4 +1,4 @@
-package com.funny.utils;
+package com.funny.config;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;

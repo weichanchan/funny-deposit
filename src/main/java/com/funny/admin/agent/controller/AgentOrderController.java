@@ -96,7 +96,7 @@ public class AgentOrderController extends AbstractController {
         }
         AgentOrderEntity agentOrder = agentOrderService.queryLast(params);
         Long now = System.currentTimeMillis();
-        now = now - 7000;
+        now = now - 15000;
         if (agentOrder.getCreateTime().getTime() >= now) {
             return R.ok();
         }

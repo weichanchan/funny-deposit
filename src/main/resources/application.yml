@@ -24,5 +24,6 @@ spring:
 mybatis:
     mapperLocations: classpath:mapper/**/*.xml
     configLocation: classpath:mybatis.xml
-
+deposit:
+    login: /login.html
 #logging.level.com.funny=DEBUG

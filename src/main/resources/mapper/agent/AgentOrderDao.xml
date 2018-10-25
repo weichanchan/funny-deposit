@@ -34,12 +34,12 @@
     <select id="queryLastAgentOrder" resultType="com.funny.admin.agent.entity.AgentOrderEntity">
         select * from agent_order a
         LEFT JOIN ware_info w ON a.ware_no = w.ware_no
-        LEFT JOIN ware_role wr ON wr.ware_info_id = w.id
         <if test="roleIds != null">
-            WHERE wr.role_id in
+            WHERE w.id in (SELECT ware_info_id FROM ware_role where role_id in
             <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
                 #{roleId}
             </foreach>
+            )
         </if>
         order by create_time desc limit 0,1
     </select>
@@ -55,17 +55,17 @@
     <select id="queryList1" resultType="com.funny.admin.agent.entity.AgentOrderVO">
         SELECT
         a.id, a.jd_order_no, a.recharge_num, a.quantity, a.ware_no, a.cost_price, a.status, a.recharge_status,
-        w.ware_name, a.create_time, a.handle_time
+        w.ware_name, a.create_time, a.handle_time, a.features
         FROM
         agent_order a
         LEFT JOIN ware_info w ON a.ware_no = w.ware_no
-        LEFT JOIN ware_role wr ON wr.ware_info_id = w.id
         WHERE 1=1
         <if test="roleIds != null">
-            and wr.role_id in
+            and w.id in (SELECT ware_info_id FROM ware_role where role_id in
             <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
                 #{roleId}
             </foreach>
+            )
         </if>
         <if test="wareType !=null">
             and w.type = #{wareType}
@@ -91,13 +91,13 @@
         FROM
         agent_order a
         LEFT JOIN ware_info w ON a.ware_no = w.ware_no
-        LEFT JOIN ware_role wr ON wr.ware_info_id = w.id
         WHERE 1=1
         <if test="roleIds != null">
-            and wr.role_id in
+            and w.id in (SELECT ware_info_id FROM ware_role where role_id in
             <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
                 #{roleId}
             </foreach>
+            )
         </if>
         <if test="wareType !=null">
             and w.type = #{wareType}

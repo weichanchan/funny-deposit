@@ -2,14 +2,14 @@ $(function () {
     var wareType = T.p('wareType');
     var param = "";
     vm.wareType = wareType;
-    if(wareType != undefined){
+    if (wareType != undefined) {
         param = "?wareType=" + wareType;
     }
     $("#jqGrid").jqGrid({
         url: '../agentorder/list' + param,
         datatype: "json",
         colModel: [
-            {label: 'id', name: 'id', index: 'id', width: 50, key: true, hidden:true},
+            {label: 'id', name: 'id', index: 'id', width: 50, key: true, hidden: true},
             {label: '京东订单号', name: 'jdOrderNo', index: 'jd_order_no', width: 80},
             {label: '充值号码', name: 'rechargeNum', index: 'recharge_num', width: 80},
             {label: '数量', name: 'quantity', index: 'quantity', width: 50},
@@ -26,12 +26,30 @@ $(function () {
                 formatter: function (value, options, row) {
                     if (value === 1) {
                         return '<font color="red">新创建</font>'
-                    } else if (value===2){
+                    } else if (value === 2) {
                         return '<font color="#1e90ff">处理中</font>';
-                    } else if (value===3){
+                    } else if (value === 3) {
                         return '<font color="gray">已处理</font>';
                     } else {
                         return '<font color="red">错误状态</font>';
+                    }
+                }
+            },
+            {
+                label: '系统类型', name: 'features', index: 'features', width: 60,
+                formatter: function (value, options, row) {
+                    if (value != null && value != '') {
+                        var jsonValue = $.parseJSON(value);
+                        ;
+                        if (jsonValue.system === '1') {
+                            return '苹果'
+                        } else if (jsonValue.system === '2') {
+                            return '安卓';
+                        } else {
+                            return '错误';
+                        }
+                    } else {
+                        return '无';
                     }
                 }
             },
@@ -40,19 +58,19 @@ $(function () {
                 formatter: function (value, options, row) {
                     if (value === 0) {
                         return '<font color="red">未充值</font>';
-                    } else if (value === 1){
+                    } else if (value === 1) {
                         return '<font color="green">充值成功</font>'
-                    } else if(value == 3) {
+                    } else if (value == 3) {
                         return '<font color="#1e90ff">充值中</font>';
-                    } else if(value == 2){
+                    } else if (value == 2) {
                         return '<font color="red">充值失败</font>';
                     } else {
                         return '<font color="red">错误状态</font>';
                     }
                 }
             },
-            { label: '下单时间', name: 'createTime', index: 'create_time', width: 80 },
-            { label: '处理时间', name: 'handleTime', index: 'handle_time', width: 80 },
+            {label: '下单时间', name: 'createTime', index: 'create_time', width: 80},
+            {label: '处理时间', name: 'handleTime', index: 'handle_time', width: 80},
         ],
         viewrecords: true,
         height: 385,
@@ -80,7 +98,7 @@ $(function () {
         }
     });
     // 7秒一次去查询是否有新的订单
-    window.setInterval("vm.newOrderWarning()",7000);
+    window.setInterval("vm.newOrderWarning()", 7000);
 });
 
 var vm = new Vue({
@@ -89,10 +107,10 @@ var vm = new Vue({
         showList: true,
         title: null,
         agentOrder: {},
-        q:{
-            jdOrderNo:""
+        q: {
+            jdOrderNo: ""
         },
-        wareType:""
+        wareType: ""
     },
     methods: {
         query: function () {
@@ -169,15 +187,15 @@ var vm = new Vue({
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page,
-                postData:{
-                    "jdOrderNo":vm.q.jdOrderNo,
-                    "wareType":vm.wareType
+                postData: {
+                    "jdOrderNo": vm.q.jdOrderNo,
+                    "wareType": vm.wareType
                 }
             }).trigger("reloadGrid");
         },
-        newOrderWarning:function(){
+        newOrderWarning: function () {
             $.get("../agentorder/infoNew", function (r) {
-                if(r.code == 0){
+                if (r.code == 0) {
                     vm.reload();
                     var n = new Audio("../public/media/2018-09-12_12_31_38.mp3");
                     n.play();
@@ -193,11 +211,11 @@ var vm = new Vue({
             var rowData = $("#jqGrid").jqGrid("getRowData", id);
             var status = rowData.status;
 
-            if(status=="<font color=\"gray\">已处理</font>" || status=="<font color=\"red\">错误状态</font>"){
+            if (status == "<font color=\"gray\">已处理</font>" || status == "<font color=\"red\">错误状态</font>") {
                 alert("订单已处理，请不要重复操作！");
                 return;
             }
-            if(status == "<font color=\"#1e90ff\">处理中</font>"){
+            if (status == "<font color=\"#1e90ff\">处理中</font>") {
                 alert("订单正在处理，请稍后~")
                 return;
             }
@@ -227,7 +245,7 @@ var vm = new Vue({
             var rowData = $("#jqGrid").jqGrid("getRowData", id);
             var status = rowData.status;
 
-            if(status=="<font color=\"gray\">已处理</font>" || status=="<font color=\"red\">错误状态</font>"){
+            if (status == "<font color=\"gray\">已处理</font>" || status == "<font color=\"red\">错误状态</font>") {
                 alert("订单已处理，请不要重复操作！");
                 return;
             }
@@ -257,7 +275,7 @@ var vm = new Vue({
             var rowData = $("#jqGrid").jqGrid("getRowData", id);
             var status = rowData.status;
 
-            if(status=="<font color=\"gray\">已处理</font>" || status=="<font color=\"red\">错误状态</font>"){
+            if (status == "<font color=\"gray\">已处理</font>" || status == "<font color=\"red\">错误状态</font>") {
                 alert("订单已处理，请不要重复操作！");
                 return;
             }
