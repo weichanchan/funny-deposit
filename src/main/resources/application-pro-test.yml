@@ -1,10 +1,10 @@
 spring:
     datasource:
 #        url: jdbc:mysql://localhost:3306/funny-deposit?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-        url: jdbc:mysql://119.23.229.146:3306/funny_deposit_test?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+        url: jdbc:mysql://120.77.83.236:3306/funny_deposit?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
         username: root
 #        password: 123456
-        password: miaoChong_20181025
+        password: 20180907_Deposit
         #连接池的配置信息
         initialSize: 10
         minIdle: 10
@@ -21,17 +21,15 @@ spring:
 # 配置自定义参数
 optional:
     params:
-        agentId: 48281
+        agentId: 10004425
         bussType: 6
-        secretKey: "01234567890123456789012345678912"
+        secretKey: "kd7ESeY9izjXggYdCBXjDAR825rTzUvL"
         versionNo: 1.0
-deposit:
-    login: login1.html
 #server:
-#    http:
-#        port: 80
-#    port: 443
-#    ssl:
-#        key-store: /app/cert/your-name.jks
-#        key-store-password: uu5R5tLf
-#        key-password: uu5R5tLf
+#  http:
+#    port: 80
+#  port: 443
+#  ssl:
+#    key-store: /app/cert/your-name.jks
+#    key-store-password: 214997044790232
+#    key-password: 214997044790232

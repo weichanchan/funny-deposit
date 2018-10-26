@@ -4,10 +4,12 @@ import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.funny.utils.R;
 import com.funny.utils.ShiroUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +33,9 @@ import java.io.IOException;
 public class SysLoginController {
 	@Autowired
 	private Producer producer;
+
+	@Value("${deposit.login}")
+	private String loginPage;
 	
 	@RequestMapping("captcha.jpg")
 	public void captcha(HttpServletResponse response)throws ServletException, IOException {
@@ -85,6 +90,9 @@ public class SysLoginController {
 	@RequestMapping(value = "logout", method = RequestMethod.GET)
 	public String logout() {
 		ShiroUtils.logout();
+		if(StringUtils.isNotBlank(loginPage)){
+			return "redirect:"+loginPage;
+		}
 		return "redirect:login.html";
 	}
 	
