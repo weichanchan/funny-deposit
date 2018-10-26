@@ -27,11 +27,11 @@ optional:
         versionNo: 1.0
 deposit:
     login: login1.html
-#server:
-#    http:
-#        port: 80
-#    port: 443
-#    ssl:
-#        key-store: /app/cert/your-name.jks
-#        key-store-password: uu5R5tLf
-#        key-password: uu5R5tLf
+server:
+    http:
+        port: 80
+    port: 443
+    ssl:
+        key-store: /app/cert/your-name.jks
+        key-store-password: uu5R5tLf
+        key-password: uu5R5tLf
