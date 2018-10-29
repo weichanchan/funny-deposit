@@ -47,3 +47,4 @@ INSERT INTO `sys_menu` VALUES ('41', '0', '卡信息查看', NULL, 'cardinfo:lis
 INSERT INTO `sys_menu` VALUES ('42', '31', '卡密订单', 'agent/agentorder.html?wareType=2', NULL, '1', 'fa fa-bars', '6');
 INSERT INTO `sys_menu` VALUES ('43', '42', '查看', NULL, 'agentorder:list,agentorder:info', '2', NULL, '0');
 INSERT INTO `sys_menu` VALUES ('44', '42', '删除', NULL, 'agentorder:delete', '2', NULL, '0');
+INSERT INTO `sys_menu` VALUES ('45', '0', '删除', NULL, 'cardinfo:delete', '2', NULL, '0');

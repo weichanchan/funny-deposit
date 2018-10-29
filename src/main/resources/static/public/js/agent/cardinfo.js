@@ -101,7 +101,16 @@ var vm = new Vue({
             if (ids == null) {
                 return;
             }
-
+            var data;
+            var status;
+            for(var i=0;i<ids.length;i++){
+                data = $("#jqGrid").jqGrid("getRowData", ids[i]);
+                status = data.status;
+                if(status=='已售出'){
+                    alert("已售出卡密不能删除，请重新选择！");
+                    return;
+                }
+            }
             confirm('确定要删除选中的记录？', function () {
                 $.ajax({
                     type: "POST",
