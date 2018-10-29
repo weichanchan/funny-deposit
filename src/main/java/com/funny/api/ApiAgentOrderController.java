@@ -203,13 +203,13 @@ public class ApiAgentOrderController {
         if (!StringUtils.isEmpty(accountNo)) {
             accountNo += "_";
         } else {
-            accountNo = " _";
+            accountNo = "无_";
         }
         String password = cardInfo.getPassword();
         if (!StringUtils.isEmpty(password)) {
             password += "_";
         } else {
-            password = " _";
+            password = "无_";
         }
         String expiryDate = sdf.format(cardInfo.getExpiryDate());
 
