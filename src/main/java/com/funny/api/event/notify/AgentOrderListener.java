@@ -51,12 +51,12 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         Map<String, Object> map = new HashMap<>(12);
 
         // 订单通知返回
-        if (!StringUtils.isEmpty(agentOrderEntity.getCardInfo())) {
-            //卡信息加密
-            String cardInfoString = null;
-            cardInfoString = EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), configUtils.getSecretKey());
-            map.put("cardInfo", cardInfoString);
-        }
+//        if (!StringUtils.isEmpty(agentOrderEntity.getCardInfo())) {
+//            //卡信息加密
+//            String cardInfoString = null;
+//            cardInfoString = EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), configUtils.getSecretKey());
+//            map.put("cardInfo", cardInfoString);
+//        }
 
         map.put("timestamp", agentOrderEntity.getTimestamp());
         map.put("version", agentOrderEntity.getVersion());
@@ -73,12 +73,8 @@ public class AgentOrderListener implements ApplicationListener<AgentOrderNotifyE
         map.put("time", time);
         map.put("quantity", agentOrderEntity.getQuantity());
         if (agentOrderEntity.getCardInfo() != null) {
-            try {
-                map.put("cardInfo", URLEncoder.encode(EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), configUtils.getSecretKey()), "UTF-8"));
-                logger.debug(map.get("cardInfo").toString());
-            } catch (UnsupportedEncodingException e) {
-                logger.error("cardInfo url编码失败");
-            }
+            map.put("cardInfo", EncryptUtil.encryptBase64(agentOrderEntity.getCardInfo(), configUtils.getSecretKey()));
+            logger.debug(map.get("cardInfo").toString());
         }
         String sign = SignUtils.getSign(map, configUtils.getSecretKey());
         map.put("sign", sign);
