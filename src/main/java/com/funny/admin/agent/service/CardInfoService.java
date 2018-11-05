@@ -39,4 +39,8 @@ public interface CardInfoService {
 	void deleteBatch(Long[] ids);
 
     List<CardInfoEntity> queryListExisted(Map<String, Object> map);
+
+	List<CardInfoEntity> queryListByIds(Long[] ids);
+
+	void updateStatusBatch(Long[] ids);
 }

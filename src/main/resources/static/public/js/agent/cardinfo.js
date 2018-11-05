@@ -129,6 +129,13 @@ var vm = new Vue({
                 });
             });
         },
+        exportExcel: function() {
+            var ids = getSelectedRows();
+            if (ids == null) {
+                return;
+            }
+            location.href = "../cardinfo/exportExcel?ids=" + JSON.stringify(ids);
+        },
         getInfo: function (id) {
             $.get("../cardinfo/info/" + id, function (r) {
                 vm.cardInfo = r.cardInfo;

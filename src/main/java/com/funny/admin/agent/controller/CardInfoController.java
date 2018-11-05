@@ -1,6 +1,7 @@
 package com.funny.admin.agent.controller;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.funny.admin.agent.entity.CardInfoEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.CardInfoService;
@@ -8,6 +9,11 @@ import com.funny.admin.agent.service.WareInfoService;
 import com.funny.utils.PageUtils;
 import com.funny.utils.Query;
 import com.funny.utils.R;
+import com.funny.utils.xss.XssHttpServletRequestWrapper;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -15,9 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -151,6 +161,63 @@ public class CardInfoController {
 
         return R.ok();
     }
+
+    /**
+     * 导出
+     */
+    @RequestMapping("/exportExcel")
+    public R exportExcel(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        //获取ids，不进行xss过滤
+        HttpServletRequest orgRequest = XssHttpServletRequestWrapper.getOrgRequest(request);
+        String idsString = orgRequest.getParameter("ids");
+        String[] tempIds = new String[]{};
+        tempIds =  JSON.parseArray(idsString).toArray(tempIds);
+        int length = tempIds.length;
+        Long[] ids = new Long[length];
+        for(int i=0;i<length;i++){
+            ids[i] = Long.valueOf(tempIds[i]);
+        }
+
+        List<CardInfoEntity> cardInfoEntityList = cardInfoService.queryListByIds(ids);
+        List<String> pwdsList ;
+        if(cardInfoEntityList != null){
+            pwdsList = new ArrayList<>();
+            for (CardInfoEntity cardInfoEntity : cardInfoEntityList ) {
+                pwdsList.add(cardInfoEntity.getPassword());
+            }
+
+            response.reset();
+            response.setContentType("application/x-download");
+            //文件命名
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHMMSS");
+            String fileName = sdf.format(new Date());
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xls");
+            response.setContentType("application/octet-stream; charset=UTF-8");
+            OutputStream out = response.getOutputStream();
+
+            HSSFWorkbook wb = new HSSFWorkbook();
+            //创建table工作薄
+            HSSFSheet sheet = wb.createSheet("sheet1");
+            pwdsList.add(0,"激活码（key）");
+            HSSFRow row;
+            HSSFCell cell;
+            for(int i = 0; i < pwdsList.size(); i++) {
+                //创建表格行
+                row = sheet.createRow(i);
+                //根据表格行创建单元格
+                cell = row.createCell(0);
+                cell.setCellValue(pwdsList.get(i));
+            }
+            wb.write(out);
+            out.close();
+
+            cardInfoService.updateStatusBatch(ids);
+
+        }
+
+        return R.ok();
+    }
+
 
     /**
      * 从excel导入数据

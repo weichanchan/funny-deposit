@@ -81,4 +81,14 @@ public class CardInfoServiceImpl implements CardInfoService {
 		return cardInfoDao.queryListByPwds(map);
 	}
 
+	@Override
+	public List<CardInfoEntity> queryListByIds(Long[] ids) {
+		return cardInfoDao.queryListByIds(ids);
+	}
+
+	@Override
+	public void updateStatusBatch(Long[] ids) {
+		cardInfoDao.updateStatusBatch(ids);
+	}
+
 }

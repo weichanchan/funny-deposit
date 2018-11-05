@@ -71,6 +71,13 @@
         </foreach>
 	</select>
 
+	<select id="queryListByIds" resultType="com.funny.admin.agent.entity.CardInfoEntity">
+        select password from card_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+	</select>
+
  	<select id="queryTotal" resultType="int">
 		select count(*) from card_info
 	</select>
@@ -129,6 +136,14 @@
 	
 	<delete id="deleteBatch">
 		delete from card_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<delete id="updateStatusBatch">
+        update card_info set `status` = 2
+        where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

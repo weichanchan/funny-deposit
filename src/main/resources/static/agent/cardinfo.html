@@ -28,6 +28,8 @@
                     class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
             <a v-if="hasPermission('cardinfo:delete')" class="btn btn-primary" @click="del"><i
                     class="fa fa-trash-o"></i>&nbsp;删除</a>
+            <a v-if="hasPermission('cardinfo:info')" class="btn btn-primary" @click="exportExcel"><i
+                    class="fa fa-arrow-circle-o-right"></i>&nbsp;导出</a>
             <a class="btn btn-warning" @click="btnback">&nbsp;返回</a>
         </div>
         <table id="jqGrid"></table>
