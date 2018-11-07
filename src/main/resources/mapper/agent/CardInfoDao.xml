@@ -42,7 +42,16 @@
 	</select>
 
     <select id="queryListByWareNo" resultType="com.funny.admin.agent.entity.CardInfoEntity">
-		select * from card_info where ware_no=#{wareNo}
+		select * from card_info
+		<where>
+			ware_no=#{wareNo}
+			<if test="password != null and password.trim() != ''">
+				and `password` like concat('%',#{password},'%')
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+		</where>
 		<choose>
 			<when test="sidx != null and sidx.trim() != ''">
 				order by ${sidx} ${order}
@@ -83,7 +92,16 @@
 	</select>
 
  	<select id="queryTotalByWareNo" resultType="int">
-		select count(*) from card_info where ware_no=#{wareNo}
+		select count(*) from card_info
+        <where>
+            ware_no = #{wareNo}
+            <if test="password != null and password.trim() != ''">
+                and `password` like concat('%',#{password},'%')
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
 	</select>
 
  	<select id="queryTotalNum" resultType="int">

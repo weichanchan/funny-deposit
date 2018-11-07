@@ -12,7 +12,13 @@ $(function () {
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
             {label: '账号', name: 'accountNo', index: 'account_no', width: 80},
-            {label: '密码/激活码', name: 'password', index: 'password', width: 80},
+            {label: '密码/激活码', name: 'password', index: 'password', width: 80,
+                formatter: function (value, options, row) {
+                    var s = vm.q.password;
+                    var reg = new RegExp("(" + s + ")", "g");
+                    return  value.replace(reg, "<font color=red>$1</font>");
+                }
+             },
             {label: '关联商品id', name: 'wareNo', index: 'ware_no', width: 80},
             {label: '关联订单id', name: 'agentOrderNo', index: 'agent_order_no', width: 80},
             {label: '状态', name: 'status', index: 'status', width: 80,
@@ -56,10 +62,27 @@ var vm = new Vue({
         showList: true,
         title: null,
         cardInfo: {},
-        wareNo:""
+        wareNo:"",
+        q:{
+            password:"",
+            status:""
+        },
+        statusSelect:[
+            {id:"",name:"全部状态"},
+            {id:"1",name:"未售出"},
+            {id:"2",name:"已售出"}
+        ],
+        btn : null
     },
     methods: {
         query: function () {
+            vm.btn = event.target.id;
+            vm.reload();
+        },
+        reset: function () {
+            $("#searchKey").val("");
+            vm.q.password = "";
+            vm.q.status = "";
             vm.reload();
         },
         add: function () {
@@ -143,8 +166,12 @@ var vm = new Vue({
         },
         reload: function (event) {
             vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            var page = (vm.btn == "query")?1:$("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
+                postData: {
+                    'password': vm.q.password,
+                    "status":vm.q.status
+                },
                 page: page
             }).trigger("reloadGrid");
         },

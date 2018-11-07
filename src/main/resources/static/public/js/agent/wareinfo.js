@@ -4,7 +4,13 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
-            {label: '商品编号', name: 'wareNo', index: 'ware_no', width: 80},
+            {label: '商品编号', name: 'wareNo', index: 'ware_no', width: 80,
+                formatter: function (value, options, row) {
+                    var s = vm.q.wareNo;
+                    var reg = new RegExp("(" + s + ")", "g");
+                    return  value.replace(reg, "<font color=red>$1</font>");
+                }
+            },
             {label: '商品名', name: 'wareName', index: 'ware_name', width: 80},
             {label: '代理商id', name: 'agentId', index: 'agent_id', width: 80},
             {label: '代理商价格(元)', name: 'agentPrice', index: 'agent_price', width: 80,

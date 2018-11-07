@@ -10,7 +10,13 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true, hidden: true},
-            {label: '京东订单号', name: 'jdOrderNo', index: 'jd_order_no', width: 80},
+            {label: '京东订单号', name: 'jdOrderNo', index: 'jd_order_no', width: 80,
+                formatter: function (value, options, row) {
+                    var s = vm.q.jdOrderNo;
+                    var reg = new RegExp("(" + s + ")", "g");
+                    return  value.replace(reg, "<font color=red>$1</font>");
+                }
+             },
             {label: '充值号码', name: 'rechargeNum', index: 'recharge_num', width: 80},
             {label: '数量', name: 'quantity', index: 'quantity', width: 50},
             {label: '商品编码', name: 'wareNo', index: 'ware_no', width: 80},
