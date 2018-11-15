@@ -14,6 +14,8 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +91,8 @@ public class AgentOrderController extends AbstractController {
      */
     @RequestMapping("/infoNew")
     @RequiresPermissions("agentorder:info")
-    public R infoNew() {
+    public R infoNew(HttpSession session) {
+        Long id = session.getAttribute("newId") == null ? 0L : (Long) session.getAttribute("newId");
         Map<String, Object> params = new HashMap<>(16);
         if (getUser().getUserId() != 1L) {
             params.put("roleIds", sysUserRoleService.queryRoleIdList(getUserId()));
@@ -97,7 +100,8 @@ public class AgentOrderController extends AbstractController {
         AgentOrderEntity agentOrder = agentOrderService.queryLast(params);
         Long now = System.currentTimeMillis();
         now = now - 15000;
-        if (agentOrder.getCreateTime().getTime() >= now) {
+        if (agentOrder.getCreateTime().getTime() >= now && id.longValue() != agentOrder.getId().longValue()) {
+            session.setAttribute("newId", agentOrder.getId());
             return R.ok();
         }
         return R.ok().put("code", -1);
@@ -138,6 +142,7 @@ public class AgentOrderController extends AbstractController {
      * 处理失败，固定返回商品不可售给京东
      *
      * @param id
+     *
      * @return
      */
     @RequestMapping("/handleFailed/{id}")
