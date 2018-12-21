@@ -8,7 +8,7 @@
     <appender name="FILE-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>../logs/funny.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/funny-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>../logs/funny-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
             <maxHistory>30</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
@@ -20,8 +20,8 @@
 
     <!-- 开发、测试环境、生产环境 -->
     <springProfile name="dev,test,pro,miao">
-        <logger name="org.springframework.web" level="INFO"/>
-        <logger name="org.springboot.sample" level="INFO" />
+        <logger name="org.springframework.web" level="DEBUG"/>
+        <logger name="org.springboot.sample" level="DEBUG" />
         <logger name="com.funny" level="DEBUG" />
     </springProfile>
 

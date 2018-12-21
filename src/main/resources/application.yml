@@ -27,3 +27,16 @@ mybatis:
 deposit:
     login: login.html
 #logging.level.com.funny=DEBUG
+message:
+    mail:
+        qq:
+            host: smtp.qq.com
+            username: 280378807@qq.com
+            password: ylcjtlsuyafebhja
+            properties:
+                mail:
+                    smtp:
+                        auth: true
+                        starttls:
+                            enable: true
+                            required: true
