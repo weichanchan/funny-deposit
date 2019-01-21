@@ -25,6 +25,10 @@ optional:
         bussType: 6
         secretKey: "kd7ESeY9izjXggYdCBXjDAR825rTzUvL"
         versionNo: 1.0
+    youzan:
+      client-id: f6e4afe3389a0b23d8
+      client-secret: c69569f3ce556a212f2d64297ea8d447
+      ktd-id: 40430747
 server:
   http:
     port: 80
