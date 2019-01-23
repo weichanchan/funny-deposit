@@ -2,6 +2,7 @@ package com.funny.admin.agent.service;
 
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.entity.WareInfoVO;
+import com.funny.api.praise.entity.MsgPushEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -40,4 +41,6 @@ public interface WareInfoService {
     WareInfoVO queryObjectAvailable(String wareNo);
 
     void shelves(Map<String,Object> map);
+
+    String getPasscode(MsgPushEntity entity, Map<String, Object> orderInfo, List<Map<String, Object>> orders);
 }
