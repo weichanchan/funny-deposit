@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Date;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 
 @Service("wareInfoService")
+@Transactional(rollbackFor = Exception.class)
 public class WareInfoServiceImpl implements WareInfoService {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiOrderNotifyController.class);
@@ -130,11 +132,6 @@ public class WareInfoServiceImpl implements WareInfoService {
     @Override
     public String getPasscode(MsgPushEntity entity, Map<String, Object> orderInfo, List<Map<String, Object>> orders) {
 
-        // 业务处理
-        logger.debug("交易类型为:" + entity.getType() + "，不是trade_TradeBuyerPay，不进行处理。");
-        if (!"trade_TradeBuyerPay".equals(entity.getType())) {
-            return "";
-        }
         logger.debug("开始卡密处理。");
         String cardInfoString = "";
 

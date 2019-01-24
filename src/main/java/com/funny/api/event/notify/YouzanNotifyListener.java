@@ -1,29 +1,19 @@
 package com.funny.api.event.notify;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.funny.admin.agent.entity.AgentOrderEntity;
-import com.funny.admin.agent.service.AgentOrderService;
 import com.funny.api.praise.entity.AccessToken;
 import com.funny.api.praise.entity.YouzanNotifyEventSource;
-import com.funny.utils.ConfigUtils;
-import com.funny.utils.EncryptUtil;
-import com.funny.utils.SignUtils;
 import com.youzan.open.sdk.client.auth.Token;
 import com.youzan.open.sdk.client.core.DefaultYZClient;
 import com.youzan.open.sdk.client.core.YZClient;
-import com.youzan.open.sdk.exception.KDTException;
-import com.youzan.open.sdk.gen.v3_0_0.api.YouzanLogisticsOnlineConfirm;
 import com.youzan.open.sdk.gen.v3_0_0.api.YouzanTradeMemoUpdate;
-import com.youzan.open.sdk.gen.v3_0_0.model.YouzanLogisticsOnlineConfirmParams;
 import com.youzan.open.sdk.gen.v3_0_0.model.YouzanTradeMemoUpdateParams;
 import com.youzan.open.sdk.gen.v3_0_0.model.YouzanTradeMemoUpdateResult;
-import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -33,9 +23,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -83,17 +70,6 @@ public class YouzanNotifyListener {
             youzanTradeMemoUpdate.setAPIParams(youzanTradeMemoUpdateParams);
             YouzanTradeMemoUpdateResult youzanTradeMemoUpdateResult = client.invoke(youzanTradeMemoUpdate);
 
-            if (!youzanTradeMemoUpdateResult.getIsSuccess()) {
-                // TODO 处理修改卡密已设置，但是却又改变订单状态失败
-            }
-            // 改备注成功以后发货
-            YouzanLogisticsOnlineConfirmParams youzanLogisticsOnlineConfirmParams = new YouzanLogisticsOnlineConfirmParams();
-            youzanLogisticsOnlineConfirmParams.setTid(youzanNotifyEventSource.getTid());
-            youzanLogisticsOnlineConfirmParams.setIsNoExpress(1L);
-
-            YouzanLogisticsOnlineConfirm youzanLogisticsOnlineConfirm = new YouzanLogisticsOnlineConfirm();
-            youzanLogisticsOnlineConfirm.setAPIParams(youzanLogisticsOnlineConfirmParams);
-            client.invoke(youzanLogisticsOnlineConfirm);
             if (!youzanTradeMemoUpdateResult.getIsSuccess()) {
                 // TODO 处理修改卡密已设置，但是却又改变订单状态失败
             }

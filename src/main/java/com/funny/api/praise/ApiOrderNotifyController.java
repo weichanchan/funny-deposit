@@ -2,42 +2,26 @@ package com.funny.api.praise;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.funny.admin.agent.entity.CardInfoEntity;
-import com.funny.admin.agent.entity.WareInfoEntity;
-import com.funny.admin.agent.entity.WareInfoVO;
 import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.api.event.notify.YouzanNotifyEvent;
-import com.funny.api.praise.entity.AccessToken;
 import com.funny.api.praise.entity.MsgPushEntity;
 import com.funny.api.praise.entity.YouzanNotifyEventSource;
 import com.funny.utils.annotation.IgnoreAuth;
-import com.youzan.open.sdk.client.auth.Token;
-import com.youzan.open.sdk.client.core.DefaultYZClient;
-import com.youzan.open.sdk.client.core.YZClient;
-import com.youzan.open.sdk.gen.v3_0_0.api.YouzanLogisticsOnlineConfirm;
-import com.youzan.open.sdk.gen.v3_0_0.api.YouzanTradeMemoUpdate;
-import com.youzan.open.sdk.gen.v3_0_0.model.YouzanLogisticsOnlineConfirmParams;
-import com.youzan.open.sdk.gen.v3_0_0.model.YouzanTradeMemoUpdateParams;
-import com.youzan.open.sdk.gen.v3_0_0.model.YouzanTradeMemoUpdateResult;
 import com.youzan.open.sdk.util.hash.MD5Utils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +63,8 @@ public class ApiOrderNotifyController {
     @IgnoreAuth
     @PostMapping("notify")
     public Object notify(@RequestBody MsgPushEntity entity) throws Exception {
-        logger.debug("**************begin praise notify test: " + entity.isTest() + "，mode" + entity.getMode() + "，**************");
+        logger.debug("**************begin praise notify**************");
+        logger.debug(objectMapper.writeValueAsString(entity));
         JSONObject res = new JSONObject();
         res.put("code", 0);
         res.put("msg", "success");
@@ -88,6 +73,13 @@ public class ApiOrderNotifyController {
          */
         if (entity.isTest()) {
             logger.error("心跳请求，不处理。");
+            return res;
+        }
+        /**
+         * 检查是否是付款推送
+         */
+        if (!("trade_TradePaid".equals(entity.getType()) && "TRADE_PAID".equals(entity.getStatus()))) {
+            logger.debug("不是付款请求不用处理。");
             return res;
         }
         /**
@@ -113,6 +105,11 @@ public class ApiOrderNotifyController {
         // 订单ID
         String tid = (String) orderInfo.get("tid");
         String cardInfoString = wareInfoService.getPasscode(entity, orderInfo, orders);
+        if (StringUtils.isBlank(cardInfoString)) {
+            //TODO 没卡密了，登记一下错误
+            logger.error("卡密库存不足。");
+            return res;
+        }
         logger.debug(tid);
         logger.debug(cardInfoString);
         // TODO 记录一个有赞订单
