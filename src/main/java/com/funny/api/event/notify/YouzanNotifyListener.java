@@ -31,7 +31,8 @@ import java.util.Map;
 @Component
 @ConditionalOnProperty("optional.youzan.enable")
 public class YouzanNotifyListener {
-    Logger logger = LoggerFactory.getLogger(YouzanNotifyListener.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(YouzanNotifyListener.class);
 
     private YZClient client;
 
@@ -71,6 +72,7 @@ public class YouzanNotifyListener {
             YouzanTradeMemoUpdateResult youzanTradeMemoUpdateResult = client.invoke(youzanTradeMemoUpdate);
 
             if (!youzanTradeMemoUpdateResult.getIsSuccess()) {
+                logger.error("修改订单备注失败。");
                 // TODO 处理修改卡密已设置，但是却又改变订单状态失败
             }
         } catch (Exception e) {
