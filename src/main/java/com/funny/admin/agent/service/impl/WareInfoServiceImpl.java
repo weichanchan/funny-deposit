@@ -8,7 +8,6 @@ import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.entity.WareInfoVO;
 import com.funny.admin.agent.entity.WareRoleEntity;
 import com.funny.admin.agent.service.WareInfoService;
-import com.funny.api.praise.ApiOrderNotifyController;
 import com.funny.api.praise.entity.MsgPushEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,7 @@ import java.util.Map;
 @Transactional(rollbackFor = Exception.class)
 public class WareInfoServiceImpl implements WareInfoService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiOrderNotifyController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WareInfoServiceImpl.class);
 
     @Autowired
     private WareInfoDao wareInfoDao;
