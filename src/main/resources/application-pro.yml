@@ -27,9 +27,16 @@ optional:
         versionNo: 1.0
     youzan:
       enable: true
-      client-id: f6e4afe3389a0b23d8
-      client-secret: c69569f3ce556a212f2d64297ea8d447
-      kdt-id: 40430747
+      client-id: d42967c0dde9de76ad
+      client-secret: c1637f0d0c07d5ec9464411f10a944e8
+      kdt-id: 13176063
+    fulu:
+      enable: true
+      no: 804867
+      name: lyh512125
+      key: 900B44E19971C3BC7EF02E1290CA08D8
+      url: http://test.ccapi.soouu.cn/Interface/Method
+      notifyUrl: https://www.lckj.shop/api/fulu/order/notify
 server:
   http:
     port: 80

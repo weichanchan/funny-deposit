@@ -56,6 +56,38 @@ public class SignUtils {
         return flag;
     }
 
+    public static Map getFuluHeader(String type){
+        Map map = new HashMap(8);
+        map.put("method", type);
+        map.put("timestamp", DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        map.put("format", "json");
+        map.put("v", "1.0");
+        return map;
+    }
+    /**
+     * 将字典集合按键排序，并拼接为URL参数对（param1=value1&param2=value2...)
+     *
+     * @param params
+     *            需要转换的字典集合
+     * @return String字符串 拼接完的URL参数对
+     */
+    public static String MaptoString(Map<String, String> params) {
+        Set<String> keySet = params.keySet();
+        String[] keysArr = keySet.toArray(new String[0]);
+        //对键进行排序
+        Arrays.sort(keysArr);
+        StringBuilder signedContent = new StringBuilder();
+        //将字典集合转换为URL参数对
+        for (int i = 0; i < keysArr.length; i++  ) {
+            signedContent.append(keysArr[i]).append("=").append(params.get(keysArr[i])).append("&");
+        }
+        String signedContentStr = signedContent.toString();
+        if (signedContentStr.endsWith("&")){
+            signedContentStr = signedContentStr.substring(0, signedContentStr.length() - 1);
+        }
+        return signedContentStr;
+    }
+
     /**
      * MD5 32位小写加密
      *
