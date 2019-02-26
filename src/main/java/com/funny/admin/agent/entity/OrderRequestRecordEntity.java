@@ -21,15 +21,11 @@ public class OrderRequestRecordEntity implements Serializable {
     /**
      * 设置：请求参数
      */
-	private String requst;
+	private String request;
     /**
      * 设置：响应参数
      */
 	private String response;
-    /**
-     * 设置：请求地址
-     */
-	private String url;
     /**
      * 设置：异常信息
      */
@@ -37,7 +33,7 @@ public class OrderRequestRecordEntity implements Serializable {
     /**
      * 设置：订单编号
      */
-	private String orderNo;
+	private Integer orderNo;
     /**
      * 设置：请求时间
      */
@@ -62,14 +58,14 @@ public class OrderRequestRecordEntity implements Serializable {
 	/**
 	 * 设置：请求参数
 	 */
-	public void setRequst(String requst) {
-		this.requst = requst;
+	public void setRequest(String request) {
+		this.request = request;
 	}
 	/**
 	 * 获取：请求参数
 	 */
-	public String getRequst() {
-		return requst;
+	public String getRequest() {
+		return request;
 	}
 	/**
 	 * 设置：响应参数
@@ -82,18 +78,6 @@ public class OrderRequestRecordEntity implements Serializable {
 	 */
 	public String getResponse() {
 		return response;
-	}
-	/**
-	 * 设置：请求地址
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	/**
-	 * 获取：请求地址
-	 */
-	public String getUrl() {
-		return url;
 	}
 	/**
 	 * 设置：异常信息
@@ -110,13 +94,13 @@ public class OrderRequestRecordEntity implements Serializable {
 	/**
 	 * 设置：订单编号
 	 */
-	public void setOrderNo(String orderNo) {
+	public void setOrderNo(Integer orderNo) {
 		this.orderNo = orderNo;
 	}
 	/**
 	 * 获取：订单编号
 	 */
-	public String getOrderNo() {
+	public Integer getOrderNo() {
 		return orderNo;
 	}
 	/**

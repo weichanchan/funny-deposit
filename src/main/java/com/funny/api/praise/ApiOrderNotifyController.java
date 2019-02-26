@@ -8,6 +8,7 @@ import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.api.event.notify.FuluSubmitEvent;
+import com.funny.api.event.notify.YouzanRefundEvent;
 import com.funny.api.praise.entity.MsgPushEntity;
 import com.funny.utils.annotation.IgnoreAuth;
 import com.youzan.open.sdk.util.hash.MD5Utils;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.Date;
 import java.util.List;
@@ -69,8 +71,6 @@ public class ApiOrderNotifyController {
     @IgnoreAuth
     @PostMapping("notify")
     public Object notify(@RequestBody MsgPushEntity entity) throws Exception {
-        logger.debug("**************begin praise notify**************");
-        logger.debug(objectMapper.writeValueAsString(entity));
         JSONObject res = new JSONObject();
         res.put("code", 0);
         res.put("msg", "success");
@@ -116,11 +116,7 @@ public class ApiOrderNotifyController {
         String outerSkuId = (String) order.get("outer_sku_id");
         // 订单ID
         String tid = (String) orderInfo.get("tid");
-        WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(outerSkuId);
-//        if (wareInfoEntity == null) {
-//            //TODO 没有这个商品要退款
-//            return res;
-//        }
+
         OrderFromYouzanEntity orderFromYouzanEntity = new OrderFromYouzanEntity();
         orderFromYouzanEntity.setOrderNo(UUID.randomUUID().toString().replace("-", ""));
         orderFromYouzanEntity.setYouzanOrderId(tid);
@@ -129,10 +125,23 @@ public class ApiOrderNotifyController {
         orderFromYouzanEntity.setFormatInfo(String.valueOf(order.get("sku_properties_name")));
         // 充值号码备注信息
         orderFromYouzanEntity.setRechargeInfo(String.valueOf(order.get("buyer_messages")));
+        // 子订单ID
+        orderFromYouzanEntity.setSubOrderId(String.valueOf(order.get("oid")));
+        // 订单金额
+        orderFromYouzanEntity.setOrderPrice(new BigDecimal(String.valueOf(order.get("total_fee"))));
         // 订单状态为处理中
-        orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.WATI_PROCESS);
+        orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.WAIT_PROCESS);
         orderFromYouzanEntity.setCreateTime(new Date());
         orderFromYouzanService.save(orderFromYouzanEntity);
+
+        WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(outerSkuId);
+        // 查不到商品就直接退款
+        if (wareInfoEntity == null) {
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+            orderFromYouzanService.update(orderFromYouzanEntity);
+            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(),"商品不可售"));
+            return res;
+        }
         applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));
         return res;
     }

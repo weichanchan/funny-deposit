@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,5 +54,15 @@ public class OrderRequestRecordServiceImpl implements OrderRequestRecordService 
 	public void deleteBatch(Integer[] ids){
 		orderRequestRecordDao.deleteBatch(ids);
 	}
-	
+
+	@Override
+	public OrderRequestRecordEntity saveRequest(String request, Integer id) {
+		OrderRequestRecordEntity orderRequestRecordEntity = new OrderRequestRecordEntity();
+		orderRequestRecordEntity.setRequest(request);
+		orderRequestRecordEntity.setCreateTime(new Date());
+		orderRequestRecordEntity.setOrderNo(id);
+		orderRequestRecordDao.save(orderRequestRecordEntity);
+		return orderRequestRecordEntity;
+	}
+
 }

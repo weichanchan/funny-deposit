@@ -6,9 +6,8 @@
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.funny.admin.agent.entity.OrderRequestRecordEntity" id="orderRequestRecordMap">
         <result property="id" column="id"/>
-        <result property="requst" column="requst"/>
+        <result property="request" column="request"/>
         <result property="response" column="response"/>
-        <result property="url" column="url"/>
         <result property="exception" column="exception"/>
         <result property="orderNo" column="order_no"/>
         <result property="createTime" column="create_time"/>
@@ -18,10 +17,9 @@
 	<select id="queryObject" resultType="com.funny.admin.agent.entity.OrderRequestRecordEntity">
 		select
 					`id`, 
-					`requst`, 
+					`request`,
 					`response`, 
-					`url`, 
-					`exception`, 
+					`exception`,
 					`order_no`, 
 					`create_time`, 
 					`response_time`
@@ -32,10 +30,9 @@
 	<select id="queryList" resultType="com.funny.admin.agent.entity.OrderRequestRecordEntity">
 		select
 		            `id`, 
-		            `requst`, 
+		            `request`,
 		            `response`, 
-		            `url`, 
-		            `exception`, 
+		            `exception`,
 		            `order_no`, 
 		            `create_time`, 
 		            `response_time`
@@ -60,20 +57,18 @@
 	<insert id="save" parameterType="com.funny.admin.agent.entity.OrderRequestRecordEntity" useGeneratedKeys="true" keyProperty="id">
 		insert into order_request_record
 		(
-			`requst`, 
+			`request`,
 			`response`, 
-			`url`, 
-			`exception`, 
+			`exception`,
 			`order_no`, 
 			`create_time`, 
 			`response_time`
 		)
 		values
 		(
-			#{requst}, 
+			#{request},
 			#{response}, 
-			#{url}, 
-			#{exception}, 
+			#{exception},
 			#{orderNo}, 
 			#{createTime}, 
 			#{responseTime}
@@ -83,9 +78,8 @@
 	<update id="update" parameterType="com.funny.admin.agent.entity.OrderRequestRecordEntity">
 		update order_request_record 
 		<set>
-			<if test="requst != null">`requst` = #{requst}, </if>
+			<if test="request != null">`request` = #{request}, </if>
 			<if test="response != null">`response` = #{response}, </if>
-			<if test="url != null">`url` = #{url}, </if>
 			<if test="exception != null">`exception` = #{exception}, </if>
 			<if test="orderNo != null">`order_no` = #{orderNo}, </if>
 			<if test="createTime != null">`create_time` = #{createTime}, </if>
