@@ -5,14 +5,13 @@ import com.funny.admin.agent.entity.OrderRequestRecordEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
 import com.funny.api.event.notify.FuluSubmitEvent;
-import com.funny.utils.DateUtils;
+import com.funny.api.event.notify.YouzanRefundEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,12 +48,16 @@ public class FuluCheckResendTask {
             map.clear();
             map.put("orderNo", orderFromYouzanEntity.getId());
             List<OrderRequestRecordEntity> orderRequestRecordEntities = orderRequestRecordService.queryList(map);
-            if (orderRequestRecordEntities.size() >= 3) {
-                // 重试3次了，不发了。退钱
-                // TODO 触发退款事件
+            if (orderRequestRecordEntities.size() >= 3 && orderFromYouzanEntity.getCreateTime().getTime() < (System.currentTimeMillis() + (660 * 1000))) {
+                // 重试3次了，不发了。下单时长超过10分钟的退钱
+                applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "重试超限"));
                 continue;
             }
-            // 触发重发事件
+            if (orderRequestRecordEntities.size() >= 3) {
+                // 重试3次了，不发了。退钱
+                continue;
+            }
+            // 触发发送事件
             applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));
         }
     }

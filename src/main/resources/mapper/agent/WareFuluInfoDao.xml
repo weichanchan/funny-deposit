@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.funny.admin.agent.dao.WareFuluInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.funny.admin.agent.entity.WareFuluInfoEntity" id="wareFuluInfoMap">
+        <result property="id" column="id"/>
+        <result property="outerSkuId" column="outer_sku_id"/>
+        <result property="wareName" column="ware_name"/>
+        <result property="num" column="num"/>
+        <result property="productId" column="product_id"/>
+        <result property="mark" column="mark"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.funny.admin.agent.entity.WareFuluInfoEntity">
+		select
+					`id`, 
+					`outer_sku_id`, 
+					`ware_name`, 
+					`num`, 
+					`product_id`, 
+					`mark`, 
+					`create_time`
+				from ware_fulu_info where id = #{id}
+        <if test="isLock != null and isLock == true">for update</if>
+	</select>
+
+	<!-- 根据商品编号查询商品-->
+	<select id="queryByOuterSkuId" resultType="com.funny.admin.agent.entity.WareInfoEntity">
+		select * from ware_fulu_info where outer_sku_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.funny.admin.agent.entity.WareFuluInfoEntity">
+		select
+		            `id`, 
+		            `outer_sku_id`, 
+		            `ware_name`, 
+		            `num`, 
+		            `product_id`, 
+		            `mark`, 
+		            `create_time`
+				from ware_fulu_info
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ware_fulu_info 
+	</select>
+	 
+	<insert id="save" parameterType="com.funny.admin.agent.entity.WareFuluInfoEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into ware_fulu_info
+		(
+			`outer_sku_id`, 
+			`ware_name`, 
+			`num`, 
+			`product_id`, 
+			`mark`, 
+			`create_time`
+		)
+		values
+		(
+			#{outerSkuId}, 
+			#{wareName}, 
+			#{num}, 
+			#{productId}, 
+			#{mark}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.funny.admin.agent.entity.WareFuluInfoEntity">
+		update ware_fulu_info 
+		<set>
+			<if test="outerSkuId != null">`outer_sku_id` = #{outerSkuId}, </if>
+			<if test="wareName != null">`ware_name` = #{wareName}, </if>
+			<if test="num != null">`num` = #{num}, </if>
+			<if test="productId != null">`product_id` = #{productId}, </if>
+			<if test="mark != null">`mark` = #{mark}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from ware_fulu_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ware_fulu_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -4,7 +4,9 @@ import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.OrderRequestRecordEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
+import com.funny.api.event.notify.FuluCheckEvent;
 import com.funny.api.event.notify.FuluSubmitEvent;
+import com.funny.api.event.notify.YouzanRefundEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +47,10 @@ public class FuluCheckTask {
                 continue;
             }
             if (orderFromYouzanEntity.getCreateTime().getTime() < (System.currentTimeMillis() + (660 * 1000))) {
-                // 超过10分钟了，没救了退款
-                // TODO 触发退款事件
+                applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "查询超时"));
                 continue;
             }
-            // TODO 触发查询事件
+            applicationContext.publishEvent(new FuluCheckEvent(orderFromYouzanEntity.getId()));
         }
     }
 }

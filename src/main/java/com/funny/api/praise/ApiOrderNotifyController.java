@@ -6,6 +6,7 @@ import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.OrderFromYouzanService;
+import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.api.event.notify.FuluSubmitEvent;
 import com.funny.api.event.notify.YouzanRefundEvent;
@@ -45,13 +46,10 @@ public class ApiOrderNotifyController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
-    ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
     @Autowired
-    private WareInfoService wareInfoService;
-
-    @Autowired
-    private CardInfoService cardInfoService;
+    private WareFuluInfoService wareFuluInfoService;
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
@@ -134,7 +132,7 @@ public class ApiOrderNotifyController {
         orderFromYouzanEntity.setCreateTime(new Date());
         orderFromYouzanService.save(orderFromYouzanEntity);
 
-        WareInfoEntity wareInfoEntity = wareInfoService.queryObjectByWareNo(outerSkuId);
+        WareInfoEntity wareInfoEntity = wareFuluInfoService.queryByOuterSkuId(outerSkuId);
         // 查不到商品就直接退款
         if (wareInfoEntity == null) {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);

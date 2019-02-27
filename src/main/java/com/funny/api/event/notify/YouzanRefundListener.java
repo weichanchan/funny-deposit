@@ -80,7 +80,7 @@ public class YouzanRefundListener {
 
             YouzanTradeRefundSellerActive youzanTradeRefundSellerActive = new YouzanTradeRefundSellerActive();
             youzanTradeRefundSellerActive.setAPIParams(youzanTradeRefundSellerActiveParams);
-            YouzanTradeRefundSellerActiveResult result = client.invoke(youzanTradeRefundSellerActive);
+            YouzanTradeRefundSellerActiveResult result = getClient().invoke(youzanTradeRefundSellerActive);
             if (!result.getIsSuccess()) {
                 logger.debug("订单：" + orderFromYouzanEntity.getId() + "退款失败，原因：" + result.toString());
                 return;
@@ -90,7 +90,7 @@ public class YouzanRefundListener {
             orderFromYouzanService.update(orderFromYouzanEntity);
         } catch (Exception e) {
             // 异常只打印日志，定时任务会继续重试
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
         }
 
     }
