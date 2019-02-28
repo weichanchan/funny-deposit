@@ -38,13 +38,17 @@ public class OrderFromYouzanEntity implements Serializable {
      */
     public static final int EXCEPTION = -2;
     /**
+     * -3、退款失败
+     */
+    public static final int REFUND_FAIL = -3;
+    /**
      * 设置：主键 ID
      */
     private Integer id;
     /**
      * 设置：用于跟外部系统对接的订单号
      */
-    private Object orderNo;
+    private String orderNo;
     /**
      * 设置：有赞订单号
      */
@@ -108,14 +112,14 @@ public class OrderFromYouzanEntity implements Serializable {
     /**
      * 设置：用于跟外部系统对接的订单号
      */
-    public void setOrderNo(Object orderNo) {
+    public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
     }
 
     /**
      * 获取：用于跟外部系统对接的订单号
      */
-    public Object getOrderNo() {
+    public String getOrderNo() {
         return orderNo;
     }
 

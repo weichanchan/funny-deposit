@@ -1,7 +1,6 @@
 package com.funny.admin.agent.dao;
 
 import com.funny.admin.agent.entity.WareFuluInfoEntity;
-import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.system.dao.BaseDao;
 import org.apache.ibatis.annotations.Param;
 

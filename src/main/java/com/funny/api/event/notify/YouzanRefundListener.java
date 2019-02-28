@@ -63,9 +63,10 @@ public class YouzanRefundListener {
     @Async
     @EventListener
     public void onApplicationEvent(YouzanRefundEvent youzanNotifyEvent) {
+        OrderFromYouzanEntity orderFromYouzanEntity = null;
         try {
             Integer id = Integer.parseInt(String.valueOf(youzanNotifyEvent.getSource()));
-            OrderFromYouzanEntity orderFromYouzanEntity = orderFromYouzanService.queryObject(id, true);
+            orderFromYouzanEntity = orderFromYouzanService.queryObject(id, true);
             // 不是失败状态，不处理
             if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.FAIL) {
                 return;
@@ -82,6 +83,9 @@ public class YouzanRefundListener {
             youzanTradeRefundSellerActive.setAPIParams(youzanTradeRefundSellerActiveParams);
             YouzanTradeRefundSellerActiveResult result = getClient().invoke(youzanTradeRefundSellerActive);
             if (!result.getIsSuccess()) {
+                // 退款成功
+                orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.REFUND_FAIL);
+                orderFromYouzanService.update(orderFromYouzanEntity);
                 logger.debug("订单：" + orderFromYouzanEntity.getId() + "退款失败，原因：" + result.toString());
                 return;
             }
@@ -89,6 +93,9 @@ public class YouzanRefundListener {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.REFUND_SUCCESS);
             orderFromYouzanService.update(orderFromYouzanEntity);
         } catch (Exception e) {
+            // 退款成功
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.REFUND_FAIL);
+            orderFromYouzanService.update(orderFromYouzanEntity);
             // 异常只打印日志，定时任务会继续重试
             logger.error(e.getMessage(),e);
         }

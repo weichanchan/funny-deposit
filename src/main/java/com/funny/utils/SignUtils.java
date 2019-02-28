@@ -56,14 +56,6 @@ public class SignUtils {
         return flag;
     }
 
-    public static Map getFuluHeader(String type){
-        Map map = new HashMap(8);
-        map.put("method", type);
-        map.put("timestamp", DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-        map.put("format", "json");
-        map.put("v", "1.0");
-        return map;
-    }
     /**
      * 将字典集合按键排序，并拼接为URL参数对（param1=value1&param2=value2...)
      *

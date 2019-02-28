@@ -31,7 +31,7 @@ import java.util.Map;
  * @author liyanjun
  */
 @Component
-public class FuluCheckListener extends AbstractFuluListener  {
+public class FuluCheckListener extends AbstractFuluListener {
 
     private static final Logger logger = LoggerFactory.getLogger(FuluCheckListener.class);
 
@@ -41,26 +41,24 @@ public class FuluCheckListener extends AbstractFuluListener  {
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
 
-    @Autowired
-    private FuluConfig fuluConfig;
-
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Async
     @EventListener
-    public void onApplicationEvent(FuluSubmitEvent fuluSubmitEvent) throws IOException {
-        Integer id = Integer.parseInt(String.valueOf(fuluSubmitEvent.getSource()));
+    public void onApplicationEvent(FuluCheckEvent fuluCheckEvent) throws IOException {
+        Integer id = Integer.parseInt(String.valueOf(fuluCheckEvent.getSource()));
         OrderFromYouzanEntity orderFromYouzanEntity = orderFromYouzanService.queryObject(id, true);
         // 不是待充值状态，不处理
         if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.PROCESS) {
             return;
         }
-        Map map = SignUtils.getFuluHeader("kamenwang.goods.get");
+        Map map = getFuluHeader("kamenwang.goods.get");
         // 合作商家订单号（唯一不重复）
         map.put("customerorderno", orderFromYouzanEntity.getOrderNo());
+        map.put("customerorderno", fuluConfig.getUserId());
         // 将签名添加到URL参数后
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(getRequestString(map), null, String.class);
-        Map<String,String> result = objectMapper.readValue(responseEntity.getBody(),Map.class);
+        Map<String, String> result = objectMapper.readValue(responseEntity.getBody(), Map.class);
         if (result.get("Status") != null && "成功".equals(result.get("Status"))) {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.SUCCESS);
             orderFromYouzanService.update(orderFromYouzanEntity);
@@ -68,15 +66,12 @@ public class FuluCheckListener extends AbstractFuluListener  {
         }
 
         // 响应错误码为1206时是查询错误：系统出现异常，可持续下单处理，可查询时间超过十分钟以后，不能查到订单可做关单处理或重新下单处理)
-        if(result.get("MessageCode") != null &&"1206".equals(result.get("MessageCode"))){
+        if (result.get("MessageCode") != null && "1206".equals(result.get("MessageCode"))) {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.WAIT_PROCESS);
             orderFromYouzanService.update(orderFromYouzanEntity);
             return;
         }
+
     }
 
-    @Override
-    public String getUrl() {
-        return  fuluConfig.getUrl();
-    }
 }

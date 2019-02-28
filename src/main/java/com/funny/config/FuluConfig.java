@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty("optional.fulu.enable")
 public class FuluConfig {
-    @Value("${optional.fulu.no}")
-    private String no;
+    @Value("${optional.fulu.userId}")
+    private String userId;
     @Value("${optional.fulu.name}")
     private String name;
     @Value("${optional.fulu.key}")
@@ -21,12 +21,12 @@ public class FuluConfig {
     @Value("${optional.fulu.url}")
     private String url;
 
-    public String getNo() {
-        return no;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setNo(String no) {
-        this.no = no;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {

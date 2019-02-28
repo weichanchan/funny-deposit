@@ -41,7 +41,7 @@ public class FuluCheckResendTask {
         map.put("status", OrderFromYouzanEntity.WAIT_PROCESS);
         List<OrderFromYouzanEntity> orderFromYouzanEntities = orderFromYouzanService.queryList(map);
         for (OrderFromYouzanEntity orderFromYouzanEntity : orderFromYouzanEntities) {
-            if (orderFromYouzanEntity.getCreateTime().getTime() < (System.currentTimeMillis() + (60 * 1000))) {
+            if ((orderFromYouzanEntity.getCreateTime().getTime()  + (60 * 1000)) < System.currentTimeMillis()) {
                 // 没入库够1分钟不理他
                 continue;
             }
@@ -49,13 +49,7 @@ public class FuluCheckResendTask {
             map.put("orderNo", orderFromYouzanEntity.getId());
             List<OrderRequestRecordEntity> orderRequestRecordEntities = orderRequestRecordService.queryList(map);
             if (orderRequestRecordEntities.size() >= 3) {
-
-                if (orderFromYouzanEntity.getCreateTime().getTime() < (System.currentTimeMillis() + (660 * 1000))) {
-                    // 重试3次。主动查询订单状态，时长超过10分钟，退钱。
-                    applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "重试超限"));
-                    continue;
-                }
-                // 最多重试3次
+                // 最多重试3次,超过的就跳过，等着超时退款，或者他们通知过来。
                 continue;
             }
 

@@ -136,6 +136,7 @@ public class ApiOrderNotifyController {
         WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(outerSkuId);
         // 查不到商品就直接退款
         if (wareFuluInfoEntity == null) {
+            orderFromYouzanEntity.setException("商品不可售，退款。");
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
             applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(),"商品不可售"));

@@ -28,7 +28,7 @@
 	</select>
 
 	<!-- 根据商品编号查询商品-->
-	<select id="queryByOuterSkuId" resultType="com.funny.admin.agent.entity.WareInfoEntity">
+	<select id="queryByOuterSkuId" resultType="com.funny.admin.agent.entity.WareFuluInfoEntity">
 		select * from ware_fulu_info where outer_sku_id = #{value}
 	</select>
 

@@ -32,7 +32,7 @@ optional:
         kdt-id: 40430747
     fulu:
         enable: true
-        no: 803683
+        userId: 803683
         name: lyh512125
         key: CC11F561EBF14204089A5C64DE61C8DF
         url: http://test.ccapi.soouu.cn/Interface/Method

@@ -1,18 +1,14 @@
 package com.funny.api.event.notify;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.OrderRequestRecordEntity;
 import com.funny.admin.agent.entity.WareFuluInfoEntity;
-import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
 import com.funny.admin.agent.service.WareFuluInfoService;
-import com.funny.admin.agent.service.WareInfoService;
 import com.funny.config.FuluConfig;
 import com.funny.utils.SignUtils;
-import com.youzan.open.sdk.util.hash.MD5Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Map;
 
@@ -51,9 +46,6 @@ public class FuluSubmitListener extends AbstractFuluListener {
     private WareFuluInfoService wareFuluInfoService;
 
     @Autowired
-    private FuluConfig fuluConfig;
-
-    @Autowired
     private ApplicationContext applicationContext;
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -69,37 +61,36 @@ public class FuluSubmitListener extends AbstractFuluListener {
         }
         WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
         if (wareFuluInfoEntity == null) {
-            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(),"商品不可售"));
+            orderFromYouzanEntity.setException("商品不可售，退款。");
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+            orderFromYouzanService.update(orderFromYouzanEntity);
+            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "商品不可售"));
         }
 
-        Map map = SignUtils.getFuluHeader("kamenwang.order.add");
+        Map<String, String> map = getFuluHeader("kamenwang.order.add");
         // 业务参数
         // 合作商家订单号（唯一不重复）
         map.put("customerorderno", orderFromYouzanEntity.getOrderNo());
-        // TODO 上线前改动
         // 福禄商品编号
-//        map.put("productid", "1204405");
-        map.put("productid", wareFuluInfoEntity.getProductId());
+        map.put("productid", String.valueOf(wareFuluInfoEntity.getProductId()));
         // 用户编号
-        map.put("customerid", fuluConfig.getNo());
+        map.put("customerid", fuluConfig.getUserId());
         // 购买数量
-//        map.put("buynum", "1");
-        map.put("buynum", wareFuluInfoEntity.getNum());
+        map.put("buynum", String.valueOf(wareFuluInfoEntity.getNum()));
         // 充值账号
-//        map.put("chargeaccount", "123456");
-        map.put("chargeaccount", objectMapper.readValue(orderFromYouzanEntity.getRechargeInfo(),Map.class).get(wareFuluInfoEntity.getMark()));
+        map.put("chargeaccount", String.valueOf(objectMapper.readValue(orderFromYouzanEntity.getRechargeInfo(), Map.class).get(wareFuluInfoEntity.getMark())));
         // 提交订单的回调地址
         map.put("notifyurl", fuluConfig.getNotifyUrl());
         // 发送请求并记录
         String request = getRequestString(map);
-        OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(request,orderFromYouzanEntity.getId());
+        OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(request, orderFromYouzanEntity.getId());
         ResponseEntity<String> responseEntity;
         Map result;
         try {
             orderFromYouzanEntity.setLastRechargeTime(new Date());
             responseEntity = restTemplate.postForEntity(request, null, String.class);
             orderRequestRecordEntity.setResponse(responseEntity.getBody());
-            result = objectMapper.readValue(responseEntity.getBody(),Map.class);
+            result = objectMapper.readValue(responseEntity.getBody(), Map.class);
         } catch (Exception e) {
             // 请求异常直接记录，然后就返回。等待定时器重试
             orderRequestRecordEntity.setException(e.getMessage());
@@ -124,8 +115,4 @@ public class FuluSubmitListener extends AbstractFuluListener {
         orderFromYouzanService.update(orderFromYouzanEntity);
     }
 
-    @Override
-    public String getUrl() {
-        return  fuluConfig.getUrl();
-    }
 }

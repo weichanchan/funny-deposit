@@ -73,7 +73,10 @@
 		            `begin_recharge_time`, 
 		            `last_recharge_time`,
 					`exception`
-				from order_from_youzan
+				from order_from_youzan where 1=1
+		<if test="status != null">
+			and status = #{status}
+		</if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}

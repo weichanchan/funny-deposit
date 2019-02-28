@@ -32,9 +32,6 @@ public class FuluCheckTask {
     private OrderFromYouzanService orderFromYouzanService;
 
     @Autowired
-    private OrderRequestRecordService orderRequestRecordService;
-
-    @Autowired
     ApplicationContext applicationContext;
 
     public void watch() {
@@ -42,11 +39,14 @@ public class FuluCheckTask {
         map.put("status", OrderFromYouzanEntity.PROCESS);
         List<OrderFromYouzanEntity> orderFromYouzanEntities = orderFromYouzanService.queryList(map);
         for (OrderFromYouzanEntity orderFromYouzanEntity : orderFromYouzanEntities) {
-            if (orderFromYouzanEntity.getCreateTime().getTime() < (System.currentTimeMillis() + (60 * 1000))) {
+            if ((orderFromYouzanEntity.getCreateTime().getTime() + (60 * 1000)) > System.currentTimeMillis()) {
                 // 没入库够1分钟不理他
                 continue;
             }
-            if (orderFromYouzanEntity.getCreateTime().getTime() < (System.currentTimeMillis() + (660 * 1000))) {
+            if ((orderFromYouzanEntity.getCreateTime().getTime() + (660 * 1000)) < System.currentTimeMillis()) {
+                orderFromYouzanEntity.setException("查询超时，退款。");
+                orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+                orderFromYouzanService.update(orderFromYouzanEntity);
                 applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "查询超时"));
                 continue;
             }
