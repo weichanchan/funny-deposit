@@ -87,6 +87,11 @@ public class OrderFromYouzanEntity implements Serializable {
     private Date lastRechargeTime;
 
     /**
+     * 异常状况
+     */
+    private String exception;
+
+    /**
      * 设置：主键 ID
      */
     public void setId(Integer id) {
@@ -240,5 +245,13 @@ public class OrderFromYouzanEntity implements Serializable {
 
     public void setSubOrderId(String subOrderId) {
         this.subOrderId = subOrderId;
+    }
+
+    public String getException() {
+        return exception;
+    }
+
+    public void setException(String exception) {
+        this.exception = exception;
     }
 }

@@ -57,4 +57,9 @@ public class OrderFromYouzanServiceImpl implements OrderFromYouzanService {
         orderFromYouzanDao.deleteBatch(ids);
     }
 
+    @Override
+    public OrderFromYouzanEntity lockByOrderNo(String customerOrderNo) {
+        return orderFromYouzanDao.lockByOrderNo(customerOrderNo);
+    }
+
 }

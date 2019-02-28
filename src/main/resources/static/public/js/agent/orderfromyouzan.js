@@ -4,11 +4,10 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
-            {label: '外部订单号', name: 'orderNo', index: 'order_no', width: 80},
-            {label: '有赞订单号', name: 'youzanOrderId', index: 'youzan_order_id', width: 80},
-            {label: '订单金额', name: 'orderPrice', index: 'order_price', width: 80},
-            {label: '子订单号', name: 'subOrderId', index: 'sub_order_id', width: 80},
-            {label: '商品编号', name: 'wareNo', index: 'ware_no', width: 80},
+            {label: '有赞订单号', name: 'youzanOrderId', index: 'youzan_order_id', width: 100},
+            {label: '订单金额', name: 'orderPrice', index: 'order_price', width: 40},
+            {label: '子订单号', name: 'subOrderId', index: 'sub_order_id', width: 60},
+            {label: '商品编号', name: 'wareNo', index: 'ware_no', width: 40},
             {label: '商品规格', name: 'formatInfo', index: 'format_info', width: 80},
             {label: '充值用户信息', name: 'rechargeInfo', index: 'recharge_info', width: 80},
             {
@@ -24,10 +23,10 @@ $(function () {
                         return'<font color="yellow">待充值</font>'
                     }
                     if(value == 3){
-                        return'<font color="yellow">充值中</font>'
+                        return'<font color="#ff8c00">充值中</font>'
                     }
                     if(value == 4){
-                        return'<font color="yellow">退款成功</font>'
+                        return'<font color="#ff8c00">退款成功</font>'
                     }
                     if(value == -1){
                         return'<font color="red">充值失败，待退款</font>'
@@ -39,7 +38,11 @@ $(function () {
                 }
             },
 
-            {label: '创建时间', name: 'createTime', index: 'create_time', width: 80}
+            {label: '创建时间', name: 'createTime', index: 'create_time', width: 80},
+            {label: '异常', name: 'exception', index: 'exception', width: 140,
+                formatter: function (value, options, row) {
+                    return'<font color="red">' + value  + '</font>'
+                }}
         ],
         viewrecords: true,
         height: 385,

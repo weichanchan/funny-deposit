@@ -3,6 +3,7 @@ package com.funny.api.praise;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
+import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.CardInfoService;
 import com.funny.admin.agent.service.OrderFromYouzanService;
@@ -132,9 +133,9 @@ public class ApiOrderNotifyController {
         orderFromYouzanEntity.setCreateTime(new Date());
         orderFromYouzanService.save(orderFromYouzanEntity);
 
-        WareInfoEntity wareInfoEntity = wareFuluInfoService.queryByOuterSkuId(outerSkuId);
+        WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(outerSkuId);
         // 查不到商品就直接退款
-        if (wareInfoEntity == null) {
+        if (wareFuluInfoEntity == null) {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
             applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(),"商品不可售"));

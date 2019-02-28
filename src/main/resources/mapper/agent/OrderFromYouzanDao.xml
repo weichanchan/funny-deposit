@@ -17,6 +17,7 @@
         <result property="createTime" column="create_time"/>
         <result property="beginRechargeTime" column="begin_recharge_time"/>
         <result property="lastRechargeTime" column="last_recharge_time"/>
+        <result property="exception" column="exception"/>
     </resultMap>
 
 	<select id="queryObject" resultType="com.funny.admin.agent.entity.OrderFromYouzanEntity">
@@ -32,9 +33,29 @@
 					`recharge_info`, 
 					`create_time`, 
 					`begin_recharge_time`, 
-					`last_recharge_time`
+					`last_recharge_time`,
+					`exception`
 				from order_from_youzan where id = #{id}
         <if test="isLock != null and isLock == true">for update</if>
+	</select>
+
+	<select id="lockByOrderNo" resultType="com.funny.admin.agent.entity.OrderFromYouzanEntity">
+			select
+					`id`,
+					`order_no`,
+					`youzan_order_id`,
+					`order_price`,
+					`sub_order_id`,
+					`ware_no`,
+					`status`,
+					`format_info`,
+					`recharge_info`,
+					`create_time`,
+					`begin_recharge_time`,
+					`last_recharge_time`,
+					`exception`
+				from order_from_youzan where order_no = #{value}
+				for update
 	</select>
 
 	<select id="queryList" resultType="com.funny.admin.agent.entity.OrderFromYouzanEntity">
@@ -50,7 +71,8 @@
 		            `recharge_info`, 
 		            `create_time`, 
 		            `begin_recharge_time`, 
-		            `last_recharge_time`
+		            `last_recharge_time`,
+					`exception`
 				from order_from_youzan
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
@@ -82,7 +104,8 @@
 			`recharge_info`, 
 			`create_time`, 
 			`begin_recharge_time`, 
-			`last_recharge_time`
+			`last_recharge_time`,
+			`exception`
 		)
 		values
 		(
@@ -96,7 +119,8 @@
 			#{rechargeInfo}, 
 			#{createTime}, 
 			#{beginRechargeTime}, 
-			#{lastRechargeTime}
+			#{lastRechargeTime},
+			#{exception}
 		)
 	</insert>
 	 
@@ -113,7 +137,8 @@
 			<if test="rechargeInfo != null">`recharge_info` = #{rechargeInfo}, </if>
 			<if test="createTime != null">`create_time` = #{createTime}, </if>
 			<if test="beginRechargeTime != null">`begin_recharge_time` = #{beginRechargeTime}, </if>
-			<if test="lastRechargeTime != null">`last_recharge_time` = #{lastRechargeTime}</if>
+			<if test="lastRechargeTime != null">`last_recharge_time` = #{lastRechargeTime},</if>
+			<if test="exception != null">`exception` = #{exception}</if>
 		</set>
 		where id = #{id}
 	</update>

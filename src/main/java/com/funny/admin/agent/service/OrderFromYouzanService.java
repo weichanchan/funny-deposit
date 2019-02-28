@@ -29,4 +29,6 @@ public interface OrderFromYouzanService {
 	void delete(Integer id);
 	
 	void deleteBatch(Integer[] ids);
+
+    OrderFromYouzanEntity lockByOrderNo(String customerOrderNo);
 }

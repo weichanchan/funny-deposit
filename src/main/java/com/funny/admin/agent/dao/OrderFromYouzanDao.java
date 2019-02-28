@@ -14,4 +14,6 @@ import org.apache.ibatis.annotations.Param;
 public interface OrderFromYouzanDao extends BaseDao<OrderFromYouzanEntity> {
 
     OrderFromYouzanEntity queryObject(@Param("id") Integer id, @Param("isLock") boolean isLock);
+
+    OrderFromYouzanEntity lockByOrderNo(String customerOrderNo);
 }
