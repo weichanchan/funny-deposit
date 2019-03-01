@@ -114,6 +114,7 @@ public class ApiOrderNotifyController {
         Map<String, Object> order = orders.get(0);
         String outerSkuId = (String) order.get("outer_sku_id");
         if(outerSkuId == null){
+            logger.debug("outerSkuId未配置，不用处理");
             return res;
         }
         WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(outerSkuId);
