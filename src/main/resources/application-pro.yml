@@ -32,6 +32,7 @@ optional:
       kdt-id: 13176063
     fulu:
       enable: true
+      huge: 5
       userId: 804867
       name: lyh512125
       key: 900B44E19971C3BC7EF02E1290CA08D8

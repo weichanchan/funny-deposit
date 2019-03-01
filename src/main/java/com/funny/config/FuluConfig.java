@@ -1,5 +1,6 @@
 package com.funny.config;
 
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,8 @@ public class FuluConfig {
     private String notifyUrl;
     @Value("${optional.fulu.url}")
     private String url;
+    @Value("${optional.fulu.huge}")
+    private Integer huge;
 
     public String getUserId() {
         return userId;
@@ -59,5 +62,13 @@ public class FuluConfig {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Integer getHuge() {
+        return huge;
+    }
+
+    public void setHuge(Integer huge) {
+        this.huge = huge;
     }
 }

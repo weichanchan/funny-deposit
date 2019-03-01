@@ -71,12 +71,28 @@ public class FuluSubmitListener extends AbstractFuluListener {
         // 业务参数
         // 合作商家订单号（唯一不重复）
         map.put("customerorderno", orderFromYouzanEntity.getOrderNo());
-        // 福禄商品编号
-        map.put("productid", String.valueOf(wareFuluInfoEntity.getProductId()));
+
         // 用户编号
         map.put("customerid", fuluConfig.getUserId());
-        // 购买数量
-        map.put("buynum", String.valueOf(wareFuluInfoEntity.getNum()));
+        // 福禄商品编号
+        map.put("productid", String.valueOf(wareFuluInfoEntity.getProductId()));
+
+        if (wareFuluInfoEntity.getType() == 1) {
+            // 购买数量
+            map.put("buynum", String.valueOf(wareFuluInfoEntity.getNum()));
+        }
+
+        if (wareFuluInfoEntity.getType() == 2) {
+            // 计算购买数量，QQ的面值是1元，然后算出具体的面值。当面值超过5时，要走大额渠道
+            Integer count = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
+            // 购买数量
+            map.put("buynum", String.valueOf(count));
+            if (count > fuluConfig.getHuge()) {
+                // 福禄商品编号
+                map.put("productid", String.valueOf(wareFuluInfoEntity.getProductHugeId()));
+            }
+        }
+
         // 充值账号
         map.put("chargeaccount", String.valueOf(objectMapper.readValue(orderFromYouzanEntity.getRechargeInfo(), Map.class).get(wareFuluInfoEntity.getMark())));
         // 提交订单的回调地址

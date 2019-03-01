@@ -62,9 +62,26 @@
                 </div>
             </div>
             <div class="form-group">
+                <div class="col-sm-2 control-label">福禄商品批量编号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="wareFuluInfo.productHugeId" placeholder="福禄商品批量编号"/>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2 control-label">提取标识</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" v-model="wareFuluInfo.mark" placeholder="充值账号提取标识"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">是否区分批量渠道</div>
+                <div class="col-sm-10">
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="1" v-model="wareFuluInfo.type"/> 不区分
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="2" v-model="wareFuluInfo.type"/> 区分
+                    </label>
                 </div>
             </div>
             <div class="form-group">

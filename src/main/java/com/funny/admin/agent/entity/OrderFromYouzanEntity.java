@@ -66,6 +66,10 @@ public class OrderFromYouzanEntity implements Serializable {
      */
     private String wareNo;
     /**
+     * 购买商品数量
+     */
+    private Integer num;
+    /**
      * 设置：1、成功。2、处理中。-1、失败。-2、异常
      */
     private Integer status;
@@ -257,5 +261,13 @@ public class OrderFromYouzanEntity implements Serializable {
 
     public void setException(String exception) {
         this.exception = exception;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
     }
 }

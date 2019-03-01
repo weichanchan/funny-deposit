@@ -113,6 +113,13 @@ public class ApiOrderNotifyController {
         }
         Map<String, Object> order = orders.get(0);
         String outerSkuId = (String) order.get("outer_sku_id");
+        if(outerSkuId == null){
+            return res;
+        }
+        WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(outerSkuId);
+        if (wareFuluInfoEntity == null) {
+            return res;
+        }
         // 订单ID
         String tid = (String) orderInfo.get("tid");
 
@@ -128,20 +135,12 @@ public class ApiOrderNotifyController {
         orderFromYouzanEntity.setSubOrderId(String.valueOf(order.get("oid")));
         // 订单金额
         orderFromYouzanEntity.setOrderPrice(new BigDecimal(String.valueOf(order.get("total_fee"))));
+        // 订单数量
+        orderFromYouzanEntity.setNum(Integer.parseInt(String.valueOf(order.get("num"))));
         // 订单状态为处理中
         orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.WAIT_PROCESS);
         orderFromYouzanEntity.setCreateTime(new Date());
         orderFromYouzanService.save(orderFromYouzanEntity);
-
-        WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(outerSkuId);
-        // 查不到商品就直接退款
-        if (wareFuluInfoEntity == null) {
-            orderFromYouzanEntity.setException("商品不可售，退款。");
-            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
-            orderFromYouzanService.update(orderFromYouzanEntity);
-            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(),"商品不可售"));
-            return res;
-        }
         applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));
         return res;
     }

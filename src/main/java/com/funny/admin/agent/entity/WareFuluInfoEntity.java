@@ -35,10 +35,18 @@ public class WareFuluInfoEntity implements Serializable {
      * 设置：福禄商品编号
      */
 	private Integer productId;
-    /**
-     * 设置：充值账号提取标识
-     */
+	/**
+	 * 设置：福禄商品批量编号
+	 */
+	private Integer productHugeId;
+	/**
+	 * 设置：充值账号提取标识
+	 */
 	private String mark;
+	/**
+	 * 设置：是否区分批量渠道，1：不区分，2：区分
+	 */
+	private Integer type;
     /**
      * 设置：创建时间
      */
@@ -127,5 +135,21 @@ public class WareFuluInfoEntity implements Serializable {
 	 */
 	public Date getCreateTime() {
 		return createTime;
+	}
+
+	public Integer getProductHugeId() {
+		return productHugeId;
+	}
+
+	public void setProductHugeId(Integer productHugeId) {
+		this.productHugeId = productHugeId;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 }

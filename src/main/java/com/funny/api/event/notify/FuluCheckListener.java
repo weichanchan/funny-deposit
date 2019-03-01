@@ -1,16 +1,8 @@
 package com.funny.api.event.notify;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
-import com.funny.admin.agent.entity.OrderRequestRecordEntity;
-import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
-import com.funny.admin.agent.service.OrderRequestRecordService;
-import com.funny.admin.agent.service.WareInfoService;
-import com.funny.config.FuluConfig;
-import com.funny.utils.SignUtils;
-import com.youzan.open.sdk.util.hash.MD5Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -55,7 +45,7 @@ public class FuluCheckListener extends AbstractFuluListener {
         Map map = getFuluHeader("kamenwang.goods.get");
         // 合作商家订单号（唯一不重复）
         map.put("customerorderno", orderFromYouzanEntity.getOrderNo());
-        map.put("customerorderno", fuluConfig.getUserId());
+        map.put("customerid", fuluConfig.getUserId());
         // 将签名添加到URL参数后
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(getRequestString(map), null, String.class);
         Map<String, String> result = objectMapper.readValue(responseEntity.getBody(), Map.class);
@@ -67,6 +57,7 @@ public class FuluCheckListener extends AbstractFuluListener {
 
         // 响应错误码为1206时是查询错误：系统出现异常，可持续下单处理，可查询时间超过十分钟以后，不能查到订单可做关单处理或重新下单处理)
         if (result.get("MessageCode") != null && "1206".equals(result.get("MessageCode"))) {
+            // 设置状态，等定时器重发
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.WAIT_PROCESS);
             orderFromYouzanService.update(orderFromYouzanEntity);
             return;

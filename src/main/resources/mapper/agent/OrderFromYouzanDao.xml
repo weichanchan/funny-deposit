@@ -11,6 +11,7 @@
         <result property="orderPrice" column="order_price"/>
         <result property="subOrderId" column="sub_order_id"/>
         <result property="wareNo" column="ware_no"/>
+        <result property="num" column="num"/>
         <result property="status" column="status"/>
         <result property="formatInfo" column="format_info"/>
         <result property="rechargeInfo" column="recharge_info"/>
@@ -27,8 +28,9 @@
 					`youzan_order_id`, 
 					`order_price`, 
 					`sub_order_id`, 
-					`ware_no`, 
-					`status`, 
+					`ware_no`,
+					`num`,
+					`status`,
 					`format_info`, 
 					`recharge_info`, 
 					`create_time`, 
@@ -47,6 +49,7 @@
 					`order_price`,
 					`sub_order_id`,
 					`ware_no`,
+					`num`,
 					`status`,
 					`format_info`,
 					`recharge_info`,
@@ -66,7 +69,8 @@
 		            `order_price`, 
 		            `sub_order_id`, 
 		            `ware_no`, 
-		            `status`, 
+		            `num`,
+		            `status`,
 		            `format_info`, 
 		            `recharge_info`, 
 		            `create_time`, 
@@ -101,7 +105,8 @@
 			`youzan_order_id`, 
 			`order_price`, 
 			`sub_order_id`, 
-			`ware_no`, 
+			`ware_no`,
+			`num`,
 			`status`, 
 			`format_info`, 
 			`recharge_info`, 
@@ -116,8 +121,9 @@
 			#{youzanOrderId}, 
 			#{orderPrice}, 
 			#{subOrderId}, 
-			#{wareNo}, 
-			#{status}, 
+			#{wareNo},
+			#{num},
+			#{status},
 			#{formatInfo}, 
 			#{rechargeInfo}, 
 			#{createTime}, 
@@ -135,6 +141,7 @@
 			<if test="orderPrice != null">`order_price` = #{orderPrice}, </if>
 			<if test="subOrderId != null">`sub_order_id` = #{subOrderId}, </if>
 			<if test="wareNo != null">`ware_no` = #{wareNo}, </if>
+			<if test="num != null">`num` = #{num}, </if>
 			<if test="status != null">`status` = #{status}, </if>
 			<if test="formatInfo != null">`format_info` = #{formatInfo}, </if>
 			<if test="rechargeInfo != null">`recharge_info` = #{rechargeInfo}, </if>
