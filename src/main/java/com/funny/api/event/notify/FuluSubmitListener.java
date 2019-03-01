@@ -122,6 +122,7 @@ public class FuluSubmitListener extends AbstractFuluListener {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderRequestRecordService.update(orderRequestRecordEntity);
             orderFromYouzanService.update(orderFromYouzanEntity);
+            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "福禄平台受理失败"));
             return;
         }
 

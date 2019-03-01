@@ -93,10 +93,10 @@ public class ApiOrderNotifyController {
          */
         String sign = MD5Utils.MD5(clientId + entity.getMsg() + clientSecret);
         logger.debug(sign);
-//        if (!sign.equals(entity.getSign())) {
-//            logger.error("MSG" + entity.getSign() + "签名不正确。");
-//            return res;
-//        }
+        if (!sign.equals(entity.getSign())) {
+            logger.error("MSG" + entity.getSign() + "签名不正确。");
+            return res;
+        }
         // 获取订单信息
         String msg = URLDecoder.decode(entity.getMsg(), "utf-8");
         logger.debug(msg);
@@ -119,6 +119,7 @@ public class ApiOrderNotifyController {
         }
         WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(outerSkuId);
         if (wareFuluInfoEntity == null) {
+            logger.debug("outerSkuId在系统中找不到，不用处理");
             return res;
         }
         // 订单ID

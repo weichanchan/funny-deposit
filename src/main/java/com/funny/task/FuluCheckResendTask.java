@@ -41,8 +41,8 @@ public class FuluCheckResendTask {
         map.put("status", OrderFromYouzanEntity.WAIT_PROCESS);
         List<OrderFromYouzanEntity> orderFromYouzanEntities = orderFromYouzanService.queryList(map);
         for (OrderFromYouzanEntity orderFromYouzanEntity : orderFromYouzanEntities) {
-            if ((orderFromYouzanEntity.getCreateTime().getTime()  + (60 * 1000)) < System.currentTimeMillis()) {
-                // 没入库够1分钟不理他
+            if ((orderFromYouzanEntity.getCreateTime().getTime()  + (60 * 1000)) > System.currentTimeMillis()) {
+                logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，入库未够一分钟。还未满足重发条件。");
                 continue;
             }
             map.clear();
@@ -50,9 +50,10 @@ public class FuluCheckResendTask {
             List<OrderRequestRecordEntity> orderRequestRecordEntities = orderRequestRecordService.queryList(map);
             if (orderRequestRecordEntities.size() >= 3) {
                 // 最多重试3次,超过的就跳过，等着超时退款，或者他们通知过来。
+                logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发已超过3次。");
                 continue;
             }
-
+            logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发。");
             // 触发发送事件
             applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));
         }
