@@ -44,6 +44,9 @@ $(function () {
             {label: '创建时间', name: 'createTime', index: 'create_time', width: 80},
             {label: '异常', name: 'exception', index: 'exception', width: 140,
                 formatter: function (value, options, row) {
+                    if(value = 'null'){
+                        return''
+                    }
                     return'<font color="red">' + value  + '</font>'
                 }}
         ],

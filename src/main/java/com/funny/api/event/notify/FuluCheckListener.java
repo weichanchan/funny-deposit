@@ -6,6 +6,7 @@ import com.funny.admin.agent.service.OrderFromYouzanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -31,6 +32,9 @@ public class FuluCheckListener extends AbstractFuluListener {
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
 
+    @Autowired
+    ApplicationContext applicationContext;
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Async
@@ -42,16 +46,25 @@ public class FuluCheckListener extends AbstractFuluListener {
         if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.PROCESS) {
             return;
         }
-        Map map = getFuluHeader("kamenwang.goods.get");
+        Map map = getFuluHeader("kamenwang.order.get");
         // 合作商家订单号（唯一不重复）
         map.put("customerorderno", orderFromYouzanEntity.getOrderNo());
         map.put("customerid", fuluConfig.getUserId());
         // 将签名添加到URL参数后
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(getRequestString(map), null, String.class);
         Map<String, String> result = objectMapper.readValue(responseEntity.getBody(), Map.class);
+        logger.debug(responseEntity.getBody());
         if (result.get("Status") != null && "成功".equals(result.get("Status"))) {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.SUCCESS);
             orderFromYouzanService.update(orderFromYouzanEntity);
+            return;
+        }
+
+        if (result.get("Status") != null && "失败".equals(result.get("Status"))) {
+            orderFromYouzanEntity.setException("充值失败。" + responseEntity.getBody());
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+            orderFromYouzanService.update(orderFromYouzanEntity);
+            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "充值失败"));
             return;
         }
 

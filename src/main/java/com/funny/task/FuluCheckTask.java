@@ -32,7 +32,7 @@ public class FuluCheckTask {
     private OrderFromYouzanService orderFromYouzanService;
 
     @Autowired
-    ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
     public void watch() {
         Map<String, Object> map = new HashMap<>(4);

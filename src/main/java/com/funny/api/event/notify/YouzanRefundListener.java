@@ -83,8 +83,8 @@ public class YouzanRefundListener {
             youzanTradeRefundSellerActive.setAPIParams(youzanTradeRefundSellerActiveParams);
             YouzanTradeRefundSellerActiveResult result = getClient().invoke(youzanTradeRefundSellerActive);
             if (!result.getIsSuccess()) {
-                // 退款成功
-                orderFromYouzanEntity.setException(objectMapper.writeValueAsString(result.toString()));
+                // 退款时报
+                orderFromYouzanEntity.setException(orderFromYouzanEntity.getException() + objectMapper.writeValueAsString(result.toString()));
                 orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.REFUND_FAIL);
                 orderFromYouzanService.update(orderFromYouzanEntity);
                 logger.debug("订单：" + orderFromYouzanEntity.getId() + "退款失败，原因：" + result.toString());
