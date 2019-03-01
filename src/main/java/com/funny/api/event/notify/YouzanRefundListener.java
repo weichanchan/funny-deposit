@@ -53,12 +53,12 @@ public class YouzanRefundListener {
     private String kdtId;
 
     @Autowired
-    RestTemplate template;
+    private RestTemplate template;
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Async
     @EventListener
@@ -84,6 +84,7 @@ public class YouzanRefundListener {
             YouzanTradeRefundSellerActiveResult result = getClient().invoke(youzanTradeRefundSellerActive);
             if (!result.getIsSuccess()) {
                 // 退款成功
+                orderFromYouzanEntity.setException(objectMapper.writeValueAsString(result.toString()));
                 orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.REFUND_FAIL);
                 orderFromYouzanService.update(orderFromYouzanEntity);
                 logger.debug("订单：" + orderFromYouzanEntity.getId() + "退款失败，原因：" + result.toString());
@@ -94,10 +95,11 @@ public class YouzanRefundListener {
             orderFromYouzanService.update(orderFromYouzanEntity);
         } catch (Exception e) {
             // 退款成功
+            orderFromYouzanEntity.setException(e.getMessage());
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.REFUND_FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
             // 异常只打印日志，定时任务会继续重试
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
 
     }

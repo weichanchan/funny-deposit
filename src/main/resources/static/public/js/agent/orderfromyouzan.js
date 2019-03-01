@@ -34,6 +34,9 @@ $(function () {
                     if(value == -2){
                         return'<font color="red">充值异常，重试中</font>'
                     }
+                    if(value == -3){
+                        return'<font color="red">有赞退款异常</font>'
+                    }
                     return '未知状态';
                 }
             },
