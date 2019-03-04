@@ -77,7 +77,7 @@ public class YouzanRefundListener {
             youzanTradeRefundSellerActiveParams.setTid(orderFromYouzanEntity.getYouzanOrderId());
             youzanTradeRefundSellerActiveParams.setRefundFee(orderFromYouzanEntity.getOrderPrice().floatValue());
             youzanTradeRefundSellerActiveParams.setOid(Long.parseLong(orderFromYouzanEntity.getSubOrderId()));
-            youzanTradeRefundSellerActiveParams.setDesc(youzanNotifyEvent.getReason());
+            youzanTradeRefundSellerActiveParams.setDesc(youzanNotifyEvent.getReason()+"");
 
             YouzanTradeRefundSellerActive youzanTradeRefundSellerActive = new YouzanTradeRefundSellerActive();
             youzanTradeRefundSellerActive.setAPIParams(youzanTradeRefundSellerActiveParams);

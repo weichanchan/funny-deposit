@@ -64,7 +64,6 @@ public class FuluCheckListener extends AbstractFuluListener {
             orderFromYouzanEntity.setException("充值失败。" + responseEntity.getBody());
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
-            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "充值失败"));
             return;
         }
 
