@@ -92,6 +92,7 @@ public class ApiFuluOrderNotifyController {
                     logger.debug("成功状态下的订单被通知失败。【id】" + orderFromYouzanEntity.getId());
                     orderFromYouzanEntity.setException("成功状态下的订单被通知失败。");
                 }
+                orderFromYouzanEntity.setException("主动通知充值失败");
                 orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
                 orderFromYouzanService.update(orderFromYouzanEntity);
                 logger.debug("订单福禄平台充值失败。【id】" + orderFromYouzanEntity.getId());
