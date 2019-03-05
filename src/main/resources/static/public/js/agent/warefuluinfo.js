@@ -13,10 +13,10 @@ $(function () {
             { label: '批量渠道', name: 'type', index: 'type', width: 80 ,
                 formatter: function (value, options, row) {
                     if(value == 1){
-                        return'<font color="green">不区分</font>'
+                        return'<font color="green">卡密</font>'
                     }
                     if(value == 2){
-                        return'<font color="#ff8c00">区分</font>'
+                        return'<font color="#ff8c00">非卡密</font>'
                     }
                     return '未知状态';
                 }},

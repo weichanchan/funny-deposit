@@ -7,8 +7,6 @@ import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
 import com.funny.admin.agent.service.WareFuluInfoService;
-import com.funny.config.FuluConfig;
-import com.funny.utils.SignUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,36 +65,31 @@ public class FuluSubmitListener extends AbstractFuluListener {
             applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "商品不可售"));
         }
 
-        Map<String, String> map = getFuluHeader("kamenwang.order.add");
+        Map<String, String> map = getFuluHeader("kamenwang.order.cardorder.add");
+        // 非卡密类型需要填写
+        if (wareFuluInfoEntity.getType() == WareFuluInfoEntity.TYPE_NOT_CARD) {
+            map.put("method", "kamenwang.order.add");
+            // 充值账号
+            map.put("chargeaccount", String.valueOf(objectMapper.readValue(orderFromYouzanEntity.getRechargeInfo(), Map.class).get(wareFuluInfoEntity.getMark())));
+            // 提交订单的回调地址
+            map.put("notifyurl", fuluConfig.getNotifyUrl());
+        }
         // 业务参数
         // 合作商家订单号（唯一不重复）
         map.put("customerorderno", orderFromYouzanEntity.getOrderNo());
-
         // 用户编号
         map.put("customerid", fuluConfig.getUserId());
         // 福禄商品编号
         map.put("productid", String.valueOf(wareFuluInfoEntity.getProductId()));
-
-        if (wareFuluInfoEntity.getType() == 1) {
-            // 购买数量
-            map.put("buynum", String.valueOf(wareFuluInfoEntity.getNum()));
+        // 计算购买数量，QQ的面值是1元，然后算出具体的面值。当面值超过5时，要走大额渠道
+        Integer count = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
+        // 购买数量
+        map.put("buynum", String.valueOf(count));
+        if (count > fuluConfig.getHuge()) {
+            // 福禄商品编号(大额渠道)
+            map.put("productid", String.valueOf(wareFuluInfoEntity.getProductHugeId()));
         }
 
-        if (wareFuluInfoEntity.getType() == 2) {
-            // 计算购买数量，QQ的面值是1元，然后算出具体的面值。当面值超过5时，要走大额渠道
-            Integer count = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
-            // 购买数量
-            map.put("buynum", String.valueOf(count));
-            if (count > fuluConfig.getHuge()) {
-                // 福禄商品编号
-                map.put("productid", String.valueOf(wareFuluInfoEntity.getProductHugeId()));
-            }
-        }
-
-        // 充值账号
-        map.put("chargeaccount", String.valueOf(objectMapper.readValue(orderFromYouzanEntity.getRechargeInfo(), Map.class).get(wareFuluInfoEntity.getMark())));
-        // 提交订单的回调地址
-        map.put("notifyurl", fuluConfig.getNotifyUrl());
         // 发送请求并记录
         String request = getRequestString(map);
         OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(request, orderFromYouzanEntity.getId());
@@ -123,6 +116,16 @@ public class FuluSubmitListener extends AbstractFuluListener {
             orderRequestRecordService.update(orderRequestRecordEntity);
             orderFromYouzanService.update(orderFromYouzanEntity);
             applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "福禄平台受理失败"));
+            return;
+        }
+
+        if(wareFuluInfoEntity.getType() == WareFuluInfoEntity.TYPE_IS_CARD && result.get("Status") != null && "成功".equals(result.get("Status"))){
+            // 如果是卡密类型商品，并且下单成功，从结果提取卡密，并设置下单成功。
+            String cards = objectMapper.writeValueAsString(result.get("Cards"));
+            orderFromYouzanEntity.setCards(cards);
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.SUCCESS);
+            orderRequestRecordService.update(orderRequestRecordEntity);
+            orderFromYouzanService.update(orderFromYouzanEntity);
             return;
         }
 

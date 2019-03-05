@@ -82,6 +82,10 @@ public class OrderFromYouzanEntity implements Serializable {
      */
     private String rechargeInfo;
     /**
+     * 卡密信息
+     */
+    private String cards;
+    /**
      * 设置：订单创建时间
      */
     private Date createTime;
@@ -195,6 +199,14 @@ public class OrderFromYouzanEntity implements Serializable {
      */
     public String getRechargeInfo() {
         return rechargeInfo;
+    }
+
+    public String getCards() {
+        return cards;
+    }
+
+    public void setCards(String cards) {
+        this.cards = cards;
     }
 
     /**
