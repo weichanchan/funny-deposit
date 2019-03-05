@@ -71,7 +71,9 @@ public class OrderFromYouzanController {
         String result = "";
         List<Map<String, String>> list = objectMapper.readValue(orderFromYouzan.getCards(), List.class);
         for (int i = 0; i < list.size(); i++) {
-            result += (i + 1) + "、卡号：" + list.get(i).get("CardNumber") + "，密码：" + list.get(i).get("CardPwd") + "，有效期：" + list.get(i).get("CardDeadline") + "<br />";
+            result += (i + 1) + "、卡号：" + list.get(i).get("CardNumber") == null ? "" : list.get(i).get("CardNumber") +
+                    "，密码：" + list.get(i).get("CardPwd") == null ? "" : list.get(i).get("CardPwd") +
+                    "，有效期：" + list.get(i).get("CardDeadline") + "<br />";
         }
         return R.ok().put("cards", result);
     }
