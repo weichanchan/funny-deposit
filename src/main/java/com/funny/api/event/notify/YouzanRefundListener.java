@@ -4,14 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.api.praise.entity.AccessToken;
-import com.funny.api.praise.entity.YouzanNotifyEventSource;
 import com.youzan.open.sdk.client.auth.Token;
 import com.youzan.open.sdk.client.core.DefaultYZClient;
 import com.youzan.open.sdk.client.core.YZClient;
-import com.youzan.open.sdk.gen.v3_0_0.api.YouzanTradeMemoUpdate;
 import com.youzan.open.sdk.gen.v3_0_0.api.YouzanTradeRefundSellerActive;
-import com.youzan.open.sdk.gen.v3_0_0.model.YouzanTradeMemoUpdateParams;
-import com.youzan.open.sdk.gen.v3_0_0.model.YouzanTradeMemoUpdateResult;
 import com.youzan.open.sdk.gen.v3_0_0.model.YouzanTradeRefundSellerActiveParams;
 import com.youzan.open.sdk.gen.v3_0_0.model.YouzanTradeRefundSellerActiveResult;
 import org.slf4j.Logger;
@@ -77,7 +73,7 @@ public class YouzanRefundListener {
             youzanTradeRefundSellerActiveParams.setTid(orderFromYouzanEntity.getYouzanOrderId());
             youzanTradeRefundSellerActiveParams.setRefundFee(orderFromYouzanEntity.getOrderPrice().floatValue());
             youzanTradeRefundSellerActiveParams.setOid(Long.parseLong(orderFromYouzanEntity.getSubOrderId()));
-            youzanTradeRefundSellerActiveParams.setDesc(youzanNotifyEvent.getReason()+"");
+            youzanTradeRefundSellerActiveParams.setDesc(youzanNotifyEvent.getReason() + "");
 
             YouzanTradeRefundSellerActive youzanTradeRefundSellerActive = new YouzanTradeRefundSellerActive();
             youzanTradeRefundSellerActive.setAPIParams(youzanTradeRefundSellerActiveParams);
@@ -94,7 +90,7 @@ public class YouzanRefundListener {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.REFUND_SUCCESS);
             orderFromYouzanService.update(orderFromYouzanEntity);
         } catch (Exception e) {
-            // 退款成功
+            // 退款失败
             orderFromYouzanEntity.setException(e.getMessage());
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.REFUND_FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
@@ -141,6 +137,7 @@ public class YouzanRefundListener {
 
         if (accessToken == null || accessToken.isExpire()) {
             accessToken = getToken();
+            client = new DefaultYZClient(new Token(accessToken.getAccessToken()));
         }
 
         if (accessToken == null) {
