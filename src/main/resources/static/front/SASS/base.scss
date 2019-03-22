@@ -1,0 +1,184 @@
+body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div,dl,dt,dd{margin:0;padding:0;border:0;}
+html,
+body{
+    background:#fff;
+    color:#333;
+    font-size:12px;
+    font-family:"微软雅黑","宋体","Arial Narrow";
+    width: 100%;
+    height: 100%;
+}
+.move_wrap,
+.header,
+.banner,
+.footer{
+    width:100%;
+    min-width:1200px;
+}
+ul,ol{list-style-type:none;}
+select,input,img,select{vertical-align:middle;}
+a{text-decoration:none; color: #fff;}
+
+.clearBoth {
+    display: block;
+    clear: both;
+    overflow: hidden;
+    height: 0;
+    content: '';
+}
+@mixin bgImg($imgurl,$left: left,$top: top) {
+    background: url(#{$imgurl}) no-repeat $left $top;
+}
+// 面包屑导航
+.news_tit {
+    width: 1200px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    color: #999999;
+    margin: 0 auto 12px;
+    span {
+        color: #666666;
+        margin-right: 5px;
+    }
+    i {
+        display: inline-block;
+        width: 9px;
+        height: 10px;
+        margin: 0 10px;
+        @include bgImg("../images/borad-nav.png"); 
+    }
+}
+
+// header样式
+.header {
+    position: fixed;
+    height: 50px;
+    padding: 20px 0;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    .header_nav {
+        height: 68px;
+        margin: {
+            left: 266px;
+            right: 180px;
+        };
+        text-align: center;
+        .hd_ul {
+            margin: 0 auto;
+            padding-top: 13px;
+            .hd_li {
+                height: 24px;
+                display: inline-block;
+                a {
+                    display: block;
+                    height: 24px;
+                    line-height: 24px;
+                    padding: 0 24px;
+                    color: #FFFFFF;
+                    font-size: 18px;
+                    &.hdActive {
+                        color: #FF9C00;
+                    }
+                }
+            }
+        }
+    }
+}
+$logoW : 283px;
+$logoH : 70px;
+.hd_logo {
+    position: absolute;
+    width: $logoW;
+    height: $logoH;
+    top: 0;
+    left: 0;
+    padding: 20px 0 0 43px;
+    a {
+        display: block;
+        width: $logoW - 43px;
+        height: $logoH - 20px;
+        @include bgImg("../images/logo-hd.png");
+    }
+}
+
+.header_enter {
+    position: absolute;
+    width: 127px;
+    height: 24px;
+    padding: 33px 27px;
+    right: 0;
+    top: 0;
+    span,a {
+        display: block;
+        width: 63px;
+        height: 24px;
+        line-height: 24px;
+        font-size: 16px;
+        text-align: center;
+        color: #FFFFFF;
+        float: left;
+        cursor: pointer;
+    }
+}
+
+.footer {
+    display: block;
+    background: #333;
+    .footer_wrap {
+        width: 1200px;
+        height: 325px;
+        padding-top: 35px;
+        margin: 0 auto;
+        .footer_logo {
+            width: 100%;
+            height: 30%;
+            margin-bottom: 28px;
+            @include bgImg("../images/logo-ft.jpg",3px,top);
+        }
+        .link_friends {
+            height: 39px;
+            line-height: 39px;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 20px;
+        }
+        .link_con {
+            height: 126px;
+            li {
+                float: left;
+                a {
+                    display: block;
+                    width: 120px;
+                    height: 25px;
+                    line-height: 25px;
+                    font-size: 14px;
+                }
+            }
+        }
+        .footer_copyRight {
+            height: 61px;
+            p {
+                height: 20px;
+                line-height: 20px;
+                text-align: left;
+                font-size: 12px;
+                color: #FFFFFF;
+            }
+        }
+    }
+}
+
+$htmlLists: vrGame_hd,news_hd,about_hd,mdjm,kfpt;
+
+@mixin initHd() {
+    @each $list in $htmlLists {
+        ##{$list} a:link,
+        ##{$list} a:visited, {
+             color: #ff9c00;
+        }
+    }
+}
+
+@include initHd;

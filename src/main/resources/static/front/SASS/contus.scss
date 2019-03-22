@@ -1,0 +1,134 @@
+$minWidth: 1200px;
+@mixin bgImg($url,$left:left,$center:center) {
+    background: url($url) no-repeat $left $center;
+}
+
+%step_tit {
+    width: 1200px;
+    height: 24px;
+    font-size: 18px;
+    color: #333333;
+    text-align: center;
+    margin-bottom: 18px;
+    font-weight: bold;
+}
+%two_con {
+    width: 830px;
+    height: 166px;
+    margin: 0 auto;
+    @include bgImg('../images/bg_shop_b.png', left, top);
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
+    padding: 24px 0 0 30px;
+}
+
+%one_w {
+    width: 100%;
+    margin-bottom: 26px;
+    h3 {
+        height: 20px;
+        line-height: 20px;
+        font-size: 18px;
+        margin-bottom: 12px;
+        color: #666666;
+    }
+    p {
+        width: 100%;
+        height: 18px;
+        font-size: 16px;
+        color: #666666;
+        margin-bottom: 12px;
+        span {
+            color: #FF9C00;
+        }
+    }
+}
+
+
+.contents {
+    width: 100%;
+    min-width: $minWidth;
+    margin: 135px 0 78px 0;
+    .main_wrap {
+        width: $minWidth;
+        margin: 0 auto;
+        min-height: 720px;
+        .steps {
+            width: $minWidth;
+            .shop_con {
+                width: 1198px;
+                height: 1084px;
+                border: 1px solid #F1F1F1;
+                padding-top: 35px;
+                .con-title {
+                    width: 1198px;
+                    height: 40px;
+                    line-height: 40px;
+                    font-size: 28px;
+                    color: #333333;
+                    text-align: center;
+                    margin-bottom: 40px;
+                }
+                .step_one {
+                    width: 1200px;
+                    height: 400px;
+                    .step_tit {
+                        @extend %step_tit;
+                    }
+                    .one_con {
+                        width: 830px;
+                        height: 304px;
+                        margin: 0 auto;
+                        @include bgImg('../images/bg_shop_a.png');
+                        background-size: 100% 100%;
+                        padding: 25px 0 0 30px;
+                        .one_w {
+                            @extend %one_w;
+                        }
+                    }
+                }
+                .step_two {
+                    width: $minWidth;
+                    height: 270px;
+                    .step_tit {
+                        @extend %step_tit;
+                    }
+                    .two_con {
+                        @extend %two_con;
+                        .one_w {
+                            @extend %one_w;
+                        }
+                    }
+                }
+                .step_three {
+                    width: $minWidth;
+                    height: 200px;
+                    margin-bottom: 30px;
+                    .step_tit {
+                        @extend %step_tit;
+                    }
+                    .two_con {
+                        @extend %two_con;
+                        height: 137px;
+                        .one_w {
+                            @extend %one_w;
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+                .btn {
+                    position: relative;
+                    width: 180px;
+                    height: 48px;
+                    line-height: 48px;
+                    font-size: 14px;
+                    color: #FFFFFF;
+                    text-align: center;
+                    margin: 0 auto;
+                    cursor: pointer;
+                    @include bgImg('../images/bg_btn_more.png', left, top);
+                }
+            }
+        }
+    }
+}

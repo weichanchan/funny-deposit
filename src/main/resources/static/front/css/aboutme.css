@@ -1,0 +1,175 @@
+/*------内容部分*/
+.contents {
+	width: 100%;
+	min-height: 1200px;
+	height: auto;
+	padding-top: 135px;
+	margin-bottom: 78px;
+}
+
+.content_wrap {
+	width: 1200px;
+	margin: 0 auto;
+	height: auto;
+}
+
+.detail_div {
+	width: 1198px;
+	margin: 0 auto;
+	height: auto;
+	border: 1px solid #f1f1f1;
+}
+
+.detail_div_wrap {
+	width: 1006px;
+	margin: 0 auto;
+	padding-top: 33px;
+}
+
+.product_img {
+	width: 1006px;
+	min-height: 720px;
+}
+
+.pro_title {
+	height: 52px;
+	line-height: 52px;
+	width: 1006px;
+	font-size: 24px;
+	color: #333333;
+	margin-bottom: 9px;
+}
+
+.product_img>p {
+	width: 1006px;
+	height: 54px;
+	line-height: 27px;
+	font-size: 14px;
+	color: #666666;
+	margin-bottom: 14px;
+}
+
+.img_div {
+	width: 1006px;
+	height: 450px;
+	margin-bottom: 50px;
+}
+
+.img_div>img {
+	display: block;
+	width: 800px;
+	height: 450px;
+	margin: 0 auto;
+}
+
+.text-list {
+	width: 1006px;
+	height: 640px;
+}
+
+.text-list li {
+	position: relative;
+	width: 503px;
+	height: 187px;
+	float: left;
+}
+
+.p-title1 {
+	width: 488px;
+	height: 49px;
+	line-height: 49px;
+	padding: 0 10px 0 5px;
+	font-size: 22px;
+	color: #333333;
+}
+
+.p-title2 {
+	width: 438px;
+	height: 138px;
+	line-height: 24px;
+	font-size: 16px;
+	color: #666666;
+}
+
+.text-list li>span {
+	position: absolute;
+	display: block;
+	width: 50px;
+	height: 50px;
+	right: 66px;
+	top: -9px;
+}
+
+.text-list .list-2,
+.text-list .list-4,
+.text-list .list-6 {
+	width: 447px;
+	padding-left: 56px;	
+}
+
+.list-2>span,
+.list-4>span,
+.list-6>span {
+	position: absolute;
+	right: 16px;
+	top: -9px;
+}
+
+/*------小图标-------*/
+.list-1>span {
+	background: url(../images/dz_tit.png) no-repeat left top;
+}
+
+.list-2>span {
+	background: url(../images/zw_tit.png) no-repeat left top;
+}
+
+.list-3>span {
+	background: url(../images/sd_tit.png) no-repeat left top;
+}
+
+.list-4>span {
+	background: url(../images/zq_tit.png) no-repeat left top;
+}
+
+.list-5>span {
+	background: url(../images/ct_tit.png) no-repeat left top;
+}
+
+.list-6>span {
+	background: url(../images/bj_tit.png) no-repeat left top;
+}
+
+.ad_list {
+	width: 1006px;
+	height: 294px;
+}
+
+.ad_list li {
+	width: 503px;
+	height: 147px;
+	float: left;
+}
+
+.ad_list .li-left {
+	width: 443px;
+	padding-left: 56px;
+}
+
+.ad-plist-1 {
+	width: 440px;
+	height: 36px;
+	font-size: 18px;
+	color: #000000;
+}
+
+.ad-plist-2 {
+	width: 440px;
+	height: 107px;
+	line-height: 24px;
+	font-size: 15px;
+	color: #666666;
+}
+
+
+

@@ -1,0 +1,164 @@
+$minWidth: 1200px;
+@mixin bgImg($url,$left,$center) {
+    background: url($url) no-repeat $left $center;
+}
+.vrGame_hd {
+    background: #333;
+}
+.vrGame {
+    width: 100%;
+    padding-top: 135px;
+    .vrGame_tabs {
+        width: $minWidth;
+        margin: 0 auto 16px;
+        ul {
+            width: 710px;
+            height: 30px;
+            float: left;
+            li {
+                float: left;
+                width: 76px;
+                height: 30px;
+                .vrTabs_color {
+                    color: #F49500;
+                }
+            }
+        }
+        ol {
+            width: 220px;
+            height: 30px;
+            float: left;
+            li {
+                width: 110px;
+                height: 30px;
+                float: left;
+                &.vrTabs_bg a {
+                    @include bgImg('../images/vrtabs_bg.png', left, top);
+                    color: #FFFFFF;
+                }
+                a {
+                    font-size: 16px;
+                    color: #666666;
+                }
+            }
+        }
+        ul a, ol a {
+            display: block;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: center;
+            color: #999999;
+        }
+        .search_input {
+            position: relative;
+            width: 162px;
+            height: 36px;
+            float: right;
+            top: -5px;
+            #game_search {
+                width: 83px;
+                height: 34px;
+                line-height: 34px;
+                border: none;
+                outline: none;
+                padding: {
+                    left: 52px;
+                    right: 5px;
+                };
+                @include bgImg('../images/bg_search.png', left, top);
+                &:hover {
+                    @include bgImg('../images/bg_search_h.png', left, top);
+                }
+            }
+        }
+    }
+}
+
+// 列表
+.vrGame_list {
+    width: $minWidth;
+    min-height: 720px;
+    margin: 0 auto 75px;
+    .vrGame_list_show {
+        width: 100%;
+        min-height: 792px;
+        a, dl {
+            display: block;
+            width: 390px;
+            height: 250px;
+            color: #FFFFFF;
+        }
+        a {
+            margin: 0 5px 14px;
+            float: left;
+        }
+        dt, dt img {
+            display: block;
+            width: 390px;
+            height: 182px;
+            -webkit-transition: all 500ms;
+            -o-transition: all 500ms;
+            -moz-transition: all 500ms;
+            -ms-transition: all 500ms;
+            transition: all 500ms;
+        }
+        dt {
+            margin-bottom: 10px;
+            overflow: hidden;
+            &:hover {
+                -webkit-box-shadow: 0 0 10px #999;
+                -moz-box-shadow: 0 0 10px #999;
+                box-shadow: 0 0 10px #999;
+            }
+            &:hover img {
+                -webkit-transform: scale(1.1,1.1);
+                -moz-transform: scale(1.1,1.1);
+                -ms-transform: scale(1.1,1.1);
+                -o-transform: scale(1.1,1.1);
+                transform: scale(1.1,1.1);
+            }
+        }
+        dd {
+            width: 390px;
+            height: 68px;
+            .var_fug_p01 {
+                height: 26px;
+                line-height: 26px;
+                font-size: 20px;
+                padding: 0 14px 0 2px;
+                text-align: left;
+                color: #000000;
+                i {
+                    font-size: 26px;
+                    float: right;
+                    .star {
+                        line-height: 20px;
+                        float: right;
+                        color: #FF9C00;
+                        font-size: 20px;
+                        margin-left: 10px;
+                        font-style: normal;
+                    }
+                }
+            }
+            .var_fug_p02 {
+                height: 23px;
+                padding: 3px 0 0 10px;
+                span {
+                    display: block;
+                    float: left;
+                    height: 23px;
+                    line-height: 23px;
+                    font-size: 14px;
+                    margin-right: 4px;
+                    background: #9A9A9A;
+                    padding: 0 10px;
+                    border-radius: 23px;
+                }
+            }
+        }
+        
+    }
+}

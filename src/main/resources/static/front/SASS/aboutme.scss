@@ -1,0 +1,137 @@
+$minWidth: 1200px;
+
+@mixin bgImg($url,$left:left,$center:center) {
+    background: url($url) no-repeat $left $center;
+}
+
+$imgurl: '../images/dz_tit.png','../images/zw_tit.png','../images/sd_tit.png','../images/zq_tit.png','../images/ct_tit.png','../images/bj_tit.png';
+
+@mixin listSty() {
+    @for $i from 1 to 7 {
+        .list-#{$i} span {
+            @include bgImg(nth($imgurl,$i), left, top);
+        }   
+    }
+};
+
+.pro_title {
+    height: 52px;
+    line-height: 52px;
+    width: 100%;
+    font-size: 24px;
+    color: #333333;
+    margin-bottom: 9px;
+}
+
+.contents {
+    width: 100%;
+    min-height: $minWidth;
+    padding-top: 135px;
+    margin-bottom: 78px;
+    .content_wrap {
+        width: $minWidth;
+        margin: 0 auto;
+        .detail_div {
+            width: $minWidth - 2px;
+            margin: 0 auto;
+            border: 1px solid #F1F1F1;
+            .detail_div_wrap {
+                width: 1006px;
+                margin: 0 auto;
+                padding-top: 33px;
+                .product_img {
+                    width: 100%;
+                    min-height: 720px;
+                    p {
+                        width: 100%;
+                        height: 54px;
+                        line-height: 27px;
+                        font-size: 14px;
+                        margin-bottom: 14px;
+                        color: #666666;
+                    }
+                    .img_div {
+                        width: 1006px;
+                        margin-bottom: 50px;
+                        img {
+                            display: block;
+                            width: 800px;
+                            height: 450px;
+                            margin: 0 auto;
+                        }
+                    }
+                    .text-list {
+                        width: 100%;
+                        height: 640px;
+                        li {
+                            position: relative;
+                            width: 503px;
+                            height: 187px;
+                            float: left;
+                            .p-title1 {
+                                width: 488px;
+                                height: 49px;
+                                line-height: 49px;
+                                padding: 0 10px 0 5px;
+                                font-size: 22px;
+                                color: #333333;
+                            }
+                            .p-title2 {
+                                width: 438px;
+                                height: 138px;
+                                line-height: 24px;
+                                font-size: 16px;
+                                color: #666666;
+                            }
+                            span {
+                                position: absolute;
+                                display: block;
+                                width: 50px;
+                                height: 50px;
+                                right: 66px;
+                                top: -9px;
+                            }
+                        }
+                        .list-2, .list-4, .list-6 {
+                            width: 447px;
+                            padding-left: 56px;
+                        }
+                        .list-2 span,.list-4 span, .list6 span {
+                            position: absolute;
+                            right: 16px;
+                            top: -9px;
+                        }
+                    }
+                }
+            }
+        }
+    }    
+}
+
+@include listSty;
+.ad_list {
+    width: 1006px;
+    height: 294px;
+    li {
+        width: 503px;
+        height: 147px;
+        float: left;
+        &.li-left {
+            width: 443px;
+            padding-left: 56px;
+        }
+        .ad-plist-1 {
+            width: 440px;
+            height: 36px;
+            font-size: 18px;
+            color: #000000;
+        }
+        .ad-plist-2 {
+            width: 440px;
+            height: 107px;
+            line-height: 24px;
+            font-size: 15px;
+            color: #666666;
+        }
+    }
+}

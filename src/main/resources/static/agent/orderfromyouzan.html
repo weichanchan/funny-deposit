@@ -23,7 +23,11 @@
 <div id="rrapp" v-cloak>
 	<div v-show="showList">
 		<div class="grid-btn">
-			<a v-if="hasPermission('orderfromyouzan:info')" class="btn btn-primary" @click="getCards"><i class="fa fa-plus"></i>&nbsp;复制卡密到剪切板</a>
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.no" @keyup.enter="query" placeholder="有赞订单号或充值号码">
+			</div>
+			<a class="btn btn-default" @click="query"><i class="fa fa-search">&nbsp;查询</i></a>
+			<a v-if="hasPermission('orderfromyouzan:info')" class="btn btn-primary" @click="getCards"><i class="fa fa-plus"></i>&nbsp;查看卡密</a>
 			<a v-if="hasPermission('orderfromyouzan:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
 			<a v-if="hasPermission('orderfromyouzan:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 		</div>

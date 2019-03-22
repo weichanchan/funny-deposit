@@ -50,10 +50,10 @@ $(function () {
             {label: '创建时间', name: 'createTime', index: 'create_time', width: 80},
             {label: '操作', name: 'cards', index: 'cards', width: 80,
                 formatter: function (value, options, row) {
-                    if(value == 'null' && value == ''){
-                        return''
+                    if(value == 'null' || value == ''){
+                        return ''
                     }
-                    return'<font color="green">可提取卡密</font>'
+                    return '<font color="green">可提取卡密</font>'
                 }}
         ],
         viewrecords: true,
@@ -88,7 +88,10 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
-        orderFromYouzan: {}
+        orderFromYouzan: {},
+        q:{
+            no:""
+        }
     },
     methods: {
         query: function () {
@@ -161,7 +164,10 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                page: page
+                page: page,
+                postData:{
+                    "no": vm.q.no
+                }
             }).trigger("reloadGrid");
         }
     }

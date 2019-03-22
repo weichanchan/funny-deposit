@@ -1,0 +1,205 @@
+.contents {
+	width: 100%;
+	min-width: 1200px;
+	height: auto;
+	margin: 135px 0 78px 0;
+}
+
+.contents_wrap {
+	width: 1200px;
+	margin: 0 auto;
+	min-height: 720px;
+}
+
+.contents_down {
+	width: 1200px;
+}
+
+.top_img {
+	width: 1200px;
+	height: 360px;
+	background: url(../images/bg.png) no-repeat left top;
+	margin-bottom: 74px;
+}
+
+.p_title {
+	height: 34px;
+	font-size: 28px;
+	color: #333333;
+	margin-bottom: 64px;
+	text-align: center;
+}
+
+.our_target {
+	width: 1200px;
+	height: 228px;
+	margin-bottom: 30px;
+}
+
+.our_target li {
+	float: left;
+	width: 300px;
+	height: auto;
+}
+
+.logo_top {
+	width: 300px;
+	height: 112px;
+	margin-bottom: 24px;
+}
+
+.list-1>.logo_top {
+	background: url(../images/bg_pt1.png) no-repeat center 6px;
+}
+
+.list-2>.logo_top {
+	background: url(../images/bg_pt2.png) no-repeat center 6px;
+}
+
+.list-3>.logo_top {
+	background: url(../images/bg_pt3.png) no-repeat center 6px;
+}
+
+.list-4>.logo_top {
+	background: url(../images/bg_pt4.png) no-repeat center 6px;
+}
+
+.list_title1 {
+	width: 300px;
+	height: 38px;
+	line-height: 38px;
+	text-align: center;
+	color: #333333;
+	font-size: 28px;
+}
+
+.list_title2 {
+	width: 160px;
+	font-size: 16px;
+	color: #333333;
+	margin: 0 auto;
+	text-align: center;
+}
+
+/*-------上传游戏按钮--------*/
+.upload_btn {
+	width: 180px;
+	height: 48px;
+	line-height: 48px;
+	font-size: 14px;
+	color: #FFFFFF;
+	text-align: center;
+	margin: 0 auto;
+	cursor: pointer;
+	-webkit-border-radius: 48px;
+	-moz-border-radius: 48px;
+	-moz-border-radius: 48px;
+	border-radius: 48px;
+	margin-bottom: 90px;
+	background: #FF9C00;
+}
+/*-------END----------*/
+.merchants_ul {
+	width: 1200px;
+}
+
+.merchants_ul li {
+	float: left;
+}
+
+.merchants_ul li>a {
+	height: 100px;
+	margin-bottom: 64px;
+}
+
+.logo_1 {
+	display: block;
+	width: 273px;
+	background: url(../images/bg-shop-1.png) no-repeat 40px 10px;
+}
+
+.logo_2 {
+	display: block;
+	width: 270px;
+	background: url(../images/bg-shop-2.png) no-repeat left top;
+}
+
+.logo_3 {
+	display: block;
+	width: 335px;
+	background: url(../images/bg-shop-3.png) no-repeat left top;
+}
+
+.logo_4 {
+	display: block;
+	width: 310px;
+	background: url(../images/bg-shop-4.png) no-repeat left 5px;
+}
+
+.logo_5 {
+	display: block;
+	width: 273px;
+	background: url(../images/bg-shop-5.png) no-repeat 52px top;
+}
+
+.logo_6 {
+	display: block;
+	width: 350px;
+	background: url(../images/bg-shop-6.png) no-repeat 54px 12px;
+}
+
+.logo_7 {
+	display: block;
+	width: 350px;
+	background: url(../images/bg-shop-7.png) no-repeat 60px 0px;
+	margin-top: -9px;
+}
+
+/*------各类合作-----*/
+.hezuo {
+	width: 1200px;
+	height: 160px;
+}
+
+.hezuo li {
+	float: left;
+	width: 360px;
+	height: 112px;
+	margin: 0 20px;
+	background: url(../images/bg_kf.png) no-repeat left top;
+	padding-top: 48px;
+}
+
+.com_p1 {
+	width: 360px;
+	height: 28px;
+	font-size: 22px;
+	color: #333333;
+	text-align: center;
+	margin-bottom: 12px;
+}
+
+.com_p2 {
+	width: 360px;
+	height: 24px;
+	font-size: 20px;
+	color: #333333;
+	text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

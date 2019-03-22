@@ -1,0 +1,200 @@
+$minWidth: 1200px;
+@mixin bgImg($url,$left:left,$center:center) {
+    background: url($url) no-repeat $left $center;
+}
+
+.contents {
+    width: 100%;
+    min-width: $minWidth;
+    margin: 135px 0 78px 0;
+    .contents_wrap {
+        width: $minWidth;
+        margin: 0 auto;
+        min-height: 720px;
+        .video_tit {
+            width: $minWidth;
+            height: 30px;
+            margin-bottom: 16px;
+            ul {
+                width: $minWidth;
+                height: 30px;
+                li {
+                    float: left;
+                    text-align: center;
+                    a {
+                        display: block;
+                        width: 110px;
+                        height: 30px;
+                        line-height: 30px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        color: #666666;
+                    }
+                    &.active a {
+                        color: #FFFFFF;
+                        @include bgImg('../images/vrtabs_bg.png', left, top);
+                    }
+                }
+            }
+        }
+        .contents_down {
+            width: $minWidth;
+            .main_left {
+                float: left;
+                width: 840px;
+                border: 1px solid #F1F1F1;
+                border-bottom: none;
+                margin-right: -1px;
+                .left_dl {
+                    width: 801px;
+                    height: 174px;
+                    border-bottom: 1px solid #F1F1F1;
+                    padding: 32px 25px 32px 14px;
+                    &:hover {
+                        background: #F1F1F1;
+                    }
+                    dt, dd {
+                        float: left;
+                    }
+                    dt {
+                        width: 300px;
+                        height: 174px;
+                        margin-right: 20px;
+                        img {
+                            display: block;
+                            width: 100%;
+                            height: 100%;
+                        }
+                    }
+                    dd {
+                        width: 481px;
+                        height: 172px;
+                        padding-top: 3px;
+                    }
+                }
+            }
+            .main_right {
+                width: 357px;
+                border: 1px solid #F1F1F1;
+                float: left;
+                .rigth_div {
+                    width: 324px;
+                    padding: 32px 11px 32px 22px;
+                    border-bottom: 1px solid #F1F1F1;
+                    .p-header {
+                        height: 48px;
+                        line-height: 48px;
+                    }
+                }
+            }
+            .right_div:hover {
+                background: #F1F1F1;
+            }
+        }
+        .pagination_div {
+            width: $minWidth;
+            height: 42px;
+            margin-top: 10px;
+            .pages {
+                height: 42px;
+                float: right;
+                margin-top: 7px;
+                .search_div {
+                    float: right;
+                    margin-left: 10px;
+                    .page-input {
+                        width: 64px;
+                        display: inline-block;
+                        color: #999999;
+                        font-size: 14px;
+                        float: left;
+                        input {
+                            width: 48px;
+                            height: 30px;
+                            line-height: 30px;
+                            margin: 0 5px;
+                            text-align: center;
+                            border: none;
+                            outline: none;
+                            color: #333333;
+                            font-size: 14px;
+                            @include bgImg('../images/bg_fy_ipt.png', center, center);
+                        }
+                    }
+                    .page-btn {
+                        display: inline-block;
+                        width: 36px;
+                        height: 24px;
+                        line-height: 24px;
+                        color: #FFFFFF;
+                        font-size: 14px;
+                        float: left;
+                        background: #FF9C00;
+                        border-radius: 24px;
+                        text-align: center;
+                        margin-top: 4px;
+                    }
+                }
+            }
+            .pages_num {
+                height: 37px;
+                float: right;
+                padding-top: 5px;
+                #pagination {
+                    a, span {
+                        float: left;
+                        width: 36px;
+                        height: 36px;
+                        line-height: 36px;
+                        font-size: 14px;
+                        text-align: center;
+                        color: #666666;
+                        cursor: pointer;
+                    }
+                    .prev_btn {
+                        @include bgImg('../images/preve_left.png', center, center);
+                        margin: -1px 20px 0 0;
+                    }
+                    .next_btn {
+                        @include bgImg('../images/preve_right.png', center, center);
+                        margin: -1px 20px 0 0;
+                    }
+                    .current {
+                        color: #FFFFFF;
+                        border-radius: 100%;
+                        background-color: #666;
+                    }
+                }
+            }
+        }
+    }
+}
+.p-header {
+    font-size: 20px;
+    padding: 11px 0;
+    color: #474747;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.p-detail {
+    height: 78px;
+    line-height: 26px;
+    font-size: 14px;
+    color: #999999;
+    overflow: hidden;
+}
+.p-date {
+    height: 43px;
+    line-height: 43px;
+    font-size: 14px;
+    color: #999999;
+    .s-time {
+        float: left;
+        height: 33px;
+    }
+    .more {
+        float: right;
+        color: #FF9C00;
+    }
+}

@@ -1,0 +1,109 @@
+.contents .main_wrap .steps .shop_con .step_one .step_tit, .contents .main_wrap .steps .shop_con .step_two .step_tit, .contents .main_wrap .steps .shop_con .step_three .step_tit {
+  width: 1200px;
+  height: 24px;
+  font-size: 18px;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 18px;
+  font-weight: bold;
+}
+
+.contents .main_wrap .steps .shop_con .step_two .two_con, .contents .main_wrap .steps .shop_con .step_three .two_con {
+  width: 830px;
+  height: 166px;
+  margin: 0 auto;
+  background: url("../images/bg_shop_b.png") no-repeat left top;
+  -webkit-background-size: 100% 100%;
+  background-size: 100% 100%;
+  padding: 24px 0 0 30px;
+}
+
+.contents .main_wrap .steps .shop_con .step_one .one_con .one_w, .contents .main_wrap .steps .shop_con .step_two .two_con .one_w, .contents .main_wrap .steps .shop_con .step_three .two_con .one_w {
+  width: 100%;
+  margin-bottom: 26px;
+}
+.contents .main_wrap .steps .shop_con .step_one .one_con .one_w h3, .contents .main_wrap .steps .shop_con .step_two .two_con .one_w h3, .contents .main_wrap .steps .shop_con .step_three .two_con .one_w h3 {
+  height: 20px;
+  line-height: 20px;
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: #666666;
+}
+.contents .main_wrap .steps .shop_con .step_one .one_con .one_w p, .contents .main_wrap .steps .shop_con .step_two .two_con .one_w p, .contents .main_wrap .steps .shop_con .step_three .two_con .one_w p {
+  width: 100%;
+  height: 18px;
+  font-size: 16px;
+  color: #666666;
+  margin-bottom: 12px;
+}
+.contents .main_wrap .steps .shop_con .step_one .one_con .one_w p span, .contents .main_wrap .steps .shop_con .step_two .two_con .one_w p span, .contents .main_wrap .steps .shop_con .step_three .two_con .one_w p span {
+  color: #FF9C00;
+}
+
+.contents {
+  width: 100%;
+  min-width: 1200px;
+  margin: 135px 0 78px 0;
+}
+.contents .main_wrap {
+  width: 1200px;
+  margin: 0 auto;
+  min-height: 720px;
+}
+.contents .main_wrap .steps {
+  width: 1200px;
+}
+.contents .main_wrap .steps .shop_con {
+  width: 1198px;
+  height: 1084px;
+  border: 1px solid #F1F1F1;
+  padding-top: 35px;
+}
+.contents .main_wrap .steps .shop_con .con-title {
+  width: 1198px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 28px;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 40px;
+}
+.contents .main_wrap .steps .shop_con .step_one {
+  width: 1200px;
+  height: 400px;
+}
+.contents .main_wrap .steps .shop_con .step_one .one_con {
+  width: 830px;
+  height: 304px;
+  margin: 0 auto;
+  background: url("../images/bg_shop_a.png") no-repeat left center;
+  background-size: 100% 100%;
+  padding: 25px 0 0 30px;
+}
+.contents .main_wrap .steps .shop_con .step_two {
+  width: 1200px;
+  height: 270px;
+}
+.contents .main_wrap .steps .shop_con .step_three {
+  width: 1200px;
+  height: 200px;
+  margin-bottom: 30px;
+}
+.contents .main_wrap .steps .shop_con .step_three .two_con {
+  height: 137px;
+}
+.contents .main_wrap .steps .shop_con .step_three .two_con .one_w {
+  margin-bottom: 0;
+}
+.contents .main_wrap .steps .shop_con .btn {
+  position: relative;
+  width: 180px;
+  height: 48px;
+  line-height: 48px;
+  font-size: 14px;
+  color: #FFFFFF;
+  text-align: center;
+  margin: 0 auto;
+  cursor: pointer;
+  background: url("../images/bg_btn_more.png") no-repeat left top;
+}

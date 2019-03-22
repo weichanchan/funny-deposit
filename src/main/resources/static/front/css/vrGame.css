@@ -1,0 +1,200 @@
+/*----------头部----------*/
+.vrGame_hd {
+    background: #333;
+}
+
+.vrGame {
+    width: 100%;
+    height: auto;
+    padding-top: 135px;
+}
+
+.vrGame_tabs {
+    width: 1200px;
+    height: 30px;
+    margin: 0 auto 16px;
+}
+
+.vrGame_tabs ul {
+    width: 710px;
+    height: 30px;
+    float: left;
+}
+
+.vrGame_tabs ol {
+    width: 220px;
+    height: 30px;  
+    float: left;
+}
+
+.vrGame_tabs ul li {
+    float: left;
+    width: 76px;
+    height: 30px;
+}
+
+.vrGame_tabs ol li {
+    width: 110px;
+    height: 30px;
+    float: left;
+}
+
+.vrGame_tabs ol .vrTabs_bg a {
+    background: url(../images/vrtabs_bg.png) no-repeat left top;
+    color: #fff;
+}
+
+.vrGame_tabs ul li .vrTabs_color {
+    color: #f49500;
+}
+
+.vrGame_tabs ul a,
+.vrGame_tabs ol a {
+    display: block;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    text-align: center;
+    color: #999;
+}
+
+.vrGame_tabs ol a {
+    font-size: 16px;
+    color: #666;
+}
+
+.search_input {
+    position: relative;
+    width: 162px;
+    height: 36px;
+    float: right;
+    top: -5px;
+}
+
+#game_search {
+    width: 83px;
+    height: 34px;
+    line-height: 34px;
+    border: none;
+    outline: none;
+    padding-left: 52px;
+    padding-right: 5px;
+    background: url(../images/bg_search.png) no-repeat left top;
+}
+
+#game_search:hover {
+    background: url(../images/bg_search_h.png) no-repeat left top;
+}
+
+/*---------游戏列表部分--------*/
+.vrGame_list {
+    width: 1200px;
+    min-height: 720px;
+    margin: 0 auto 75px;
+}
+
+.vrGame_list_show {
+    width: 1200px;
+    min-height: 792px;
+}
+
+.vrGame_list_show>a,
+.vrGame_list_show dl {
+    display: block;
+    width: 390px;
+    height: 250px;
+    color: #fff;
+}
+
+.vrGame_list_show>a {
+    margin: 0 5px 14px ;
+    float: left;
+}
+
+/*-------鼠标放上去放大效果------*/
+.vrGame_list_show dt,
+.vrGame_list_show dt img {
+    display: block;
+    width: 390px;
+    height: 182px;
+    -webkit-transition: all 500ms;
+    -o-transition: all 500ms;
+    -moz-transition: all 500ms;
+    -ms-transition: all 500ms;
+    transition: all 500ms;
+}
+
+.vrGame_list_show dt:hover img {
+    -webkit-transform: scale(1.1,1.1);
+    -moz-transform: scale(1.1,1.1);
+    -ms-transform: scale(1.1,1.1);
+    -o-transform: scale(1.1,1.1);
+    transform: scale(1.1,1.1);
+}
+
+.vrGame_list_show dt:hover {
+    -webkit-box-shadow: 0 0 10px #999;
+    -moz-box-shadow: 0 0 10px #999;
+    box-shadow: 0 0 10px #999;
+}
+
+.vrGame_list_show dt {
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.vrGame_list_show dl dd {
+    width: 390px;
+    height: 68px;
+}
+
+/*----游戏名部分----*/
+.var_fug_p01 {
+    height: 26px;
+    line-height: 26px;
+    font-size: 20px;
+    padding: 0 14px 0 2px;
+    color: #000;
+    text-align: left;
+}
+
+.var_fug_p01 i {
+    font-size: 26px;
+    float: right;
+}
+
+.var_fug_p01 i .star {
+    line-height: 20px;
+    float: right;
+    color: #ff9c00;
+    font-size: 20px;
+    margin-left: 10px;
+    font-style: normal;
+}
+
+.var_fug_p02 {
+    height: 23px;
+    padding: 3px 0 0 10px;
+}
+
+.var_fug_p02 span {
+    display: block;
+    float: left;
+    height: 23px;
+    line-height: 23px;
+    font-size: 14px;
+    margin-right: 4px;
+    background: #9a9a9a;
+    padding: 0 10px;
+    border-radius: 23px;
+}
+
+
+
+
+
+
+
+
+
