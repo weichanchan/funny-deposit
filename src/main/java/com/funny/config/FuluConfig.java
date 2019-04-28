@@ -21,6 +21,12 @@ public class FuluConfig {
     private String notifyUrl;
     @Value("${optional.fulu.url}")
     private String url;
+    @Value("${optional.fulu.kamiUrl}")
+    private String kamiUrl;
+    @Value("${optional.fulu.feiKamiUrl}")
+    private String feiKamiUrl;
+    @Value("${optional.fulu.fuluCheckUrl}")
+    private String fuluCheckUrl;
     @Value("${optional.fulu.huge}")
     private Integer huge;
 
@@ -70,5 +76,29 @@ public class FuluConfig {
 
     public void setHuge(Integer huge) {
         this.huge = huge;
+    }
+
+    public String getKamiUrl() {
+        return kamiUrl;
+    }
+
+    public void setKamiUrl(String kamiUrl) {
+        this.kamiUrl = kamiUrl;
+    }
+
+    public String getFeiKamiUrl() {
+        return feiKamiUrl;
+    }
+
+    public void setFeiKamiUrl(String feiKamiUrl) {
+        this.feiKamiUrl = feiKamiUrl;
+    }
+
+    public String getFuluCheckUrl() {
+        return fuluCheckUrl;
+    }
+
+    public void setFuluCheckUrl(String fuluCheckUrl) {
+        this.fuluCheckUrl = fuluCheckUrl;
     }
 }

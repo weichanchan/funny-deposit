@@ -4,9 +4,11 @@ import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.OrderRequestRecordEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
+import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.FuluCheckEvent;
 import com.funny.api.event.notify.FuluSubmitEvent;
 import com.funny.api.event.notify.YouzanRefundEvent;
+import com.funny.api.event.notify.v2.FuluSubmitV2Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class FuluCheckTask {
     private OrderFromYouzanService orderFromYouzanService;
 
     @Autowired
+    private WareFuluInfoService wareFuluInfoService;
+
+    @Autowired
     private ApplicationContext applicationContext;
 
     public void watch() {
@@ -46,17 +51,20 @@ public class FuluCheckTask {
 
         map.put("status", OrderFromYouzanEntity.PROCESS);
         orderFromYouzanEntities = orderFromYouzanService.queryList(map);
-        if(orderFromYouzanEntities.size() == 0){
+        if (orderFromYouzanEntities.size() == 0) {
             logger.debug("没用状态为充值中的订单，不需要去查询");
         }
 
         for (OrderFromYouzanEntity orderFromYouzanEntity : orderFromYouzanEntities) {
             if ((orderFromYouzanEntity.getCreateTime().getTime() + (60 * 1000)) > System.currentTimeMillis()) {
-                logger.debug("充值中的订单【" + orderFromYouzanEntity.getId()+"】，入库未够一分钟。");
+                logger.debug("充值中的订单【" + orderFromYouzanEntity.getId() + "】，入库未够一分钟。");
                 // 没入库够1分钟不理他
                 continue;
             }
-            logger.debug("充值中的订单【" + orderFromYouzanEntity.getId()+"】，查询充值状态");
+            logger.debug("充值中的订单【" + orderFromYouzanEntity.getId() + "】，查询充值状态");
+            if ("aaabbbccc".equals(orderFromYouzanEntity.getWareNo())) {
+                applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
+            }
             applicationContext.publishEvent(new FuluCheckEvent(orderFromYouzanEntity.getId()));
         }
     }

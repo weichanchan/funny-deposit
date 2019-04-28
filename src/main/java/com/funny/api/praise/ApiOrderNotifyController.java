@@ -11,6 +11,7 @@ import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.admin.agent.service.WareInfoService;
 import com.funny.api.event.notify.FuluSubmitEvent;
 import com.funny.api.event.notify.YouzanRefundEvent;
+import com.funny.api.event.notify.v2.FuluSubmitV2Event;
 import com.funny.api.praise.entity.MsgPushEntity;
 import com.funny.utils.annotation.IgnoreAuth;
 import com.youzan.open.sdk.util.hash.MD5Utils;
@@ -113,7 +114,7 @@ public class ApiOrderNotifyController {
         }
         Map<String, Object> order = orders.get(0);
         String outerSkuId = (String) order.get("outer_sku_id");
-        if(outerSkuId == null){
+        if (outerSkuId == null) {
             logger.debug("outerSkuId未配置，不用处理");
             return res;
         }
@@ -143,6 +144,9 @@ public class ApiOrderNotifyController {
         orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.WAIT_PROCESS);
         orderFromYouzanEntity.setCreateTime(new Date());
         orderFromYouzanService.save(orderFromYouzanEntity);
+        if ("aaabbbccc".equals(wareFuluInfoEntity.getOuterSkuId())) {
+            applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
+        }
         applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));
         return res;
     }
