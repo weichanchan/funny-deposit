@@ -8,10 +8,12 @@ import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.FuluCheckEvent;
 import com.funny.api.event.notify.FuluSubmitEvent;
 import com.funny.api.event.notify.YouzanRefundEvent;
+import com.funny.api.event.notify.v2.FuluCheckV2Event;
 import com.funny.api.event.notify.v2.FuluSubmitV2Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +41,9 @@ public class FuluCheckTask {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Value("${optional.fulu.v2Enable}")
+    private boolean v2Enable;
+
     public void watch() {
         Map<String, Object> map = new HashMap<>(4);
 
@@ -62,8 +67,9 @@ public class FuluCheckTask {
                 continue;
             }
             logger.debug("充值中的订单【" + orderFromYouzanEntity.getId() + "】，查询充值状态");
-            if ("aaabbbccc".equals(orderFromYouzanEntity.getWareNo())) {
-                applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
+            if (v2Enable || "aaabbbccc".equals(orderFromYouzanEntity.getWareNo())) {
+                logger.debug("执行新版本查询");
+                applicationContext.publishEvent(new FuluCheckV2Event(orderFromYouzanEntity.getId()));
             }
             applicationContext.publishEvent(new FuluCheckEvent(orderFromYouzanEntity.getId()));
         }

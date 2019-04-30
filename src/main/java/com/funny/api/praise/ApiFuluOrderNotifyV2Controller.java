@@ -23,10 +23,10 @@ import java.util.Map;
  * @author liyanjun
  */
 @RestController
-@RequestMapping("/api/fulu/order")
-public class ApiFuluOrderNotifyController {
+@RequestMapping("/api/fulu/v2/order")
+public class ApiFuluOrderNotifyV2Controller {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiFuluOrderNotifyController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ApiFuluOrderNotifyV2Controller.class);
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
@@ -40,22 +40,31 @@ public class ApiFuluOrderNotifyController {
     public Object notify(HttpServletRequest request) {
         try {
             // 福禄订单号
-            String orderNo = request.getParameter("OrderNo");
+            String orderNo = request.getParameter("OrderId");
             // 交易完成时间
-            String chargeTime = request.getParameter("ChargeTime");
+            String chargeTime = request.getParameter("ChargeFinishTime");
             // 合作商家订单号
             String customerOrderNo = request.getParameter("CustomerOrderNo");
             // 订单状态(成功,失败)
-            String status = request.getParameter("Status");
-            String reMark = request.getParameter("ReMark");
+            String status = request.getParameter("OrderStatus");
+            String rechargeDescription = request.getParameter("RechargeDescription");
+            String productId = request.getParameter("ProductId");
+            String price = request.getParameter("Price");
+            String buyNum = request.getParameter("BuyNum");
+            String operatorSerialNumber = request.getParameter("OperatorSerialNumber");
+
             String sign = request.getParameter("Sign");
 
             Map<String, String> map = new HashMap(8);
-            map.put("chargetime", chargeTime.replace("/", "-"));
-            map.put("customerorderno", customerOrderNo);
-            map.put("orderno", orderNo);
-            map.put("remark", reMark);
-            map.put("status", status);
+            map.put("ChargeFinishTime", chargeTime.replace("/", "-"));
+            map.put("CustomerOrderNo", customerOrderNo);
+            map.put("OrderId", orderNo);
+            map.put("RechargeDescription", rechargeDescription);
+            map.put("OrderStatus", status);
+            map.put("ProductId", productId);
+            map.put("Price", price);
+            map.put("BuyNum", buyNum);
+            map.put("OperatorSerialNumber", operatorSerialNumber);
 
             // 将字典集合转换为URL参数对
             String param = SignUtils.MaptoString(map);
@@ -66,7 +75,7 @@ public class ApiFuluOrderNotifyController {
             String temp = MD5Utils.MD5(postData);
             if (!temp.equals(sign)) {
                 logger.debug("福禄订单回调通知验签失败：" + param + "【temp】:" + temp + "【sign】" + sign);
-                return "<?xml version=\"1.0\" encoding=\"utf-8\"?><root><ret><status>False</status></ret></root>";
+                return "false";
             }
 
             OrderFromYouzanEntity orderFromYouzanEntity = orderFromYouzanService.lockByOrderNo(customerOrderNo);
@@ -75,7 +84,7 @@ public class ApiFuluOrderNotifyController {
             }
 
             // 失败通知处理
-            if ("False".equals(status)) {
+            if ("失败".equals(status)) {
                 if (orderFromYouzanEntity.getStatus() == OrderFromYouzanEntity.SUCCESS) {
                     logger.debug("成功状态下的订单被通知失败。【id】" + orderFromYouzanEntity.getId());
                     orderFromYouzanEntity.setException("成功状态下的订单被通知失败。");
@@ -84,11 +93,10 @@ public class ApiFuluOrderNotifyController {
                 orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
                 orderFromYouzanService.update(orderFromYouzanEntity);
                 logger.debug("订单福禄平台充值失败。【id】" + orderFromYouzanEntity.getId());
-                return "<?xml version=\"1.0\" encoding=\"utf-8\"?><root><ret><status>True</status></ret></root>";
+                return "true";
             }
 
             // 成功通知处理
-
             if (orderFromYouzanEntity.getStatus() == OrderFromYouzanEntity.REFUND_SUCCESS) {
                 logger.debug("已经置为失败的订单，但福禄通知充值成功。【id】" + orderFromYouzanEntity.getId());
                 orderFromYouzanEntity.setException("已经退款订单，但福禄通知成功。");
@@ -100,10 +108,10 @@ public class ApiFuluOrderNotifyController {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.SUCCESS);
             orderFromYouzanService.update(orderFromYouzanEntity);
             logger.debug("订单福禄平台充值成功。【id】" + orderFromYouzanEntity.getId());
-            return "<?xml version=\"1.0\" encoding=\"utf-8\"?><root><ret><status>True</status></ret></root>";
+            return "true";
         } catch (Exception e) {
             logger.error("接受福禄平台回调失败", e);
-            return "<?xml version=\"1.0\" encoding=\"utf-8\"?><root><ret><status>False</status></ret></root>";
+            return "false";
         }
     }
 

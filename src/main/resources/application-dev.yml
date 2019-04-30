@@ -32,6 +32,7 @@ optional:
         kdt-id: 40430747
     fulu:
         enable: true
+        v2Enable: false
         huge: 5
         userId: 803683
         name: lyh512125
