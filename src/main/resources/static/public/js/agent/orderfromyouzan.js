@@ -51,6 +51,7 @@ $(function () {
             {label: '操作', name: 'cards', index: 'cards', width: 80,
                 formatter: function (value, options, row) {
                     if(value == 'null' || value == ''){
+                        alert(value)
                         return ''
                     }
                     return '<font color="green">可提取卡密</font>'

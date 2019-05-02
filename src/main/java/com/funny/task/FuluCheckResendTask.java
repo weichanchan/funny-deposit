@@ -6,9 +6,11 @@ import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
 import com.funny.api.event.notify.FuluSubmitEvent;
 import com.funny.api.event.notify.YouzanRefundEvent;
+import com.funny.api.event.notify.v2.FuluSubmitV2Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +38,9 @@ public class FuluCheckResendTask {
     @Autowired
     ApplicationContext applicationContext;
 
+    @Value("${optional.fulu.v2Enable}")
+    private boolean v2Enable;
+
     public void watch() {
         Map<String, Object> map = new HashMap<>(4);
         map.put("status", OrderFromYouzanEntity.WAIT_PROCESS);
@@ -55,6 +60,11 @@ public class FuluCheckResendTask {
             }
             logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发。");
             // 触发发送事件
+            if (v2Enable || "aaabbbccc".equals(orderFromYouzanEntity.getWareNo())) {
+                logger.debug("执行新版本重发");
+                applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
+                return;
+            }
             applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));
         }
     }

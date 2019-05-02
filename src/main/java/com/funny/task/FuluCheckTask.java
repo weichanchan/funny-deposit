@@ -70,6 +70,7 @@ public class FuluCheckTask {
             if (v2Enable || "aaabbbccc".equals(orderFromYouzanEntity.getWareNo())) {
                 logger.debug("执行新版本查询");
                 applicationContext.publishEvent(new FuluCheckV2Event(orderFromYouzanEntity.getId()));
+                return;
             }
             applicationContext.publishEvent(new FuluCheckEvent(orderFromYouzanEntity.getId()));
         }

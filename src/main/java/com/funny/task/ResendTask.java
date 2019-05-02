@@ -25,7 +25,7 @@ import java.util.Map;
  * 
  * @author liyanjun
  */
-@Component("resendTask")
+//@Component("resendTask")
 public class ResendTask {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	

@@ -94,10 +94,10 @@ public class ApiOrderNotifyController {
          */
         String sign = MD5Utils.MD5(clientId + entity.getMsg() + clientSecret);
         logger.debug(sign);
-        if (!sign.equals(entity.getSign())) {
-            logger.error("MSG" + entity.getSign() + "签名不正确。");
-            return res;
-        }
+//        if (!sign.equals(entity.getSign())) {
+//            logger.error("MSG" + entity.getSign() + "签名不正确。");
+//            return res;
+//        }
         // 获取订单信息
         String msg = URLDecoder.decode(entity.getMsg(), "utf-8");
         logger.debug(msg);
@@ -146,6 +146,7 @@ public class ApiOrderNotifyController {
         orderFromYouzanService.save(orderFromYouzanEntity);
         if ("aaabbbccc".equals(wareFuluInfoEntity.getOuterSkuId())) {
             applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
+            return res;
         }
         applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));
         return res;

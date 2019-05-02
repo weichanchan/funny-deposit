@@ -32,9 +32,12 @@ optional:
       kdt-id: 13176063
     fulu:
       enable: true
+      v2Enable: false
       huge: 5
       userId: 804867
       name: lyh512125
+      appKey: Q8VLF1U1sBWvx9f6LFVPed18TKzjML+axbFHeW2Aqxi3XzpT+CHNuW4RvHXgetEq
+      appSecret: 3fd6e0ab8a9444bdbff1db34d75ec456
       key: 900B44E19971C3BC7EF02E1290CA08D8
       url: http://ccapi.soouu.cn/Interface/Method
       kamiUrl: http://api.open.fulu.com/api/Order/CreateCardOrder

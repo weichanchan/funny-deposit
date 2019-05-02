@@ -24,7 +24,7 @@ import java.util.Map;
  *
  * @author liyanjun
  */
-@Component("checkNewOrderAndSendEmailTask")
+//@Component("checkNewOrderAndSendEmailTask")
 public class CheckNewOrderAndSendEmailTask {
     private Logger logger = LoggerFactory.getLogger(getClass());
 

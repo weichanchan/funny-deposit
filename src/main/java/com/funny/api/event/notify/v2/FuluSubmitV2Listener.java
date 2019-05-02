@@ -10,6 +10,8 @@ import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.YouzanRefundEvent;
 import com.funny.config.FuluConfig;
 import com.funny.utils.DateUtils;
+import com.funny.utils.SignUtils;
+import com.youzan.open.sdk.util.hash.MD5Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +78,7 @@ public class FuluSubmitV2Listener {
         }
 
         String url = fuluConfig.getKamiUrl();
-        Map<String, Object> map = getCommonParam();
+        Map<String, String> map = getCommonParam();
         // 非卡密类型需要填写
         if (wareFuluInfoEntity.getType() == WareFuluInfoEntity.TYPE_NOT_CARD) {
             // 充值账号
@@ -97,6 +99,12 @@ public class FuluSubmitV2Listener {
             map.put("ProductId", String.valueOf(wareFuluInfoEntity.getProductHugeId()));
         }
 
+        String param = SignUtils.MaptoString(map);
+        // 将秘钥拼接到URL参数对后
+        String postData = param + fuluConfig.getAppSecret();
+        String sign = MD5Utils.MD5(postData);
+        map.put("Sign", sign);
+
         // 发送请求并记录
         HttpHeaders headers = new HttpHeaders();
         //定义请求参数类型，这里用json所以是MediaType.APPLICATION_JSON
@@ -106,7 +114,7 @@ public class FuluSubmitV2Listener {
         ResponseEntity<String> responseEntity;
         Map result;
         try {
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(map, headers);
+            HttpEntity<Map<String, String>> request = new HttpEntity<>(map, headers);
             orderFromYouzanEntity.setLastRechargeTime(new Date());
             responseEntity = restTemplate.postForEntity(url, request, String.class);
             orderRequestRecordEntity.setResponse(responseEntity.getBody());
@@ -119,7 +127,7 @@ public class FuluSubmitV2Listener {
         }
 
         // 福禄平台受理失败,等待退款，但是当请求为3000外部订单号已存在时，等待主动查询或者通知。
-        if (result.get("Code") != null && !"3000".equals(result.get("Code").toString())) {
+        if (result.get("State") != null && !"Success".equals(result.get("State")) && !"3000".equals(result.get("Code").toString())) {
             orderRequestRecordEntity.setException(responseEntity.getBody());
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderRequestRecordService.update(orderRequestRecordEntity);
@@ -128,7 +136,7 @@ public class FuluSubmitV2Listener {
             return;
         }
 
-        if (wareFuluInfoEntity.getType() == WareFuluInfoEntity.TYPE_IS_CARD && result.get("Status") != null && "Success".equals(result.get("State"))) {
+        if (wareFuluInfoEntity.getType() == WareFuluInfoEntity.TYPE_IS_CARD && result.get("State") != null && "Success".equals(result.get("State"))) {
             // 如果是卡密类型商品，并且下单成功，从结果提取卡密，并设置下单成功。
             String cards = objectMapper.writeValueAsString(result.get("Cards"));
             orderFromYouzanEntity.setCards(cards);
@@ -144,9 +152,9 @@ public class FuluSubmitV2Listener {
         orderFromYouzanService.update(orderFromYouzanEntity);
     }
 
-    private Map<String, Object> getCommonParam() {
+    private Map<String, String> getCommonParam() {
         Map map = new HashMap(8);
-        map.put("AppKey", fuluConfig.getKey());
+        map.put("AppKey", fuluConfig.getAppKey());
         map.put("TimeStamp", DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
         map.put("Format", "json");
         map.put("SignType", "md5");

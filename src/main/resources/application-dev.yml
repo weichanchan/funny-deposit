@@ -32,6 +32,11 @@ optional:
         kdt-id: 40430747
     fulu:
         enable: true
+        appKey: dmQNHkLro7xRei7ORvviV8acPmrkX9k/t08GJwuTsKWxUP+EQak4jAYszDlF1HcF
+        appSecret: 8cf86a60d90d4328a006610e2123612e
+        kamiUrl: http://api.open.fulu.com/api/Order/CreateCardOrder
+        feiKamiUrl: http://api.open.fulu.com/api/Order/CreateOrder
+        fuluCheckUrl: http://api.open.fulu.com/api/Order/GetOrder
         v2Enable: false
         huge: 5
         userId: 803683

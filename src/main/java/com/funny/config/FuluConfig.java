@@ -17,6 +17,10 @@ public class FuluConfig {
     private String name;
     @Value("${optional.fulu.key}")
     private String key;
+    @Value("${optional.fulu.appKey}")
+    private String appKey;
+    @Value("${optional.fulu.appSecret}")
+    private String appSecret;
     @Value("${optional.fulu.notifyUrl}")
     private String notifyUrl;
     @Value("${optional.fulu.url}")
@@ -100,5 +104,21 @@ public class FuluConfig {
 
     public void setFuluCheckUrl(String fuluCheckUrl) {
         this.fuluCheckUrl = fuluCheckUrl;
+    }
+
+    public String getAppKey() {
+        return appKey;
+    }
+
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
+    }
+
+    public String getAppSecret() {
+        return appSecret;
+    }
+
+    public void setAppSecret(String appSecret) {
+        this.appSecret = appSecret;
     }
 }
