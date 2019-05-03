@@ -144,7 +144,7 @@ public class ApiOrderNotifyController {
         orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.WAIT_PROCESS);
         orderFromYouzanEntity.setCreateTime(new Date());
         orderFromYouzanService.save(orderFromYouzanEntity);
-        if ("aaabbbccc".equals(wareFuluInfoEntity.getOuterSkuId())) {
+        if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
             applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
             return res;
         }

@@ -2,8 +2,10 @@ package com.funny.task;
 
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.OrderRequestRecordEntity;
+import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
+import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.FuluSubmitEvent;
 import com.funny.api.event.notify.YouzanRefundEvent;
 import com.funny.api.event.notify.v2.FuluSubmitV2Event;
@@ -36,6 +38,9 @@ public class FuluCheckResendTask {
     private OrderRequestRecordService orderRequestRecordService;
 
     @Autowired
+    private WareFuluInfoService wareFuluInfoService;
+
+    @Autowired
     ApplicationContext applicationContext;
 
     @Value("${optional.fulu.v2Enable}")
@@ -58,9 +63,10 @@ public class FuluCheckResendTask {
                 logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发已超过3次。");
                 continue;
             }
+            WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
             logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发。");
             // 触发发送事件
-            if (v2Enable || "aaabbbccc".equals(orderFromYouzanEntity.getWareNo())) {
+            if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
                 logger.debug("执行新版本重发");
                 applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
                 return;

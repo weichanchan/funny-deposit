@@ -10,6 +10,16 @@ $(function () {
 			{ label: '福禄商品编号', name: 'productId', index: 'product_id', width: 80 },
 			{ label: '福禄商品编号（批量）', name: 'productHugeId', index: 'product_huge_id', width: 80 },
 			{ label: '充值账号提取标识', name: 'mark', index: 'mark', width: 80 },
+            { label: '充值平台', name: 'rechargeChannel', index: 'recharge_channel', width: 80 ,
+                formatter: function (value, options, row) {
+                    if(value == 1){
+                        return'<font color="green">旧卡门平台</font>'
+                    }
+                    if(value == 2){
+                        return'<font color="#ff8c00">新福禄平台</font>'
+                    }
+                    return '未知状态';
+                }},
             { label: '批量渠道', name: 'type', index: 'type', width: 80 ,
                 formatter: function (value, options, row) {
                     if(value == 1){
@@ -20,7 +30,7 @@ $(function () {
                     }
                     return '未知状态';
                 }},
-			{ label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }			
+			{ label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }
         ],
 		viewrecords: true,
         height: 385,

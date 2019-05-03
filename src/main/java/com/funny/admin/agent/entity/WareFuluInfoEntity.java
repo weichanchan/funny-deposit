@@ -22,6 +22,14 @@ public class WareFuluInfoEntity implements Serializable {
      * 非卡密类型
      */
     public static final int TYPE_NOT_CARD = 2;
+    /**
+     * 旧福禄充值平台类型
+     */
+    public static final int TYPE_OLD_RECHARGE_CHANNEL = 1;
+    /**
+     * 新福禄充值平台类型
+     */
+    public static final int TYPE_NEW_RECHARGE_CHANNEL = 2;
 
     /**
      * 设置：主键id
@@ -55,6 +63,10 @@ public class WareFuluInfoEntity implements Serializable {
      * 设置：是否区分批量渠道，1：不区分，2：区分
      */
     private Integer type;
+    /**
+     * 充值渠道，1：旧福禄平台，2：新福禄平台
+     */
+    private Integer rechargeChannel;
     /**
      * 设置：创建时间
      */
@@ -172,5 +184,13 @@ public class WareFuluInfoEntity implements Serializable {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getRechargeChannel() {
+        return rechargeChannel;
+    }
+
+    public void setRechargeChannel(Integer rechargeChannel) {
+        this.rechargeChannel = rechargeChannel;
     }
 }

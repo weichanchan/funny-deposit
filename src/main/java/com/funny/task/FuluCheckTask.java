@@ -2,6 +2,7 @@ package com.funny.task;
 
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.OrderRequestRecordEntity;
+import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
 import com.funny.admin.agent.service.WareFuluInfoService;
@@ -66,8 +67,9 @@ public class FuluCheckTask {
                 // 没入库够1分钟不理他
                 continue;
             }
+            WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
             logger.debug("充值中的订单【" + orderFromYouzanEntity.getId() + "】，查询充值状态");
-            if (v2Enable || "aaabbbccc".equals(orderFromYouzanEntity.getWareNo())) {
+            if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
                 logger.debug("执行新版本查询");
                 applicationContext.publishEvent(new FuluCheckV2Event(orderFromYouzanEntity.getId()));
                 return;
