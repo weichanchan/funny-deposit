@@ -101,7 +101,7 @@ public class FuluCheckV2Listener {
         }
 
         // 失败，同时失败原因不是订单不存在。置为失败，退款
-        if (result.get("State") != null && !"Success".equals(result.get("State")) && !"3007".equals(result.get("Code").toString())) {
+        if ("失败".equals(((Map)result.get("Result")).get("OrderState")) && !"3007".equals(result.get("Code").toString())) {
             orderFromYouzanEntity.setException("充值失败。" + responseEntity.getBody());
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);

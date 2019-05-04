@@ -109,7 +109,8 @@ public class FuluSubmitV2Listener {
         HttpHeaders headers = new HttpHeaders();
         //定义请求参数类型，这里用json所以是MediaType.APPLICATION_JSON
         headers.setContentType(MediaType.APPLICATION_JSON);
-        OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(url, orderFromYouzanEntity.getId());
+
+        OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(url + "参数：" + objectMapper.writeValueAsString(map), orderFromYouzanEntity.getId());
 
         ResponseEntity<String> responseEntity;
         Map result;
