@@ -51,25 +51,27 @@ public class FuluCheckResendTask {
         map.put("status", OrderFromYouzanEntity.WAIT_PROCESS);
         List<OrderFromYouzanEntity> orderFromYouzanEntities = orderFromYouzanService.queryList(map);
         for (OrderFromYouzanEntity orderFromYouzanEntity : orderFromYouzanEntities) {
+            logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，尝试重发。");
             if ((orderFromYouzanEntity.getCreateTime().getTime()  + (60 * 1000)) > System.currentTimeMillis()) {
                 logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，入库未够一分钟。还未满足重发条件。");
                 continue;
             }
-            map.clear();
-            map.put("orderNo", orderFromYouzanEntity.getId());
-            List<OrderRequestRecordEntity> orderRequestRecordEntities = orderRequestRecordService.queryList(map);
-            if (orderRequestRecordEntities.size() >= 3) {
-                // 最多重试3次,超过的就跳过，等着超时退款，或者他们通知过来。
-                logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发已超过3次。");
-                continue;
-            }
+            logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发。");
+//            map.clear();
+//            map.put("orderNo", orderFromYouzanEntity.getId());
+//            List<OrderRequestRecordEntity> orderRequestRecordEntities = orderRequestRecordService.queryList(map);
+//            if (orderRequestRecordEntities.size() >= 3) {
+//                // 最多重试3次,超过的就跳过，等着超时退款，或者他们通知过来。
+//                logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发已超过3次。");
+//                continue;
+//            }
             WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
             logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发。");
             // 触发发送事件
             if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
                 logger.debug("执行新版本重发");
                 applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
-                return;
+                continue;
             }
             applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));
         }

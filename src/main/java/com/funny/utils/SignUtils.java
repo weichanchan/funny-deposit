@@ -71,7 +71,7 @@ public class SignUtils {
         StringBuilder signedContent = new StringBuilder();
         //将字典集合转换为URL参数对
         for (int i = 0; i < keysArr.length; i++  ) {
-            if(params.get(keysArr[i]) != null && !"Sign".equals(keysArr[i]) && !"sign".equals(keysArr[i])) {
+            if(StringUtils.isNotBlank(params.get(keysArr[i])) && !"Sign".equals(keysArr[i]) && !"sign".equals(keysArr[i])) {
                 signedContent.append(keysArr[i]).append("=").append(params.get(keysArr[i])).append("&");
             }
         }

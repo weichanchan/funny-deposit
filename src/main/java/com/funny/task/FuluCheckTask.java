@@ -72,7 +72,7 @@ public class FuluCheckTask {
             if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
                 logger.debug("执行新版本查询");
                 applicationContext.publishEvent(new FuluCheckV2Event(orderFromYouzanEntity.getId()));
-                return;
+                continue;
             }
             applicationContext.publishEvent(new FuluCheckEvent(orderFromYouzanEntity.getId()));
         }
