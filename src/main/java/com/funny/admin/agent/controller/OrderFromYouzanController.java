@@ -1,28 +1,24 @@
 package com.funny.admin.agent.controller;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.funny.admin.agent.entity.OrderFromYouzanEntity;
+import com.funny.admin.agent.service.OrderFromYouzanService;
+import com.funny.config.FuluConfig;
+import com.funny.utils.Des;
+import com.funny.utils.PageUtils;
+import com.funny.utils.Query;
+import com.funny.utils.R;
+import com.youzan.open.sdk.util.hash.MD5Utils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.funny.admin.agent.entity.OrderFromYouzanEntity;
-import com.funny.admin.agent.service.OrderFromYouzanService;
-import com.funny.utils.PageUtils;
-import com.funny.utils.Query;
-import com.funny.utils.R;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,6 +35,9 @@ public class OrderFromYouzanController {
     private OrderFromYouzanService orderFromYouzanService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    private FuluConfig fuluConfig;
 
     /**
      * 列表
@@ -63,17 +62,19 @@ public class OrderFromYouzanController {
      */
     @RequestMapping("/cards")
     @RequiresPermissions("orderfromyouzan:info")
-    public R cards(Integer id) throws IOException {
+    public R cards(Integer id) throws Exception {
         OrderFromYouzanEntity orderFromYouzan = orderFromYouzanService.queryObject(id);
         if (StringUtils.isBlank(orderFromYouzan.getCards())) {
             return R.error("没有可提取的卡密信息。");
         }
         String result = "";
-        List<Map<String, String>> list = objectMapper.readValue(orderFromYouzan.getCards(), List.class);
+        Map<String, Object> map = objectMapper.readValue(orderFromYouzan.getCards(), Map.class);
+        List<Map<String, String>> list = (List<Map<String, String>>) map.get("Cards");
+        String key = MD5Utils.MD5(fuluConfig.getAppSecret() + map.get("OrderId")).substring(4, 12);
         for (int i = 0; i < list.size(); i++) {
-            result += (i + 1) + "、卡号：" + list.get(i).get("CardNumber") == null ? "" : list.get(i).get("CardNumber") +
-                    "，密码：" + list.get(i).get("CardPwd") == null ? "" : list.get(i).get("CardPwd") +
-                    "，有效期：" + list.get(i).get("CardDeadline") + "<br />";
+            String cardNumber = list.get(i).get("CardNumber") == null ? "" : Des.decrypt(list.get(i).get("CardNumber").getBytes("UTF-8"), key);
+            String CardPwd = list.get(i).get("CardPwd") == null ? "" : Des.decrypt(list.get(i).get("CardPwd").getBytes("UTF-8"), key);
+            result += (i + 1) + "、卡号：" + cardNumber + "，密码：" + CardPwd + "，有效期：" + list.get(i).get("CardDeadline") + "<br />";
         }
         return R.ok().put("cards", result);
     }

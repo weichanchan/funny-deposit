@@ -85,7 +85,7 @@ public class FuluCheckV2Listener {
             WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
             if (wareFuluInfoEntity.getType() == WareFuluInfoEntity.TYPE_IS_CARD) {
                 // 卡密类型的，成功后需要提取卡密内容
-                orderFromYouzanEntity.setCards(result.get("Cards").toString());
+                orderFromYouzanEntity.setCards(objectMapper.writeValueAsString(result.get("Result")));
             }
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.SUCCESS);
             orderFromYouzanService.update(orderFromYouzanEntity);

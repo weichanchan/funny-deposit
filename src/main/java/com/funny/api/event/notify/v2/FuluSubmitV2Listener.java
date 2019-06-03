@@ -137,16 +137,6 @@ public class FuluSubmitV2Listener {
             return;
         }
 
-        if (wareFuluInfoEntity.getType() == WareFuluInfoEntity.TYPE_IS_CARD && result.get("State") != null && "Success".equals(result.get("State"))) {
-            // 如果是卡密类型商品，并且下单成功，从结果提取卡密，并设置下单成功。
-            String cards = objectMapper.writeValueAsString(result.get("Cards"));
-            orderFromYouzanEntity.setCards(cards);
-            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.SUCCESS);
-            orderRequestRecordService.update(orderRequestRecordEntity);
-            orderFromYouzanService.update(orderFromYouzanEntity);
-            return;
-        }
-
         // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
         orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
         orderRequestRecordService.update(orderRequestRecordEntity);
