@@ -87,7 +87,7 @@ public class ASubmitListener {
         // 发送请求并记录
         String sign = SignUtils.getASign(map, aConfig.getAppKey());
         String request = SignUtils.MaptoString(map) + "&signType=md5&ign=" + sign;
-        OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(request, orderFromYouzanEntity.getId());
+        OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(aConfig.getUrl() + "?" + request, orderFromYouzanEntity.getId());
         ResponseEntity<String> responseEntity;
         Map<String,Object> result;
         try {

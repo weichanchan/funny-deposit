@@ -66,13 +66,11 @@ public class ACheckListener {
         Map map = new HashMap();
         // 合作商家订单号（唯一不重复）
         map.put("outOrderNo", orderFromYouzanEntity.getOrderNo());
-
-        HttpHeaders headers = new HttpHeaders();
-        //定义请求参数类型，这里用json所以是MediaType.APPLICATION_JSON
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(map, headers);
+        // 发送请求
+        String sign = SignUtils.getASign(map, aConfig.getAppKey());
+        String request = SignUtils.MaptoString(map) + "&signType=md5&ign=" + sign;
         // 将签名添加到URL参数后
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(aConfig.getCheckUrl(), request, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(aConfig.getCheckUrl() + "?" + request, null, String.class);
         Map<String, Object> result = objectMapper.readValue(responseEntity.getBody(), Map.class);
         logger.debug(responseEntity.getBody());
         if ("0".equals(result.get("resultCode").toString()) && "SUCCESS".equals(((Map) result.get("resultData")).get("status"))) {
