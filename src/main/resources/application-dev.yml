@@ -44,3 +44,13 @@ optional:
         key: CC11F561EBF14204089A5C64DE61C8DF
         url: http://test.ccapi.soouu.cn/Interface/Method
         notifyUrl: https://www.lckj.shop/api/fulu/order/notify
+    a:
+        enable: true
+        appKey: dmQNHkLro7xRei7ORvviV8acPmrkX9k/t08GJwuTsKWxUP+EQak4jAYszDlF1HcF
+        appSecret: 8cf86a60d90d4328a006610e2123612e
+        fuluCheckUrl: http://api.open.fulu.com/api/Order/GetOrder
+        userId: 803683
+        name: lyh512125
+        key: CC11F561EBF14204089A5C64DE61C8DF
+        url: http://test.ccapi.soouu.cn/Interface/Method
+        notifyUrl: https://www.lckj.shop/api/fulu/order/notify

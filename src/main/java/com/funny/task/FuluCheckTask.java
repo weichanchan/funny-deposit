@@ -9,6 +9,7 @@ import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.FuluCheckEvent;
 import com.funny.api.event.notify.FuluSubmitEvent;
 import com.funny.api.event.notify.YouzanRefundEvent;
+import com.funny.api.event.notify.a.ACheckEvent;
 import com.funny.api.event.notify.v2.FuluCheckV2Event;
 import com.funny.api.event.notify.v2.FuluSubmitV2Event;
 import org.slf4j.Logger;
@@ -72,6 +73,11 @@ public class FuluCheckTask {
             if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
                 logger.debug("执行新版本查询");
                 applicationContext.publishEvent(new FuluCheckV2Event(orderFromYouzanEntity.getId()));
+                continue;
+            }
+            if (WareFuluInfoEntity.TYPE_A_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
+                logger.debug("执行A版本查询");
+                applicationContext.publishEvent(new ACheckEvent(orderFromYouzanEntity.getId()));
                 continue;
             }
             applicationContext.publishEvent(new FuluCheckEvent(orderFromYouzanEntity.getId()));

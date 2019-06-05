@@ -8,6 +8,7 @@ import com.funny.admin.agent.service.OrderRequestRecordService;
 import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.FuluSubmitEvent;
 import com.funny.api.event.notify.YouzanRefundEvent;
+import com.funny.api.event.notify.a.ASubmitEvent;
 import com.funny.api.event.notify.v2.FuluSubmitV2Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,11 @@ public class FuluCheckResendTask {
             if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
                 logger.debug("执行新版本重发");
                 applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
+                continue;
+            }
+            if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
+                logger.debug("执行A版本重发");
+                applicationContext.publishEvent(new ASubmitEvent(orderFromYouzanEntity.getId()));
                 continue;
             }
             applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));

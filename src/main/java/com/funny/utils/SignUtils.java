@@ -59,8 +59,8 @@ public class SignUtils {
     /**
      * 将字典集合按键排序，并拼接为URL参数对（param1=value1&param2=value2...)
      *
-     * @param params
-     *            需要转换的字典集合
+     * @param params 需要转换的字典集合
+     *
      * @return String字符串 拼接完的URL参数对
      */
     public static String MaptoString(Map<String, String> params) {
@@ -70,13 +70,13 @@ public class SignUtils {
         Arrays.sort(keysArr);
         StringBuilder signedContent = new StringBuilder();
         //将字典集合转换为URL参数对
-        for (int i = 0; i < keysArr.length; i++  ) {
-            if(StringUtils.isNotBlank(params.get(keysArr[i])) && !"Sign".equals(keysArr[i]) && !"sign".equals(keysArr[i])) {
+        for (int i = 0; i < keysArr.length; i++) {
+            if (StringUtils.isNotBlank(params.get(keysArr[i])) && !"Sign".equals(keysArr[i]) && !"sign".equals(keysArr[i])) {
                 signedContent.append(keysArr[i]).append("=").append(params.get(keysArr[i])).append("&");
             }
         }
         String signedContentStr = signedContent.toString();
-        if (signedContentStr.endsWith("&")){
+        if (signedContentStr.endsWith("&")) {
             signedContentStr = signedContentStr.substring(0, signedContentStr.length() - 1);
         }
         return signedContentStr;
@@ -86,7 +86,9 @@ public class SignUtils {
      * MD5 32位小写加密
      *
      * @param str
+     *
      * @return
+     *
      * @throws IOException
      */
     public static String getMD5(String str) throws IOException {
@@ -115,6 +117,7 @@ public class SignUtils {
      *
      * @param params    参数集合不含secretkey
      * @param secretkey 验证接口的secretkey
+     *
      * @return
      */
     public static String getSign(Map<String, Object> params, String secretkey) {
@@ -131,6 +134,32 @@ public class SignUtils {
             Object value = params.get(key);
             sb.append(key).append(value);
         }
+        sb.append(secretkey);
+        try {
+            //Md5加密得到sign
+            sign = getMD5(sb.toString());
+            LOGGER.debug(sb.toString());
+            LOGGER.debug(sign);
+        } catch (IOException e) {
+            LOGGER.error("生成签名错误", e);
+        }
+        return sign;
+    }
+
+    /**
+     * 得到签名
+     *
+     * @param params    参数集合不含secretkey
+     * @param secretkey 验证接口的secretkey
+     *
+     * @return
+     */
+    public static String getASign(Map<String, String> params, String secretkey) {
+        String sign = "";
+        String param = MaptoString(params);
+        StringBuilder sb = new StringBuilder();
+        sb.append(param);
+        sb.append("signType=md5&key=");
         sb.append(secretkey);
         try {
             //Md5加密得到sign

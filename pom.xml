@@ -236,22 +236,22 @@
 			</extension>
 		</extensions>
 		<!-- 打包时打开 -->
-		<!--<resources>-->
-			<!--<resource>-->
-				<!--<directory>src/main/resources/lib</directory>-->
-				<!--<targetPath>BOOT-INF/lib/</targetPath>-->
-				<!--<includes>-->
-					<!--<include>**/*.jar</include>-->
-				<!--</includes>-->
-			<!--</resource>-->
-			<!--<resource>-->
-				<!--<directory>src/main/resources</directory>-->
-				<!--<targetPath>BOOT-INF/classes/</targetPath>-->
-				<!--<excludes>-->
-					<!--<exclude>lib/**</exclude>-->
-				<!--</excludes>-->
-			<!--</resource>-->
-		<!--</resources>-->
+		<resources>
+			<resource>
+				<directory>src/main/resources/lib</directory>
+				<targetPath>BOOT-INF/lib/</targetPath>
+				<includes>
+					<include>**/*.jar</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>BOOT-INF/classes/</targetPath>
+				<excludes>
+					<exclude>lib/**</exclude>
+				</excludes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

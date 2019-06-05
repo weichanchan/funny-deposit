@@ -30,6 +30,10 @@ public class WareFuluInfoEntity implements Serializable {
      * 新福禄充值平台类型
      */
     public static final int TYPE_NEW_RECHARGE_CHANNEL = 2;
+    /**
+     * A平台充值类型
+     */
+    public static final int TYPE_A_CHANNEL = 3;
 
     /**
      * 设置：主键id
@@ -64,7 +68,7 @@ public class WareFuluInfoEntity implements Serializable {
      */
     private Integer type;
     /**
-     * 充值渠道，1：旧福禄平台，2：新福禄平台
+     * 充值渠道，1：旧福禄平台，2：新福禄平台，3：A平台
      */
     private Integer rechargeChannel;
     /**
