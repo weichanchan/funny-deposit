@@ -10,12 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty("optional.a.enable")
 public class AConfig {
-    @Value("${optional.a.userId}")
-    private String userId;
+    @Value("${optional.a.mctNo}")
+    private String mctNo;
     @Value("${optional.a.name}")
     private String name;
-    @Value("${optional.a.key}")
-    private String key;
     @Value("${optional.a.appKey}")
     private String appKey;
     @Value("${optional.a.appSecret}")
@@ -27,12 +25,12 @@ public class AConfig {
     @Value("${optional.a.fuluCheckUrl}")
     private String checkUrl;
 
-    public String getUserId() {
-        return userId;
+    public String getMctNo() {
+        return mctNo;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setMctNo(String mctNo) {
+        this.mctNo = mctNo;
     }
 
     public String getName() {
@@ -41,14 +39,6 @@ public class AConfig {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public String getNotifyUrl() {

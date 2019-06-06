@@ -102,8 +102,7 @@ public class ASubmitListener {
             return;
         }
 
-        // 福禄平台受理失败,等待退款，但是当请求为2407为下单超时，2115为添加订单失败。当前状态不明还不能直接判定为失败。视为他们平台已经受理，等待主动查询或者通知。
-        if ("0".equals(result.get("resultCode").toString())) {
+        if (!"0".equals(result.get("resultCode").toString())) {
             orderRequestRecordEntity.setException(responseEntity.getBody());
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderRequestRecordService.update(orderRequestRecordEntity);

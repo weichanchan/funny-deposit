@@ -10,6 +10,7 @@ import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.YouzanRefundEvent;
 import com.funny.config.FuluConfig;
 import com.funny.utils.DateUtils;
+import com.funny.utils.IPUtils;
 import com.funny.utils.SignUtils;
 import com.youzan.open.sdk.util.hash.MD5Utils;
 import org.slf4j.Logger;
@@ -90,6 +91,7 @@ public class FuluSubmitV2Listener {
         map.put("CustomerOrderNo", orderFromYouzanEntity.getOrderNo());
         // 福禄商品编号
         map.put("ProductId", String.valueOf(wareFuluInfoEntity.getProductId()));
+        map.put("BuyerIP", IPUtils.getRandomIp());
         // 计算购买数量，QQ的面值是1元，然后算出具体的面值。当面值超过5时，要走大额渠道
         Integer count = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
         // 购买数量
