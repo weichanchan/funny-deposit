@@ -22,8 +22,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +61,7 @@ public class ACheckListener {
 
     @Async
     @EventListener
-    public void onApplicationEvent(ACheckEvent fuluCheckEvent) throws IOException {
+    public void onApplicationEvent(ACheckEvent fuluCheckEvent) throws Exception {
         Integer id = Integer.parseInt(String.valueOf(fuluCheckEvent.getSource()));
         OrderFromYouzanEntity orderFromYouzanEntity = orderFromYouzanService.queryObject(id, true);
         // 不是充值中状态，不处理
@@ -65,31 +70,26 @@ public class ACheckListener {
         }
         Map map = new HashMap();
         // 合作商家订单号（唯一不重复）
-        map.put("outOrderNo", orderFromYouzanEntity.getOrderNo());
+        map.put("OrderNo", orderFromYouzanEntity.getOrderNo());
+        map.put("cpid", aConfig.getMctNo());
+        map.put("createtime", URLEncoder.encode(DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN), "UTF-8"));
         // 发送请求
-        String sign = SignUtils.getASign(map, aConfig.getAppKey());
-        String request = SignUtils.MaptoString(map) + "&signType=md5&ign=" + sign;
+        String sign = SignUtils.getACheckSign(map, aConfig.getAppKey());
+        String request = SignUtils.MaptoString(map) + "&sign=" + sign;
         // 将签名添加到URL参数后
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(aConfig.getCheckUrl() + "?" + request, null, String.class);
-        Map<String, Object> result = objectMapper.readValue(responseEntity.getBody(), Map.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(aConfig.getCheckUrl() + "?" + request, String.class );
+        //创建一个DocumentBuilderFactory的对象
         logger.debug(responseEntity.getBody());
-        if ("0".equals(result.get("resultCode").toString()) && "SUCCESS".equals(((Map) result.get("resultData")).get("status"))) {
-            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.SUCCESS);
-            orderFromYouzanService.update(orderFromYouzanEntity);
-            return;
-        }
         // 受理成功和处理中先不管，失败就置为失败
-        if ("0".equals(result.get("resultCode").toString()) && "FAIL".equals(((Map) result.get("resultData")).get("status"))) {
+        if (responseEntity.getBody().contains("ORDER_FAILEDL")) {
             orderFromYouzanEntity.setException("充值失败：" + responseEntity.getBody());
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
             return;
         }
 
-        // 失败
-        if (!"0".equals(result.get("resultCode").toString())) {
-            orderFromYouzanEntity.setException("充值异常：" + responseEntity.getBody());
-            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.EXCEPTION);
+        if(responseEntity.getBody().contains("SUCCESSL")) {
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.SUCCESS);
             orderFromYouzanService.update(orderFromYouzanEntity);
             return;
         }

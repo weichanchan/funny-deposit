@@ -159,7 +159,33 @@ public class SignUtils {
         String param = MaptoString(params);
         StringBuilder sb = new StringBuilder();
         sb.append(param);
-        sb.append("signType=md5&key=");
+        sb.append("&signType=md5&key=");
+        sb.append(secretkey);
+        try {
+            //Md5加密得到sign
+            sign = getMD5(sb.toString());
+            LOGGER.debug(sb.toString());
+            LOGGER.debug(sign);
+        } catch (IOException e) {
+            LOGGER.error("生成签名错误", e);
+        }
+        return sign;
+    }
+
+    /**
+     * 得到签名
+     *
+     * @param params    参数集合不含secretkey
+     * @param secretkey 验证接口的secretkey
+     *
+     * @return
+     */
+    public static String getACheckSign(Map<String, String> params, String secretkey) {
+        String sign = "";
+        String param = MaptoString(params);
+        StringBuilder sb = new StringBuilder();
+        sb.append(param);
+        sb.append("&key=");
         sb.append(secretkey);
         try {
             //Md5加密得到sign

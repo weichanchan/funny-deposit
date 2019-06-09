@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -72,27 +75,29 @@ public class ASubmitListener {
             orderFromYouzanService.update(orderFromYouzanEntity);
             applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "商品不可售"));
         }
-        Map map = new HashMap();
+        Map<String,String> map = new HashMap();
         // 合作商家订单号（唯一不重复）
         map.put("outOrderNo", orderFromYouzanEntity.getOrderNo());
-        map.put("prodNo", wareFuluInfoEntity.getProductId());
+        map.put("mctNo", aConfig.getMctNo());
+        map.put("prodNo", wareFuluInfoEntity.getProductId().toString());
         map.put("prodName", wareFuluInfoEntity.getWareName());
         // 计算购买数量
         Integer count = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
         // 购买数量
         map.put("amount", String.valueOf(count));
+        map.put("province", "1");
         // 充值账号
         map.put("chargeNo", String.valueOf(objectMapper.readValue(orderFromYouzanEntity.getRechargeInfo(), Map.class).get(wareFuluInfoEntity.getMark())));
 
         // 发送请求并记录
         String sign = SignUtils.getASign(map, aConfig.getAppKey());
-        String request = SignUtils.MaptoString(map) + "&signType=md5&ign=" + sign;
+        String request = SignUtils.MaptoString(map) + "&signType=md5&sign=" + sign;
         OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(aConfig.getUrl() + "?" + request, orderFromYouzanEntity.getId());
         ResponseEntity<String> responseEntity;
         Map<String,Object> result;
         try {
             orderFromYouzanEntity.setLastRechargeTime(new Date());
-            responseEntity = restTemplate.postForEntity(request, null, String.class);
+            responseEntity = restTemplate.getForEntity(aConfig.getUrl() + "?" + request, String.class);
             orderRequestRecordEntity.setResponse(responseEntity.getBody());
             result = objectMapper.readValue(responseEntity.getBody(), Map.class);
         } catch (Exception e) {

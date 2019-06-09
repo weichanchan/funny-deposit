@@ -46,9 +46,7 @@ optional:
         notifyUrl: https://www.lckj.shop/api/fulu/order/notify
     a:
         enable: true
-        appKey: dmQNHkLro7xRei7ORvviV8acPmrkX9k/t08GJwuTsKWxUP+EQak4jAYszDlF1HcF
-        appSecret: 8cf86a60d90d4328a006610e2123612e
-        fuluCheckUrl: http://api.open.fulu.com/api/Order/GetOrder
-        mctNo: 803683
-        url: http://test.ccapi.soouu.cn/Interface/Method
-        notifyUrl: https://www.lckj.shop/api/fulu/order/notify
+        appKey: 85AAB222A5CFA60E6B3AB9C272F27078
+        checkUrl: https://pdd.paymob.cn/mobileService/xyQuery
+        mctNo: 20190608133802330
+        url: https://pdd.paymob.cn/mobileService/orderVideo

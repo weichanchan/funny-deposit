@@ -16,13 +16,9 @@ public class AConfig {
     private String name;
     @Value("${optional.a.appKey}")
     private String appKey;
-    @Value("${optional.a.appSecret}")
-    private String appSecret;
-    @Value("${optional.a.notifyUrl}")
-    private String notifyUrl;
     @Value("${optional.a.url}")
     private String url;
-    @Value("${optional.a.fuluCheckUrl}")
+    @Value("${optional.a.checkUrl}")
     private String checkUrl;
 
     public String getMctNo() {
@@ -39,14 +35,6 @@ public class AConfig {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getNotifyUrl() {
-        return notifyUrl;
-    }
-
-    public void setNotifyUrl(String notifyUrl) {
-        this.notifyUrl = notifyUrl;
     }
 
     public String getUrl() {
@@ -73,11 +61,4 @@ public class AConfig {
         this.appKey = appKey;
     }
 
-    public String getAppSecret() {
-        return appSecret;
-    }
-
-    public void setAppSecret(String appSecret) {
-        this.appSecret = appSecret;
-    }
 }

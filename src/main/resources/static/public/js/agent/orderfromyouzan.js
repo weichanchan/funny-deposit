@@ -5,7 +5,7 @@ $(function () {
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
             {label: '有赞订单号', name: 'youzanOrderId', index: 'youzan_order_id', width: 100},
-            {label: '福禄平台下单号', name: 'orderNo', index: 'order_no', width: 60},
+            {label: '对接平台下单号', name: 'orderNo', index: 'order_no', width: 60},
             {label: '订单金额', name: 'orderPrice', index: 'order_price', width: 40},
             {label: '商品编号', name: 'wareNo', index: 'ware_no', width: 40},
             {label: '商品规格', name: 'formatInfo', index: 'format_info', width: 80},
@@ -40,7 +40,7 @@ $(function () {
                     return '未知状态';
                 }
             },
-            {label: '异常', name: 'exception', index: 'exception', width: 140,
+            {label: '异常', name: 'exception', index: 'exception', width: 80,
                 formatter: function (value, options, row) {
                     if(value = 'null'){
                         return''
@@ -50,11 +50,7 @@ $(function () {
             {label: '创建时间', name: 'createTime', index: 'create_time', width: 80},
             {label: '操作', name: 'cards', index: 'cards', width: 80,
                 formatter: function (value, options, row) {
-                    if(value == 'null' || value == ''){
-                        alert(value)
-                        return ''
-                    }
-                    return '<font color="green">可提取卡密</font>'
+                    return '<font color="green">提取卡密</font>'
                 }}
         ],
         viewrecords: true,

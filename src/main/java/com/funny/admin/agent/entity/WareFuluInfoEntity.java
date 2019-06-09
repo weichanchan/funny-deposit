@@ -54,11 +54,11 @@ public class WareFuluInfoEntity implements Serializable {
     /**
      * 设置：福禄商品编号
      */
-    private Integer productId;
+    private String productId;
     /**
      * 设置：福禄商品批量编号
      */
-    private Integer productHugeId;
+    private String productHugeId;
     /**
      * 设置：充值账号提取标识
      */
@@ -135,14 +135,14 @@ public class WareFuluInfoEntity implements Serializable {
     /**
      * 设置：福禄商品编号
      */
-    public void setProductId(Integer productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
     /**
      * 获取：福禄商品编号
      */
-    public Integer getProductId() {
+    public String getProductId() {
         return productId;
     }
 
@@ -174,11 +174,11 @@ public class WareFuluInfoEntity implements Serializable {
         return createTime;
     }
 
-    public Integer getProductHugeId() {
+    public String getProductHugeId() {
         return productHugeId;
     }
 
-    public void setProductHugeId(Integer productHugeId) {
+    public void setProductHugeId(String productHugeId) {
         this.productHugeId = productHugeId;
     }
 

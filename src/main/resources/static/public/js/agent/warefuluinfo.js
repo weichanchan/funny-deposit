@@ -7,8 +7,8 @@ $(function () {
 			{ label: '商品编号', name: 'outerSkuId', index: 'outer_sku_id', width: 80 },
 			{ label: '商品名', name: 'wareName', index: 'ware_name', width: 80 }, 			
 			{ label: '数量', name: 'num', index: 'num', width: 80 },
-			{ label: '福禄商品编号', name: 'productId', index: 'product_id', width: 80 },
-			{ label: '福禄商品编号（批量）', name: 'productHugeId', index: 'product_huge_id', width: 80 },
+			{ label: '对接平台商品编号', name: 'productId', index: 'product_id', width: 80 },
+			{ label: '对接平台商品编号（批量）', name: 'productHugeId', index: 'product_huge_id', width: 80 },
 			{ label: '充值账号提取标识', name: 'mark', index: 'mark', width: 80 },
             { label: '充值平台', name: 'rechargeChannel', index: 'recharge_channel', width: 80 ,
                 formatter: function (value, options, row) {
@@ -17,6 +17,9 @@ $(function () {
                     }
                     if(value == 2){
                         return'<font color="#ff8c00">新福禄平台</font>'
+                    }
+                    if(value == 3){
+                        return'<font color="#gray">A平台</font>'
                     }
                     return '未知状态';
                 }},
