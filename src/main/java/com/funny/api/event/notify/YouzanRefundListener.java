@@ -10,6 +10,7 @@ import com.youzan.open.sdk.client.core.YZClient;
 import com.youzan.open.sdk.gen.v3_0_0.api.YouzanTradeRefundSellerActive;
 import com.youzan.open.sdk.gen.v3_0_0.model.YouzanTradeRefundSellerActiveParams;
 import com.youzan.open.sdk.gen.v3_0_0.model.YouzanTradeRefundSellerActiveResult;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,12 @@ public class YouzanRefundListener {
             orderFromYouzanEntity = orderFromYouzanService.queryObject(id, true);
             // 不是失败状态，不处理
             if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.FAIL) {
+                return;
+            }
+            if(StringUtils.isBlank(orderFromYouzanEntity.getSubOrderId())){
+                // 请收工退款
+                orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.HAND_REFUND);
+                orderFromYouzanService.update(orderFromYouzanEntity);
                 return;
             }
             logger.debug("订单：" + orderFromYouzanEntity.getId() + "开始发起退款。退款原因：" + youzanNotifyEvent.getReason());

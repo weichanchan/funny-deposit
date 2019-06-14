@@ -28,6 +28,9 @@ $(function () {
                     if(value == 4){
                         return'<font color="#ff8c00">退款成功</font>'
                     }
+                    if(value == 5){
+                        return'<font color="red">需要手工退款</font>'
+                    }
                     if(value == -1){
                         return'<font color="red">充值失败，待退款</font>'
                     }

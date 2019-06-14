@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.funny.admin.agent.entity.WareFuluRoleEntity;
+import com.funny.admin.agent.entity.WareInfoEntity;
+import com.funny.admin.agent.service.WareFuluRoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +34,8 @@ import com.funny.utils.R;
 public class WareFuluInfoController {
     @Autowired
     private WareFuluInfoService wareFuluInfoService;
+    @Autowired
+    private WareFuluRoleService wareFuluRoleService;
 
     /**
      * 列表
@@ -57,7 +62,8 @@ public class WareFuluInfoController {
     @RequiresPermissions("warefuluinfo:info")
     public R info(@PathVariable("id") Long id) {
         WareFuluInfoEntity wareFuluInfo = wareFuluInfoService.queryObject(id);
-
+        List<Long> roleIdList = wareFuluRoleService.queryRoleList(wareFuluInfo.getId());
+        wareFuluInfo.setRoleList(roleIdList);
         return R.ok().put("wareFuluInfo", wareFuluInfo);
     }
 
@@ -68,6 +74,7 @@ public class WareFuluInfoController {
     @RequiresPermissions("warefuluinfo:save")
     public R save(@RequestBody WareFuluInfoEntity wareFuluInfo) {
         wareFuluInfo.setCreateTime(new Date());
+
         wareFuluInfoService.save(wareFuluInfo);
 
         return R.ok();

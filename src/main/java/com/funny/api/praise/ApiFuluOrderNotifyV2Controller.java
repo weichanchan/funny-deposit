@@ -63,6 +63,10 @@ public class ApiFuluOrderNotifyV2Controller {
 
             // 失败通知处理
             if ("失败".equals(status)) {
+                if(orderFromYouzanEntity.getStatus() == OrderFromYouzanEntity.REFUND_SUCCESS){
+                    // 已退款，不理他了
+                    return "true";
+                }
                 if (orderFromYouzanEntity.getStatus() == OrderFromYouzanEntity.SUCCESS) {
                     logger.debug("成功状态下的订单被通知失败。【id】" + orderFromYouzanEntity.getId());
                     orderFromYouzanEntity.setException("成功状态下的订单被通知失败。");

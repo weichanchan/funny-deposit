@@ -2,6 +2,7 @@ package com.funny.admin.agent.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -75,6 +76,10 @@ public class WareFuluInfoEntity implements Serializable {
      * 设置：创建时间
      */
     private Date createTime;
+    /**
+     * 角色ID列表
+     */
+    private List<Long> roleList;
 
     /**
      * 设置：主键id
@@ -196,5 +201,13 @@ public class WareFuluInfoEntity implements Serializable {
 
     public void setRechargeChannel(Integer rechargeChannel) {
         this.rechargeChannel = rechargeChannel;
+    }
+
+    public List<Long> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Long> roleList) {
+        this.roleList = roleList;
     }
 }

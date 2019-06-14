@@ -82,7 +82,7 @@ public class ACheckListener {
         logger.debug(responseEntity.getBody());
         // 受理成功和处理中先不管，失败就置为失败
         if (responseEntity.getBody().contains("ORDER_FAILEDL")) {
-            orderFromYouzanEntity.setException("充值失败：" + responseEntity.getBody());
+            orderFromYouzanEntity.setException("充值失败：A平台通知失败" );
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
             return;

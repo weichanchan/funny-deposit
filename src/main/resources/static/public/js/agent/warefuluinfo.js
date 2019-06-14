@@ -67,7 +67,9 @@ var vm = new Vue({
 	data:{
 		showList: true,
 		title: null,
-		wareFuluInfo: {}
+        roleList: [],
+		wareFuluInfo: {roleList:[]}
+
 	},
 	methods: {
 		query: function () {
@@ -76,7 +78,9 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			vm.wareFuluInfo = {};
+			vm.wareFuluInfo = {roleList:[]};
+			//获取角色信息
+			this.getRoleList();
 		},
 		update: function (event) {
 			var id = getSelectedRow();
@@ -87,6 +91,8 @@ var vm = new Vue({
             vm.title = "修改";
             
             vm.getInfo(id)
+			//获取角色信息
+			this.getRoleList();
 		},
 		saveOrUpdate: function (event) {
 			var url = vm.wareFuluInfo.id == null ? "../warefuluinfo/save" : "../warefuluinfo/update";
@@ -141,6 +147,11 @@ var vm = new Vue({
 			$("#jqGrid").jqGrid('setGridParam',{ 
                 page:page
             }).trigger("reloadGrid");
+		},
+		getRoleList: function(){
+			$.get("../sys/role/select", function(r){
+				vm.roleList = r.list;
+			});
 		}
 	}
 });

@@ -30,6 +30,10 @@ public class OrderFromYouzanEntity implements Serializable {
      */
     public static final int REFUND_SUCCESS = 4;
     /**
+     * 5、需要收工退款
+     */
+    public static final int HAND_REFUND = 5;
+    /**
      * -1、失败，准备退款
      */
     public static final int FAIL = -1;

@@ -66,34 +66,43 @@
 
 	<select id="queryList" resultType="com.funny.admin.agent.entity.OrderFromYouzanEntity">
 		select
-		            `id`, 
-		            `order_no`, 
-		            `youzan_order_id`, 
-		            `order_price`, 
-		            `sub_order_id`, 
-		            `ware_no`, 
-		            `num`,
-		            `status`,
-		            `format_info`, 
-		            `recharge_info`, 
-		            `cards`,
-		            `create_time`,
-		            `begin_recharge_time`, 
-		            `last_recharge_time`,
-					`exception`
-				from order_from_youzan where 1=1
+		            a.`id`,
+		            a.`order_no`,
+		            a.`youzan_order_id`,
+		            a.`order_price`,
+		            a.`sub_order_id`,
+		            a.`ware_no`,
+		            a.`num`,
+		            a.`status`,
+		            a.`format_info`,
+		            a.`recharge_info`,
+		            a.`cards`,
+		            a.`create_time`,
+		            a.`begin_recharge_time`,
+		            a.`last_recharge_time`,
+					a.`exception`
+				from order_from_youzan a
+	  	LEFT JOIN ware_fulu_info w ON a.ware_no = w.outer_sku_id
+		WHERE 1=1
+		<if test="roleIds != null">
+			and w.id in (SELECT ware_fulu_info_id FROM ware_fulu_role where role_id in
+			<foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+				#{roleId}
+			</foreach>
+			)
+		</if>
 		<if test="status != null">
-			and status = #{status}
+			and a.status = #{status}
 		</if>
 		<if test="no != null">
-			and (youzan_order_id like concat('%',#{no},'%') or recharge_info like concat('%',#{no},'%'))
+			and (a.youzan_order_id like concat('%',#{no},'%') or recharge_info like concat('%',#{no},'%'))
 		</if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
 			<otherwise>
-                order by id desc
+                order by a.id desc
 			</otherwise>
         </choose>
 		<if test="offset != null and limit != null">
@@ -102,12 +111,21 @@
 	</select>
 	
  	<select id="queryTotal" resultType="int">
-		select count(*) from order_from_youzan where 1=1
+		select count(*) from order_from_youzan a
+		LEFT JOIN ware_fulu_info w ON a.ware_no = w.outer_sku_id
+		where 1=1
+		<if test="roleIds != null">
+			and w.id in (SELECT ware_fulu_info_id FROM ware_fulu_role where role_id in
+			<foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+				#{roleId}
+			</foreach>
+			)
+		</if>
 		<if test="status != null">
-			and status = #{status}
+			and a.status = #{status}
 		</if>
 		<if test="no != null">
-			and (youzan_order_id like concat('%',#{no},'%') or recharge_info like concat('%',#{no},'%'))
+			and (a.youzan_order_id like concat('%',#{no},'%') or recharge_info like concat('%',#{no},'%'))
 		</if>
 	</select>
 	 

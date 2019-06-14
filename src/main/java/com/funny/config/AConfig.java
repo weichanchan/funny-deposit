@@ -20,6 +20,8 @@ public class AConfig {
     private String url;
     @Value("${optional.a.checkUrl}")
     private String checkUrl;
+    @Value("${optional.a.clientKey}")
+    private String clientKey;
 
     public String getMctNo() {
         return mctNo;
@@ -61,4 +63,11 @@ public class AConfig {
         this.appKey = appKey;
     }
 
+    public String getClientKey() {
+        return clientKey;
+    }
+
+    public void setClientKey(String clientKey) {
+        this.clientKey = clientKey;
+    }
 }

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.funny.admin.agent.dao.WareFuluRoleDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.funny.admin.agent.entity.WareFuluRoleEntity" id="wareFuluRoleMap">
+        <result property="id" column="id"/>
+        <result property="roleId" column="role_id"/>
+        <result property="wareFuluInfoId" column="ware_fulu_info_id"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.funny.admin.agent.entity.WareFuluRoleEntity">
+		select
+					`id`, 
+					`role_id`, 
+					`ware_fulu_info_id`
+				from ware_fulu_role where id = #{id}
+        <if test="isLock != null and isLock == true">for update</if>
+	</select>
+
+	<select id="queryList" resultType="com.funny.admin.agent.entity.WareFuluRoleEntity">
+		select
+		            `id`, 
+		            `role_id`, 
+		            `ware_fulu_info_id`
+				from ware_fulu_role
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from ware_fulu_role 
+	</select>
+	 
+	<insert id="save" parameterType="com.funny.admin.agent.entity.WareFuluRoleEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into ware_fulu_role
+		(
+			`role_id`, 
+			`ware_fulu_info_id`
+		)
+		values
+		(
+			#{roleId}, 
+			#{wareFuluInfoId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.funny.admin.agent.entity.WareFuluRoleEntity">
+		update ware_fulu_role 
+		<set>
+			<if test="roleId != null">`role_id` = #{roleId}, </if>
+			<if test="wareFuluInfoId != null">`ware_fulu_info_id` = #{wareFuluInfoId}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from ware_fulu_role where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from ware_fulu_role where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="queryRoleList" resultType="long">
+		select role_id from ware_fulu_role where ware_fulu_info_id = #{value}
+	</select>
+
+	<delete id="deleteByWareId">
+		delete from ware_fulu_role where ware_fulu_info_id = #{value}
+	</delete>
+
+</mapper>

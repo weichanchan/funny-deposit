@@ -16,4 +16,5 @@ public interface WareFuluInfoDao extends BaseDao<WareFuluInfoEntity> {
     WareFuluInfoEntity queryObject(@Param("id") Long id,@Param("isLock") boolean b);
 
     WareFuluInfoEntity queryByOuterSkuId(String outerSkuId);
+
 }

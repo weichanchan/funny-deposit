@@ -47,6 +47,7 @@ optional:
     a:
         enable: true
         appKey: 85AAB222A5CFA60E6B3AB9C272F27078
+        clientKey: 32AAB222A5CF4036B3AB9C275427038
         checkUrl: https://pdd.paymob.cn/mobileService/xyQuery
         mctNo: 20190608133802330
         url: https://pdd.paymob.cn/mobileService/orderVideo

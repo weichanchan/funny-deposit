@@ -3,6 +3,8 @@ package com.funny.admin.agent.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
+import com.funny.admin.common.AbstractController;
+import com.funny.admin.system.service.SysUserRoleService;
 import com.funny.config.FuluConfig;
 import com.funny.utils.Des;
 import com.funny.utils.PageUtils;
@@ -30,7 +32,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("orderfromyouzan")
-public class OrderFromYouzanController {
+public class OrderFromYouzanController extends AbstractController {
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
 
@@ -45,6 +49,9 @@ public class OrderFromYouzanController {
     @RequestMapping("/list")
     @RequiresPermissions("orderfromyouzan:list")
     public R list(@RequestParam Map<String, Object> params) {
+        if (getUser().getUserId() != 1L) {
+            params.put("roleIds", sysUserRoleService.queryRoleIdList(getUserId()));
+        }
         //查询列表数据
         Query query = new Query(params);
 

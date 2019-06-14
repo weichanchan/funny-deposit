@@ -74,7 +74,7 @@ public class FuluCheckResendTask {
                 applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
                 continue;
             }
-            if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
+            if (WareFuluInfoEntity.TYPE_A_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
                 logger.debug("执行A版本重发");
                 applicationContext.publishEvent(new ASubmitEvent(orderFromYouzanEntity.getId()));
                 continue;
