@@ -97,6 +97,9 @@
 		<if test="no != null">
 			and (a.youzan_order_id like concat('%',#{no},'%') or recharge_info like concat('%',#{no},'%'))
 		</if>
+		<if test="wareNo != null">
+			and w.outer_sku_id like concat('%',#{wareNo},'%')
+		</if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}

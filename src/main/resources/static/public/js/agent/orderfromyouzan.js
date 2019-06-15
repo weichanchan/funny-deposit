@@ -16,48 +16,52 @@ $(function () {
                 index: 'status',
                 width: 80,
                 formatter: function (value, options, row) {
-                    if(value == 1){
-                        return'<font color="green">充值成功</font>'
+                    if (value == 1) {
+                        return '<font color="green">充值成功</font>'
                     }
-                    if(value == 2){
-                        return'<font color="yellow">待充值</font>'
+                    if (value == 2) {
+                        return '<font color="yellow">待充值</font>'
                     }
-                    if(value == 3){
-                        return'<font color="#ff8c00">充值中</font>'
+                    if (value == 3) {
+                        return '<font color="#ff8c00">充值中</font>'
                     }
-                    if(value == 4){
-                        return'<font color="#ff8c00">退款成功</font>'
+                    if (value == 4) {
+                        return '<font color="#ff8c00">退款成功</font>'
                     }
-                    if(value == 5){
-                        return'<font color="red">需要手工退款</font>'
+                    if (value == 5) {
+                        return '<font color="red">需要手工退款</font>'
                     }
-                    if(value == -1){
-                        return'<font color="red">充值失败，待退款</font>'
+                    if (value == -1) {
+                        return '<font color="red">充值失败，待退款</font>'
                     }
-                    if(value == -2){
-                        return'<font color="red">充值异常，重试中</font>'
+                    if (value == -2) {
+                        return '<font color="red">充值异常，重试中</font>'
                     }
-                    if(value == -3){
-                        return'<font color="red">有赞退款异常</font>'
+                    if (value == -3) {
+                        return '<font color="red">有赞退款异常</font>'
                     }
                     return '未知状态';
                 }
             },
-            {label: '异常', name: 'exception', index: 'exception', width: 80,
+            {
+                label: '异常', name: 'exception', index: 'exception', width: 80,
                 formatter: function (value, options, row) {
-                    if(value = 'null'){
-                        return''
+                    if (value = 'null') {
+                        return ''
                     }
-                    return'<font color="red">' + value  + '</font>'
-                }},
+                    return '<font color="red">' + value + '</font>'
+                }
+            },
             {label: '创建时间', name: 'createTime', index: 'create_time', width: 80},
-            {label: '操作', name: 'cards', index: 'cards', width: 80,
+            {
+                label: '操作', name: 'cards', index: 'cards', width: 80,
                 formatter: function (value, options, row) {
                     return '<font color="green">提取卡密</font>'
-                }}
+                }
+            }
         ],
         viewrecords: true,
-        height: 385,
+        height: 650,
         rowNum: 10,
         rowList: [10, 30, 50],
         rownumbers: true,
@@ -89,8 +93,9 @@ var vm = new Vue({
         showList: true,
         title: null,
         orderFromYouzan: {},
-        q:{
-            no:""
+        q: {
+            no: "",
+            wareNo: ""
         }
     },
     methods: {
@@ -165,8 +170,9 @@ var vm = new Vue({
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
                 page: page,
-                postData:{
-                    "no": vm.q.no
+                postData: {
+                    "no": vm.q.no,
+                    "wareNo": vm.q.wareNo
                 }
             }).trigger("reloadGrid");
         }
