@@ -69,7 +69,7 @@ public class YouzanRefundListener {
                 return;
             }
             if(StringUtils.isBlank(orderFromYouzanEntity.getSubOrderId())){
-                // 请收工退款
+                // 请手工退款
                 orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.HAND_REFUND);
                 orderFromYouzanService.update(orderFromYouzanEntity);
                 return;

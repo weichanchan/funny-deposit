@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -144,6 +145,10 @@ public class FuluSubmitV2Listener {
         }
 
         // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
+        if(orderFromYouzanEntity.getOrderPrice() == null || orderFromYouzanEntity.getOrderPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            Map m = (Map) result.get("Result");
+            orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Double.parseDouble(m.get("OrderPrice").toString())));
+        }
         orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
         orderRequestRecordService.update(orderRequestRecordEntity);
         orderFromYouzanService.update(orderFromYouzanEntity);
