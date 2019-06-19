@@ -1,4 +1,22 @@
 $(function () {
+    $.ajax({
+        type: "POST",
+        url: "../orderfromyouzan/totalFee",
+        contentType: "application/json",
+        success: function (r) {
+            vm.totalFee = r.totalFee;
+        }
+    });
+    $("#beginTime").datetimepicker({
+        language: 'zh-CN',   // 以中文显示
+        autoclose: true,   // 选完后自动关闭
+        format: 'yyyy-mm-dd hh:ii:ss'
+    });
+    $("#endTime").datetimepicker({
+        language: 'zh-CN',   // 以中文显示
+        autoclose: true,   // 选完后自动关闭
+        format: 'yyyy-mm-dd hh:ii:ss'
+    });
     $("#jqGrid").jqGrid({
         url: '../orderfromyouzan/list',
         datatype: "json",
@@ -83,6 +101,18 @@ $(function () {
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+            var beginTime = $('#beginTime').val();
+            var endTime = $('#endTime').val();
+            $.ajax({
+                type: "POST",
+                url: "../orderfromyouzan/totalFee?no=" + vm.q.no + "&wareNo=" + vm.q.wareNo + "&beginTime=" + beginTime + "&endTime=" + endTime,
+                contentType: "application/json",
+                success: function (r) {
+                    vm.totalFee = r.totalFee;
+                    $('#beginTime').val(beginTime);
+                    $('#endTime').val(endTime);
+                }
+            });
         }
     });
 });
@@ -92,6 +122,7 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
+        totalFee: 0.0,
         orderFromYouzan: {},
         q: {
             no: "",
@@ -172,7 +203,9 @@ var vm = new Vue({
                 page: page,
                 postData: {
                     "no": vm.q.no,
-                    "wareNo": vm.q.wareNo
+                    "wareNo": vm.q.wareNo,
+                    "beginTime": $('#beginTime').val(),
+                    "endTime": $('#endTime').val()
                 }
             }).trigger("reloadGrid");
         }

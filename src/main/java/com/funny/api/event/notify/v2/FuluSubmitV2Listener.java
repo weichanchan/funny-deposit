@@ -83,7 +83,11 @@ public class FuluSubmitV2Listener {
         // 非卡密类型需要填写
         if (wareFuluInfoEntity.getType() == WareFuluInfoEntity.TYPE_NOT_CARD) {
             // 充值账号
-            map.put("ChargeAccount", String.valueOf(objectMapper.readValue(orderFromYouzanEntity.getRechargeInfo(), Map.class).get(wareFuluInfoEntity.getMark())));
+            if (wareFuluInfoEntity.getMark() == null || "".equals(wareFuluInfoEntity.getMark())) {
+                map.put("ChargeAccount", orderFromYouzanEntity.getRechargeInfo());
+            } else {
+                map.put("ChargeAccount", String.valueOf(objectMapper.readValue(orderFromYouzanEntity.getRechargeInfo(), Map.class).get(wareFuluInfoEntity.getMark())));
+            }
             url = fuluConfig.getFeiKamiUrl();
         }
         // 业务参数

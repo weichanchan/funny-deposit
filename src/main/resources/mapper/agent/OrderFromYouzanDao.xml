@@ -100,6 +100,8 @@
 		<if test="wareNo != null">
 			and w.outer_sku_id like concat('%',#{wareNo},'%')
 		</if>
+        <if test="beginTime != null and beginTime != ''">AND a.create_time <![CDATA[>=]]> #{beginTime}</if>
+        <if test="endTime != null and endTime != ''">AND a.create_time <![CDATA[<=]]>#{endTime}</if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
@@ -130,6 +132,35 @@
 		<if test="no != null">
 			and (a.youzan_order_id like concat('%',#{no},'%') or recharge_info like concat('%',#{no},'%'))
 		</if>
+		<if test="wareNo != null">
+			and w.outer_sku_id like concat('%',#{wareNo},'%')
+		</if>
+        <if test="beginTime != null and beginTime != ''">AND a.create_time <![CDATA[>=]]> #{beginTime}</if>
+        <if test="endTime != null and endTime != ''">AND a.create_time <![CDATA[<=]]>#{endTime}</if>
+	</select>
+
+	<select id="queryTotalFee" resultType="java.math.BigDecimal">
+		select sum(a.order_price) from order_from_youzan a
+		LEFT JOIN ware_fulu_info w ON a.ware_no = w.outer_sku_id
+		where 1=1
+		<if test="roleIds != null">
+			and w.id in (SELECT ware_fulu_info_id FROM ware_fulu_role where role_id in
+			<foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+				#{roleId}
+			</foreach>
+			)
+		</if>
+		<if test="status != null">
+			and a.status = #{status}
+		</if>
+		<if test="no != null">
+			and (a.youzan_order_id like concat('%',#{no},'%') or recharge_info like concat('%',#{no},'%'))
+		</if>
+		<if test="wareNo != null">
+			and w.outer_sku_id like concat('%',#{wareNo},'%')
+		</if>
+        <if test="beginTime != null and beginTime != ''">AND a.create_time <![CDATA[>=]]> #{beginTime}</if>
+        <if test="endTime != null and endTime != ''">AND a.create_time <![CDATA[<=]]>#{endTime}</if>
 	</select>
 	 
 	<insert id="save" parameterType="com.funny.admin.agent.entity.OrderFromYouzanEntity" useGeneratedKeys="true" keyProperty="id">

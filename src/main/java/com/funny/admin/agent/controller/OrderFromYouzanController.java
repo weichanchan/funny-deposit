@@ -14,11 +14,15 @@ import com.youzan.open.sdk.util.hash.MD5Utils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +65,28 @@ public class OrderFromYouzanController extends AbstractController {
         PageUtils pageUtil = new PageUtils(orderFromYouzanList, total, query.getLimit(), query.getPage());
 
         return R.ok().put("page", pageUtil);
+    }
+
+    /**
+     * 统计
+     */
+    @RequestMapping("/totalFee")
+    @RequiresPermissions("orderfromyouzan:list")
+    public R totalFee(String no, String wareNo,
+                      String beginTime,
+                      String endTime) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("no", no);
+        params.put("wareNo", wareNo);
+        params.put("beginTime", beginTime);
+        params.put("endTime", endTime);
+        if (getUser().getUserId() != 1L) {
+            params.put("roleIds", sysUserRoleService.queryRoleIdList(getUserId()));
+        }
+        //查询列表数据
+        BigDecimal totalFee = orderFromYouzanService.queryTotalFee(params);
+
+        return R.ok().put("totalFee", totalFee == null ? 0 : totalFee);
     }
 
 

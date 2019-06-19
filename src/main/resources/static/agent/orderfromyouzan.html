@@ -6,6 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <link rel="stylesheet" href="../public/css/bootstrap.min.css">
+<link rel="stylesheet" href="../public/css/bootstrap-datetimepicker.min.css">
 <link rel="stylesheet" href="../public/css/font-awesome.min.css">
 <link rel="stylesheet" href="../public/plugins/jqgrid/ui.jqgrid-bootstrap.css">
 <link rel="stylesheet" href="../public/plugins/ztree/css/metroStyle/metroStyle.css">
@@ -18,26 +19,36 @@
 <script src="../public/plugins/jqgrid/jquery.jqGrid.min.js"></script>
 <script src="../public/plugins/ztree/jquery.ztree.all.min.js"></script>
 <script src="../public/js/common.js"></script>
+<script type="text/javascript" src="../public/libs/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="../public/libs/bootstrap-datetimepicker.zh-CN.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
 	<div v-show="showList">
-		<div class="grid-btn">
-			<div class="form-group col-sm-2">
-				<input type="text" class="form-control" v-model="q.no" @keyup.enter="query" placeholder="有赞订单号或充值号码">
+		<div class="grid-btn" style="height: 84px">
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" v-model="q.no" @keyup.enter="query" placeholder="有赞订单号或充值号码">
+            </div>
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" v-model="q.wareNo" width="20" @keyup.enter="query" placeholder="商品编号">
+            </div>
+            <div class="form-group col-sm-2">
+                <input id="beginTime" type="text" class="form-control" width="20" @keyup.enter="query" placeholder=起始时间>
+            </div>
+            <div class="form-group col-sm-2">
+                <input id="endTime" type="text" class="form-control" width="20" @keyup.enter="query" placeholder="结束时间">
+            </div>
+			<div class="form-group col-sm-4">
+				<a style="float: right;"  v-if="hasPermission('orderfromyouzan:info')" class="btn btn-primary" @click="getCards"><i class="fa fa-plus"></i>&nbsp;查看卡密</a>
+				<a style="float: right;"  class="btn btn-default" @click="query"><i class="fa fa-search">&nbsp;查询</i></a>
+				<p style="float:left;margin-top: 8px;">统计金额：</p><p style="margin-top: 8px">{{ totalFee }}</p>
 			</div>
-			<div class="form-group col-sm-2">
-				<input type="text" class="form-control" v-model="q.wareNo" @keyup.enter="query" placeholder="商品编号">
-			</div>
-			<a class="btn btn-default" @click="query"><i class="fa fa-search">&nbsp;查询</i></a>
-			<a v-if="hasPermission('orderfromyouzan:info')" class="btn btn-primary" @click="getCards"><i class="fa fa-plus"></i>&nbsp;查看卡密</a>
-			<a v-if="hasPermission('orderfromyouzan:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			<a v-if="hasPermission('orderfromyouzan:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 		</div>
+
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager"></div>
     </div>
-    
+
     <div v-show="!showList" class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal">
@@ -108,7 +119,7 @@
 			    </div>
 			</div>
 							<div class="form-group">
-				<div class="col-sm-2 control-label"></div> 
+				<div class="col-sm-2 control-label"></div>
 				<input type="button" class="btn btn-primary"  value="确定"/>
 				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
 			</div>

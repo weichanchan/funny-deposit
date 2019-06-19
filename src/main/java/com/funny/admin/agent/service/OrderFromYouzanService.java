@@ -2,7 +2,9 @@ package com.funny.admin.agent.service;
 
 
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
+import com.funny.utils.Query;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -31,4 +33,6 @@ public interface OrderFromYouzanService {
 	void deleteBatch(Integer[] ids);
 
     OrderFromYouzanEntity lockByOrderNo(String customerOrderNo);
+
+    BigDecimal queryTotalFee(Map<String, Object> query);
 }

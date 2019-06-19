@@ -57,7 +57,7 @@ public class ApiPDDOrderNotifyController {
     @IgnoreAuth
     @PostMapping("notify")
     public Object notify(String orderId, String number, String outerSkuId, Integer count, Long timeStamp, String sign) throws IOException {
-        String param = "number=" + number + "&outerSkuId=" + outerSkuId + "&orderId=" + orderId + "&count=" + count + "&timeStamp=" + timeStamp;
+        String param = "number=" + number + "&orderId=" + orderId + "&count=" + count + "&timeStamp=" + timeStamp;
         String tempSign = SignUtils.getMD5(param + aConfig.getClientKey());
         if (!sign.equals(tempSign)) {
             logger.debug("签名错误");

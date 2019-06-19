@@ -3,10 +3,12 @@ package com.funny.admin.agent.service.impl;
 import com.funny.admin.agent.dao.OrderFromYouzanDao;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
+import com.funny.utils.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +62,11 @@ public class OrderFromYouzanServiceImpl implements OrderFromYouzanService {
     @Override
     public OrderFromYouzanEntity lockByOrderNo(String customerOrderNo) {
         return orderFromYouzanDao.lockByOrderNo(customerOrderNo);
+    }
+
+    @Override
+    public BigDecimal queryTotalFee(Map<String, Object> query) {
+        return orderFromYouzanDao.queryTotalFee(query);
     }
 
 }
