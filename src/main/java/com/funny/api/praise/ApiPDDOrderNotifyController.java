@@ -7,6 +7,7 @@ import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.FuluSubmitEvent;
 import com.funny.api.event.notify.a.ASubmitEvent;
+import com.funny.api.event.notify.superman.SupermanSubmitEvent;
 import com.funny.api.event.notify.v2.FuluSubmitV2Event;
 import com.funny.config.AConfig;
 import com.funny.utils.R;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.UUID;
 
@@ -57,13 +59,16 @@ public class ApiPDDOrderNotifyController {
     @IgnoreAuth
     @PostMapping("notify")
     public Object notify(String orderId, String number, String outerSkuId, Integer count, Long timeStamp, String sign) throws IOException {
-        String param = "number=" + number + "&orderId=" + orderId + "&count=" + count + "&timeStamp=" + timeStamp;
-        String tempSign = SignUtils.getMD5(param + aConfig.getClientKey());
+        String paramToDecode = "number=" + URLEncoder.encode(number, "UTF-8") + "&orderId=" + orderId + "&count=" + count + "&timeStamp=" + timeStamp + "&outerSkuId=" + URLEncoder.encode(outerSkuId, "UTF-8");
+        String tempSign = SignUtils.getMD5(paramToDecode + aConfig.getClientKey());
         if (!sign.equals(tempSign)) {
+            logger.debug(paramToDecode);
+            logger.debug(tempSign);
+            logger.debug(sign);
             logger.debug("签名错误");
             return R.ok();
         }
-        logger.debug("orderId:" + orderId + "number:" + number + "outerSkuId:" + outerSkuId);
+        logger.debug("number=" + number + "&orderId=" + orderId + "&count=" + count + "&timeStamp=" + timeStamp + "&outerSkuId=" + outerSkuId);
         // 获取订单信息
         if (outerSkuId == null) {
             logger.debug("outerSkuId未配置，不用处理");
@@ -98,6 +103,10 @@ public class ApiPDDOrderNotifyController {
         }
         if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
             applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
+            return R.ok();
+        }
+        if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
+            applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
             return R.ok();
         }
         applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));

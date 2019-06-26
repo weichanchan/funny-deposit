@@ -35,6 +35,10 @@ public class WareFuluInfoEntity implements Serializable {
      * A平台充值类型
      */
     public static final int TYPE_A_CHANNEL = 3;
+    /**
+     * 超人平台充值类型
+     */
+    public static final int TYPE_SUPERMAN_CHANNEL = 4;
 
     /**
      * 设置：主键id

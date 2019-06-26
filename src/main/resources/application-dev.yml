@@ -51,6 +51,11 @@ optional:
         checkUrl: https://pdd.paymob.cn/mobileService/xyQuery
         mctNo: 20190608133802330
         url: https://pdd.paymob.cn/mobileService/orderVideo
+    superman:
+        enable: true
+        username: 15677188594
+        password: 6211889
+        url: http://chaoren.waa.cn/home/api
 #server:
 #    http:
 #        port: 80

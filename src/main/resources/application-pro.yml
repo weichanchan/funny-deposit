@@ -26,36 +26,41 @@ optional:
         secretKey: "kd7ESeY9izjXggYdCBXjDAR825rTzUvL"
         versionNo: 1.0
     youzan:
-      enable: true
-      client-id: d42967c0dde9de76ad
-      client-secret: c1637f0d0c07d5ec9464411f10a944e8
-      kdt-id: 13176063
+        enable: true
+        client-id: d42967c0dde9de76ad
+        client-secret: c1637f0d0c07d5ec9464411f10a944e8
+        kdt-id: 13176063
     fulu:
-      enable: true
-      v2Enable: false
-      huge: 5
-      userId: 804867
-      name: lyh512125
-      appKey: Q8VLF1U1sBWvx9f6LFVPed18TKzjML+axbFHeW2Aqxi3XzpT+CHNuW4RvHXgetEq
-      appSecret: 3fd6e0ab8a9444bdbff1db34d75ec456
-      key: 900B44E19971C3BC7EF02E1290CA08D8
-      url: http://ccapi.soouu.cn/Interface/Method
-      kamiUrl: http://api.open.fulu.com/api/Order/CreateCardOrder
-      feiKamiUrl: http://api.open.fulu.com/api/Order/CreateOrder
-      fuluCheckUrl: http://api.open.fulu.com/api/Order/GetOrder
-      notifyUrl: https://www.lckj.shop/api/fulu/order/notify
+        enable: true
+        v2Enable: false
+        huge: 5
+        userId: 804867
+        name: lyh512125
+        appKey: Q8VLF1U1sBWvx9f6LFVPed18TKzjML+axbFHeW2Aqxi3XzpT+CHNuW4RvHXgetEq
+        appSecret: 3fd6e0ab8a9444bdbff1db34d75ec456
+        key: 900B44E19971C3BC7EF02E1290CA08D8
+        url: http://ccapi.soouu.cn/Interface/Method
+        kamiUrl: http://api.open.fulu.com/api/Order/CreateCardOrder
+        feiKamiUrl: http://api.open.fulu.com/api/Order/CreateOrder
+        fuluCheckUrl: http://api.open.fulu.com/api/Order/GetOrder
+        notifyUrl: https://www.lckj.shop/api/fulu/order/notify
     a:
-      enable: true
-      appKey: 85AAB222A5CFA60E6B3AB9C272F27078
-      clientKey: 32AAB222A5CF4036B3AB9C275427038
-      checkUrl: https://pdd.paymob.cn/mobileService/xyQuery
-      mctNo: 20190608133802330
-      url: https://pdd.paymob.cn/mobileService/orderVideo
+        enable: true
+        appKey: 85AAB222A5CFA60E6B3AB9C272F27078
+        clientKey: 32AAB222A5CF4036B3AB9C275427038
+        checkUrl: https://pdd.paymob.cn/mobileService/xyQuery
+        mctNo: 20190608133802330
+        url: https://pdd.paymob.cn/mobileService/orderVideo
+    superman:
+        enable: true
+        username: 15677188594
+        password: 6211889
+        url: http://chaoren.waa.cn/home/api
 server:
-  http:
-    port: 80
-  port: 443
-  ssl:
-    key-store: /app/cert/your-name.jks
-    key-store-password: 214997044790232
-    key-password: 214997044790232
+    http:
+        port: 80
+    port: 443
+    ssl:
+        key-store: /app/cert/your-name.jks
+        key-store-password: 214997044790232
+        key-password: 214997044790232
