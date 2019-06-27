@@ -31,10 +31,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 去超人平台下单监听器
@@ -80,19 +77,23 @@ public class SupermanSubmitListener {
             applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "商品不可售"));
         }
         MultiValueMap map = new LinkedMultiValueMap(16);
-        map.put("user", supermanConfig.getUsername());
-        // 合作商家订单号（唯一不重复）
-        map.put("order", orderFromYouzanEntity.getOrderNo());
-        map.put("code", "102");
-        map.put("token", supermanConfig.getToken());
-        map.put("pass", supermanConfig.getPassword());
-        map.put("spid", wareFuluInfoEntity.getProductId());
+        map.put("user", Collections.singletonList(supermanConfig.getUsername()));
+        // 这个平台不需要第三方订单号，问你怕不怕
+//        map.put("order", Collections.singletonList(orderFromYouzanEntity.getOrderNo()));
+        map.put("code", Collections.singletonList("102"));
+        map.put("token", Collections.singletonList(supermanConfig.getToken()));
+        map.put("pass", Collections.singletonList(SignUtils.getMD5(supermanConfig.getPassword())));
+        map.put("spid", Collections.singletonList(wareFuluInfoEntity.getProductId()));
+        // 计算购买数量，QQ的面值是1元，然后算出具体的面值。当面值超过5时，要走大额渠道
+        Integer count = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
+        // 购买数量
+        map.put("mun", Collections.singletonList(String.valueOf(count)));
 
         // 充值账号
         if (wareFuluInfoEntity.getMark() == null || "".equals(wareFuluInfoEntity.getMark())) {
-            map.put("beizhu", objectMapper.writeValueAsString(Collections.singletonList(orderFromYouzanEntity.getRechargeInfo())));
+            map.put("beizhu", Collections.singletonList(Base64.getEncoder().encodeToString(objectMapper.writeValueAsString(Collections.singletonList(orderFromYouzanEntity.getRechargeInfo())).getBytes("UTF-8"))));
         } else {
-            map.put("beizhu", objectMapper.writeValueAsString(Collections.singletonList(String.valueOf(objectMapper.readValue(orderFromYouzanEntity.getRechargeInfo(), Map.class).get(wareFuluInfoEntity.getMark())))));
+            map.put("beizhu", Collections.singletonList(Base64.getEncoder().encodeToString(objectMapper.writeValueAsString(Collections.singletonList(String.valueOf(objectMapper.readValue(orderFromYouzanEntity.getRechargeInfo(), Map.class).get(wareFuluInfoEntity.getMark())))).getBytes("UTF-8"))));
         }
 
         // 发送请求并记录
@@ -140,6 +141,7 @@ public class SupermanSubmitListener {
         if (orderFromYouzanEntity.getOrderPrice().intValue() == 0) {
             orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Long.valueOf((result.get("money")).toString())));
         }
+        orderFromYouzanEntity.setOrderNo(result.get("order").toString());
         // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
         orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
         orderRequestRecordService.update(orderRequestRecordEntity);

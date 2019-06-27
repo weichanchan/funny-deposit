@@ -12,6 +12,7 @@ import com.funny.admin.agent.service.WareInfoService;
 import com.funny.api.event.notify.FuluSubmitEvent;
 import com.funny.api.event.notify.YouzanRefundEvent;
 import com.funny.api.event.notify.a.ASubmitEvent;
+import com.funny.api.event.notify.superman.SupermanSubmitEvent;
 import com.funny.api.event.notify.v2.FuluSubmitV2Event;
 import com.funny.api.praise.entity.MsgPushEntity;
 import com.funny.utils.annotation.IgnoreAuth;
@@ -151,6 +152,10 @@ public class ApiOrderNotifyController {
         }
         if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
             applicationContext.publishEvent(new FuluSubmitV2Event(orderFromYouzanEntity.getId()));
+            return res;
+        }
+        if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
+            applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
             return res;
         }
         applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));

@@ -21,6 +21,9 @@ $(function () {
                     if(value == 3){
                         return'<font color="#gray">A平台</font>'
                     }
+                    if(value == 4){
+                        return'<font color="#gray">超人平台</font>'
+                    }
                     return '未知状态';
                 }},
             { label: '批量渠道', name: 'type', index: 'type', width: 80 ,

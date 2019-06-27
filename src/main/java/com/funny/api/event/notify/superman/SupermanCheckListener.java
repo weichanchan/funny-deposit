@@ -11,6 +11,7 @@ import com.funny.config.FuluConfig;
 import com.funny.config.SupermanConfig;
 import com.funny.utils.DateUtils;
 import com.funny.utils.SignUtils;
+import com.youzan.open.sdk.client.auth.Sign;
 import com.youzan.open.sdk.util.hash.MD5Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,11 +73,11 @@ public class SupermanCheckListener {
         }
         MultiValueMap map = new LinkedMultiValueMap(16);
         // 合作商家订单号（唯一不重复）
-        map.put("user", supermanConfig.getUsername());
-        map.put("pass", supermanConfig.getPassword());
-        map.put("order", orderFromYouzanEntity.getOrderNo());
-        map.put("code", "1010");
-        map.put("token", supermanConfig.getToken());
+        map.put("user", Collections.singletonList(supermanConfig.getUsername()));
+        map.put("pass", Collections.singletonList(SignUtils.getMD5(supermanConfig.getPassword())));
+        map.put("order", Collections.singletonList(orderFromYouzanEntity.getOrderNo()));
+        map.put("code", Collections.singletonList("1010"));
+        map.put("token", Collections.singletonList(supermanConfig.getToken()));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
