@@ -29,4 +29,6 @@ public interface OrderRequestRecordService {
 	void deleteBatch(Integer[] ids);
 
     OrderRequestRecordEntity saveRequest(String request, Integer id);
+
+	Integer queryTotalByOrderNo(Integer orderNo);
 }

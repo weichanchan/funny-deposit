@@ -101,6 +101,15 @@ public class SupermanSubmitListener {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
+       int i = orderRequestRecordService.queryTotalByOrderNo(orderFromYouzanEntity.getId());
+        if(i > 0){
+            // 只发一次
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+            orderFromYouzanService.update(orderFromYouzanEntity);
+            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "超人平台受理失败"));
+            return;
+        }
+
         OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(supermanConfig.getUrl() + "?" + request.toString(), orderFromYouzanEntity.getId());
         ResponseEntity<Map> responseEntity;
         Map<String, Object> result;
@@ -139,7 +148,7 @@ public class SupermanSubmitListener {
 
         // 如果没有订单价格，就把充值平台的成本价写上去
         if (orderFromYouzanEntity.getOrderPrice().intValue() == 0) {
-            orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Long.valueOf((result.get("money")).toString())));
+            orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Double.valueOf((result.get("money")).toString())));
         }
         orderFromYouzanEntity.setOrderNo(result.get("order").toString());
         // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）

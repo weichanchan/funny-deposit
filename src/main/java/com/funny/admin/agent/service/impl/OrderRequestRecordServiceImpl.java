@@ -65,4 +65,9 @@ public class OrderRequestRecordServiceImpl implements OrderRequestRecordService 
 		return orderRequestRecordEntity;
 	}
 
+	@Override
+	public Integer queryTotalByOrderNo(Integer orderNo) {
+		return orderRequestRecordDao.queryTotalByOrderNo(orderNo);
+	}
+
 }

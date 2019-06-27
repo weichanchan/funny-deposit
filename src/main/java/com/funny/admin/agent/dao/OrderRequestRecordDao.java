@@ -11,5 +11,6 @@ import com.funny.admin.system.dao.BaseDao;
  * @date 2019-02-25 10:45:41
  */
 public interface OrderRequestRecordDao extends BaseDao<OrderRequestRecordEntity> {
-	
+
+    Integer queryTotalByOrderNo(Integer orderNo);
 }

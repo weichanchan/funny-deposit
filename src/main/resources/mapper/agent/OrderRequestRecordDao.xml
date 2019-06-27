@@ -53,6 +53,10 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from order_request_record 
 	</select>
+
+	<select id="queryTotalByOrderNo" resultType="int">
+		select count(*) from order_request_record where order_no = #{value}
+	</select>
 	 
 	<insert id="save" parameterType="com.funny.admin.agent.entity.OrderRequestRecordEntity" useGeneratedKeys="true" keyProperty="id">
 		insert into order_request_record
