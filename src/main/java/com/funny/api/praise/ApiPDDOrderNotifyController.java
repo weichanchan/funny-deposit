@@ -16,6 +16,7 @@ import com.funny.utils.annotation.IgnoreAuth;
 import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -106,7 +107,20 @@ public class ApiPDDOrderNotifyController {
             return R.ok();
         }
         if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
-            applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
+            if (wareFuluInfoEntity.getWareName().contains("Q币")) {
+                applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
+            } else {
+                // 非Q币的超人渠道，如果要购买多个，需要拆单
+                Integer num = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
+                for (int i = 1; i < num ; i++) {
+                    OrderFromYouzanEntity orderFromYouzanEntity1 = new OrderFromYouzanEntity();
+                    BeanUtils.copyProperties(orderFromYouzanEntity,orderFromYouzanEntity1);
+                    orderFromYouzanEntity1.setOrderNo(orderFromYouzanEntity.getOrderNo() + "-" + num);
+                    orderFromYouzanEntity1.setLastRechargeTime(new Date(orderFromYouzanEntity.getCreateTime().getTime() + (60000 * num)));
+                    orderFromYouzanService.save(orderFromYouzanEntity1);
+                }
+                applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
+            }
             return R.ok();
         }
         applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));

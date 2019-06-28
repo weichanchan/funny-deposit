@@ -1,4 +1,4 @@
-package com.funny.api.event.notify.a;
+package com.funny.api.event.notify.superman;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
@@ -16,6 +16,7 @@ import com.funny.config.SupermanConfig;
 import com.funny.utils.SignUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
@@ -69,6 +70,10 @@ public class SupermanSubmitListener {
         if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.WAIT_PROCESS) {
             return;
         }
+        if(orderFromYouzanEntity.getLastRechargeTime() != null && orderFromYouzanEntity.getLastRechargeTime().after(new Date())) {
+            // 还没到时间发
+            return;
+        }
         WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
         if (wareFuluInfoEntity == null) {
             orderFromYouzanEntity.setException("商品不可售，退款。");
@@ -84,8 +89,12 @@ public class SupermanSubmitListener {
         map.put("token", Collections.singletonList(supermanConfig.getToken()));
         map.put("pass", Collections.singletonList(SignUtils.getMD5(supermanConfig.getPassword())));
         map.put("spid", Collections.singletonList(wareFuluInfoEntity.getProductId()));
-        // 计算购买数量，QQ的面值是1元，然后算出具体的面值。当面值超过5时，要走大额渠道
-        Integer count = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
+        // 除了Q币，超人的数量都为1
+        Integer count = 1;
+        if (wareFuluInfoEntity.getWareName().contains("Q币")) {
+            count = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
+        }
+
         // 购买数量
         map.put("mun", Collections.singletonList(String.valueOf(count)));
 
@@ -150,7 +159,7 @@ public class SupermanSubmitListener {
         if (orderFromYouzanEntity.getOrderPrice().intValue() == 0) {
             orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Double.valueOf((result.get("money")).toString())));
         }
-        orderFromYouzanEntity.setOrderNo(result.get("order").toString());
+        orderFromYouzanEntity.setOrderNo(orderFromYouzanEntity.getOrderNo() + "---" + result.get("order").toString());
         // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
         orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
         orderRequestRecordService.update(orderRequestRecordEntity);

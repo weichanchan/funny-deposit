@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,9 @@ public class FuluCheckResendTask {
             }
             if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
                 logger.debug("执行超人平台版本重发");
-                applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
+                if(orderFromYouzanEntity.getLastRechargeTime() != null && orderFromYouzanEntity.getLastRechargeTime().before(new Date())) {
+                    applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
+                }
                 continue;
             }
             applicationContext.publishEvent(new FuluSubmitEvent(orderFromYouzanEntity.getId()));

@@ -53,8 +53,8 @@ optional:
         url: https://pdd.paymob.cn/mobileService/orderVideo
     superman:
         enable: true
-        username: 15677188594
-        password: 6211889
+        username: 13557942290
+        password: ab123456
         url: http://chaoren.waa.cn/home/api
 server:
     http:

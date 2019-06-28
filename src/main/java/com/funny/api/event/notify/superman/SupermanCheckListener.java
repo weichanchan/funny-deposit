@@ -75,7 +75,7 @@ public class SupermanCheckListener {
         // 合作商家订单号（唯一不重复）
         map.put("user", Collections.singletonList(supermanConfig.getUsername()));
         map.put("pass", Collections.singletonList(SignUtils.getMD5(supermanConfig.getPassword())));
-        map.put("order", Collections.singletonList(orderFromYouzanEntity.getOrderNo()));
+        map.put("order", Collections.singletonList(orderFromYouzanEntity.getOrderNo().split("---")[1]));
         map.put("code", Collections.singletonList("1010"));
         map.put("token", Collections.singletonList(supermanConfig.getToken()));
         HttpHeaders headers = new HttpHeaders();
