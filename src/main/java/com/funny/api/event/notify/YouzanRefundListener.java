@@ -2,7 +2,9 @@ package com.funny.api.event.notify;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
+import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
+import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.praise.entity.AccessToken;
 import com.youzan.open.sdk.client.auth.Token;
 import com.youzan.open.sdk.client.core.DefaultYZClient;
@@ -54,6 +56,8 @@ public class YouzanRefundListener {
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
+    @Autowired
+    private WareFuluInfoService wareFuluInfoService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -70,6 +74,13 @@ public class YouzanRefundListener {
             }
             if(StringUtils.isBlank(orderFromYouzanEntity.getSubOrderId())){
                 // 请手工退款
+                orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.HAND_REFUND);
+                orderFromYouzanService.update(orderFromYouzanEntity);
+                return;
+            }
+            WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
+            if(wareFuluInfoEntity != null && !wareFuluInfoEntity.getWareName().contains("Q币") && wareFuluInfoEntity.getRechargeChannel() == WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL){
+                // 超人拆单，没法退款
                 orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.HAND_REFUND);
                 orderFromYouzanService.update(orderFromYouzanEntity);
                 return;

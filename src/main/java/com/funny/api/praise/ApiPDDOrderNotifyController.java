@@ -115,8 +115,9 @@ public class ApiPDDOrderNotifyController {
                 for (int i = 1; i < num ; i++) {
                     OrderFromYouzanEntity orderFromYouzanEntity1 = new OrderFromYouzanEntity();
                     BeanUtils.copyProperties(orderFromYouzanEntity,orderFromYouzanEntity1);
-                    orderFromYouzanEntity1.setOrderNo(orderFromYouzanEntity.getOrderNo() + "-" + num);
-                    orderFromYouzanEntity1.setLastRechargeTime(new Date(orderFromYouzanEntity.getCreateTime().getTime() + (60000 * num)));
+                    orderFromYouzanEntity1.setOrderNo(orderFromYouzanEntity.getOrderNo() + "-" + i);
+                    orderFromYouzanEntity1.setYouzanOrderId(orderFromYouzanEntity.getYouzanOrderId() + "-" + i);
+                    orderFromYouzanEntity1.setLastRechargeTime(new Date(orderFromYouzanEntity.getCreateTime().getTime() + (60000 * i)));
                     orderFromYouzanService.save(orderFromYouzanEntity1);
                 }
                 applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
