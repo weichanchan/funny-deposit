@@ -74,7 +74,7 @@ public class OrderFromYouzanEntity implements Serializable {
      */
     private Integer num;
     /**
-     * 设置：1、成功。2、处理中。-1、失败。-2、异常
+     * 状态
      */
     private Integer status;
     /**

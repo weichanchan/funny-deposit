@@ -1,6 +1,6 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: '../warefuluinfo/list',
+        url: '../warefuluinfo/list?type=' + $.getUrlParam('type'),
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
@@ -158,3 +158,12 @@ var vm = new Vue({
 		}
 	}
 });
+
+(function($){
+$.getUrlParam = function(name)
+{
+	var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	var r = window.location.search.substr(1).match(reg);
+	if (r!=null) return unescape(r[2]); return null;
+}
+})(jQuery);

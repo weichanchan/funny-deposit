@@ -56,6 +56,15 @@ public class OrderFromYouzanController extends AbstractController {
         if (getUser().getUserId() != 1L) {
             params.put("roleIds", sysUserRoleService.queryRoleIdList(getUserId()));
         }
+        // 筛选出拼多多的商品
+        if("1".equals(params.get("type"))){
+            params.put("type","拼多多");
+        }
+        // 筛选除了拼多多以外的商品
+        if("0".equals(params.get("type"))){
+            params.remove("type");
+            params.put("other","其他");
+        }
         //查询列表数据
         Query query = new Query(params);
 
@@ -80,6 +89,7 @@ public class OrderFromYouzanController extends AbstractController {
         params.put("wareNo", wareNo);
         params.put("beginTime", beginTime);
         params.put("endTime", endTime);
+        params.put("status", 1);
         if (getUser().getUserId() != 1L) {
             params.put("roleIds", sysUserRoleService.queryRoleIdList(getUserId()));
         }

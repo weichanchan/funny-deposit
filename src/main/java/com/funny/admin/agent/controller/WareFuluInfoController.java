@@ -45,7 +45,15 @@ public class WareFuluInfoController {
     public R list(@RequestParam Map<String, Object> params) {
         //查询列表数据
         Query query = new Query(params);
-
+        // 筛选出拼多多的商品
+        if("1".equals(query.get("type"))){
+            query.put("type","拼多多");
+        }
+        // 筛选除了拼多多以外的商品
+        if("0".equals(query.get("type"))){
+            query.remove("type");
+            query.put("other","其他");
+        }
         List<WareFuluInfoEntity> wareFuluInfoList = wareFuluInfoService.queryList(query);
         int total = wareFuluInfoService.queryTotal(query);
 

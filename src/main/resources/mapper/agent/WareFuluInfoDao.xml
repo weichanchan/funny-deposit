@@ -61,7 +61,13 @@
         `type`,
         `recharge_channel`,
         `create_time`
-        from ware_fulu_info
+        from ware_fulu_info where 1=1
+        <if test="type != null">
+            and ware_name like concat('%',#{type},'%')
+        </if>
+        <if test="other != null">
+            and ware_name not like concat('%',#{other},'%')
+        </if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
@@ -76,7 +82,13 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-		select count(*) from ware_fulu_info 
+		select count(*) from ware_fulu_info where 1=1
+        <if test="type != null">
+            and ware_name like concat('%',#{type},'%')
+        </if>
+        <if test="other != null">
+            and ware_name not like concat('%',#{other},'%')
+        </if>
 	</select>
 
     <insert id="save" parameterType="com.funny.admin.agent.entity.WareFuluInfoEntity" useGeneratedKeys="true"
