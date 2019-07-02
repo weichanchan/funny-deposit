@@ -1,7 +1,7 @@
 $(function () {
     $.ajax({
         type: "POST",
-        url: "../orderfromyouzan/totalFee",
+        url: "../orderfromyouzan/totalFee?type=" + $.getUrlParam('type'),
         contentType: "application/json",
         success: function (r) {
             vm.totalFee = r.totalFee;
@@ -105,7 +105,7 @@ $(function () {
             var endTime = $('#endTime').val();
             $.ajax({
                 type: "POST",
-                url: "../orderfromyouzan/totalFee?no=" + vm.q.no + "&wareNo=" + vm.q.wareNo + "&beginTime=" + beginTime + "&endTime=" + endTime,
+                url: "../orderfromyouzan/totalFee?no=" + vm.q.no + "&wareNo=" + vm.q.wareNo + "&beginTime=" + beginTime + "&endTime=" + endTime + "&type=" + $.getUrlParam('type'),
                 contentType: "application/json",
                 success: function (r) {
                     vm.totalFee = r.totalFee;
@@ -212,11 +212,11 @@ var vm = new Vue({
     }
 });
 
-(function($){
-    $.getUrlParam = function(name)
-    {
-        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
-        if (r!=null) return unescape(r[2]); return null;
+        if (r != null) return unescape(r[2]);
+        return null;
     }
 })(jQuery);

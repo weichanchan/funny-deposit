@@ -83,20 +83,20 @@
 					a.`exception`
 				from order_from_youzan a
 	  	LEFT JOIN ware_fulu_info w ON a.ware_no = w.outer_sku_id
-		WHERE 1=1 and w.id in (SELECT ware_fulu_info_id FROM ware_fulu_role where 1=1
-			<if test="roleIds != null">
-				and role_id in
-				<foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
-					#{roleId}
-				</foreach>
-			</if>
-			<if test="type != null">
-				and ware_name like concat('%',#{type},'%')
-			</if>
-			<if test="other != null">
-				and ware_name not like concat('%',#{other},'%')
-			</if>
+		WHERE 1=1
+		<if test="roleIds != null">
+			and w.id in (SELECT ware_fulu_info_id FROM ware_fulu_role where role_id in
+			<foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+				#{roleId}
+			</foreach>
 			)
+		</if>
+		<if test="type != null">
+			and w.ware_name like concat('%',#{type},'%')
+		</if>
+		<if test="other != null">
+			and w.ware_name not like concat('%',#{other},'%')
+		</if>
 		<if test="status != null">
 			and a.status = #{status}
 		</if>
@@ -124,20 +124,20 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from order_from_youzan a
 		LEFT JOIN ware_fulu_info w ON a.ware_no = w.outer_sku_id
-		where 1=1 and w.id in (SELECT ware_fulu_info_id FROM ware_fulu_role where 1=1
+		where 1=1
 		<if test="roleIds != null">
-			and role_id in
+			and w.id in (SELECT ware_fulu_info_id FROM ware_fulu_role where role_id in
 			<foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
 				#{roleId}
 			</foreach>
+			)
 		</if>
 		<if test="type != null">
-			and ware_name like concat('%',#{type},'%')
+			and w.ware_name like concat('%',#{type},'%')
 		</if>
 		<if test="other != null">
-			and ware_name not like concat('%',#{other},'%')
+			and w.ware_name not like concat('%',#{other},'%')
 		</if>
-		)
 		<if test="status != null">
 			and a.status = #{status}
 		</if>
@@ -154,20 +154,20 @@
 	<select id="queryTotalFee" resultType="java.math.BigDecimal">
 		select sum(a.order_price) from order_from_youzan a
 		LEFT JOIN ware_fulu_info w ON a.ware_no = w.outer_sku_id
-		where 1=1 and w.id in (SELECT ware_fulu_info_id FROM ware_fulu_role where 1=1
+		where 1=1
 		<if test="roleIds != null">
-			and role_id in
+			and w.id in (SELECT ware_fulu_info_id FROM ware_fulu_role where role_id in
 			<foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
 				#{roleId}
 			</foreach>
+			)
 		</if>
 		<if test="type != null">
-			and ware_name like concat('%',#{type},'%')
+			and w.ware_name like concat('%',#{type},'%')
 		</if>
 		<if test="other != null">
-			and ware_name not like concat('%',#{other},'%')
+			and w.ware_name not like concat('%',#{other},'%')
 		</if>
-		)
 		<if test="status != null">
 			and a.status = #{status}
 		</if>

@@ -10,6 +10,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -304,9 +305,10 @@ public class EncryptUtil{
     }
 
     public static void main(String[] args) throws UnsupportedEncodingException {
-        String test = encryptBase64("466243_TVEQB1WNSH_20181201", "01234567890123456789012345678912");
-        System.out.println(test);
-        System.out.println(URLEncoder.encode(test,"UTF-8"));
-        System.out.println(decryptBase64(test, "01234567890123456789012345678912"));
+//        String test = encryptBase64("466243_TVEQB1WNSH_20181201", "01234567890123456789012345678912");
+//        System.out.println(test);
+//        System.out.println(URLEncoder.encode(test,"UTF-8"));
+//        System.out.println(decryptBase64(test, "01234567890123456789012345678912"));
+        System.out.println(BigDecimal.valueOf(Double.valueOf(("68.31"))));
     }
 }

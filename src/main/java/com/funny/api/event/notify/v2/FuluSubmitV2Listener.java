@@ -147,7 +147,7 @@ public class FuluSubmitV2Listener {
         // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
         if(orderFromYouzanEntity.getOrderPrice() == null || orderFromYouzanEntity.getOrderPrice().compareTo(BigDecimal.ZERO) <= 0) {
             Map m = (Map) result.get("Result");
-            orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Double.parseDouble(m.get("OrderPrice").toString())));
+            orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Double.parseDouble(m.get("OrderPrice").toString())).multiply(BigDecimal.valueOf(Double.parseDouble(m.get("BuyNum").toString()))));
         }
         orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
         orderRequestRecordService.update(orderRequestRecordEntity);

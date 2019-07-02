@@ -52,7 +52,7 @@ public class WareFuluInfoController {
         // 筛选除了拼多多以外的商品
         if("0".equals(query.get("type"))){
             query.remove("type");
-            query.put("other","其他");
+            query.put("other","拼多多");
         }
         List<WareFuluInfoEntity> wareFuluInfoList = wareFuluInfoService.queryList(query);
         int total = wareFuluInfoService.queryTotal(query);
