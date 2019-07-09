@@ -81,7 +81,7 @@ public class YouzanRefundListener {
             WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
             // 非Q币的超人渠道，如果要购买多个，需要拆单，只有一个就不是拆单，可以直接退款
             Integer num = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
-            if(wareFuluInfoEntity != null && !wareFuluInfoEntity.getWareName().contains("Q币") && wareFuluInfoEntity.getRechargeChannel() == WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL && num > 1){
+            if(wareFuluInfoEntity != null && !wareFuluInfoEntity.getWareName().contains("Q币") && !wareFuluInfoEntity.getWareName().contains("喜点") && wareFuluInfoEntity.getRechargeChannel() == WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL && num > 1){
                 // 超人拆单，没法退款
                 orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.HAND_REFUND);
                 orderFromYouzanService.update(orderFromYouzanEntity);

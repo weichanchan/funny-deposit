@@ -59,15 +59,6 @@ public class FuluCheckResendTask {
                 logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，入库未够一分钟。还未满足重发条件。");
                 continue;
             }
-            logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发。");
-//            map.clear();
-//            map.put("orderNo", orderFromYouzanEntity.getId());
-//            List<OrderRequestRecordEntity> orderRequestRecordEntities = orderRequestRecordService.queryList(map);
-//            if (orderRequestRecordEntities.size() >= 3) {
-//                // 最多重试3次,超过的就跳过，等着超时退款，或者他们通知过来。
-//                logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发已超过3次。");
-//                continue;
-//            }
             WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
             logger.debug("待充值的订单【" + orderFromYouzanEntity.getId()+"】，重发。");
             // 触发发送事件
@@ -82,8 +73,12 @@ public class FuluCheckResendTask {
                 continue;
             }
             if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
-                logger.debug("执行超人平台版本重发");
                 if(orderFromYouzanEntity.getLastRechargeTime() != null && orderFromYouzanEntity.getLastRechargeTime().before(new Date())) {
+                    logger.debug("执行超人平台版本拆单发送");
+                    applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
+                }
+                if(orderFromYouzanEntity.getLastRechargeTime() == null){
+                    logger.debug("执行超人平台版本重发");
                     applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
                 }
                 continue;

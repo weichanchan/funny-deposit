@@ -40,8 +40,6 @@ public class ApiPDDOrderNotifyController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiPDDOrderNotifyController.class);
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -53,9 +51,18 @@ public class ApiPDDOrderNotifyController {
     @Autowired
     private AConfig aConfig;
 
+    @IgnoreAuth
+    @PostMapping("check")
+    public Object check(String outerSkuId) {
+        WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(outerSkuId);
+        if (wareFuluInfoEntity == null) {
+            return R.error("检查商品编号【" + outerSkuId + "】不需要自动充值");
+        }
+        return R.ok();
+    }
 
     /**
-     * 登录
+     * 拼多多通知
      */
     @IgnoreAuth
     @PostMapping("notify")
@@ -107,14 +114,14 @@ public class ApiPDDOrderNotifyController {
             return R.ok();
         }
         if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
-            if (wareFuluInfoEntity.getWareName().contains("Q币")) {
+            if (wareFuluInfoEntity.getWareName().contains("Q币") || wareFuluInfoEntity.getWareName().contains("喜点")) {
                 applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
             } else {
                 // 非Q币的超人渠道，如果要购买多个，需要拆单
                 Integer num = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
-                for (int i = 1; i < num ; i++) {
+                for (int i = 1; i < num; i++) {
                     OrderFromYouzanEntity orderFromYouzanEntity1 = new OrderFromYouzanEntity();
-                    BeanUtils.copyProperties(orderFromYouzanEntity,orderFromYouzanEntity1);
+                    BeanUtils.copyProperties(orderFromYouzanEntity, orderFromYouzanEntity1);
                     orderFromYouzanEntity1.setOrderNo(orderFromYouzanEntity.getOrderNo() + "-" + i);
                     orderFromYouzanEntity1.setYouzanOrderId(orderFromYouzanEntity.getYouzanOrderId() + "-" + i);
                     orderFromYouzanEntity1.setLastRechargeTime(new Date(orderFromYouzanEntity.getCreateTime().getTime() + (60000 * i)));

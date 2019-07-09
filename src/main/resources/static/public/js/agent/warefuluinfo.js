@@ -39,7 +39,7 @@ $(function () {
 			{ label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }
         ],
 		viewrecords: true,
-        height: 385,
+        height: 650,
         rowNum: 10,
 		rowList : [10,30,50],
         rownumbers: true, 
@@ -71,7 +71,10 @@ var vm = new Vue({
 		showList: true,
 		title: null,
         roleList: [],
-		wareFuluInfo: {roleList:[]}
+		wareFuluInfo: {roleList:[]},
+		q: {
+			no: ""
+		}
 
 	},
 	methods: {
@@ -148,7 +151,10 @@ var vm = new Vue({
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
-                page:page
+                page:page,
+				postData: {
+					"no": vm.q.no
+				}
             }).trigger("reloadGrid");
 		},
 		getRoleList: function(){

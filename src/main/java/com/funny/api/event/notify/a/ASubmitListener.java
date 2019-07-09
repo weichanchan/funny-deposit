@@ -64,17 +64,21 @@ public class ASubmitListener {
     @EventListener
     public void onApplicationEvent(ASubmitEvent aSubmitEvent) throws IOException {
         Integer id = Integer.parseInt(String.valueOf(aSubmitEvent.getSource()));
+        logger.debug("平台开始发送：" + id);
         OrderFromYouzanEntity orderFromYouzanEntity = orderFromYouzanService.queryObject(id, true);
         // 不是待充值状态，不处理
         if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.WAIT_PROCESS) {
+            logger.debug("平台发送失败订单状态不是待发送");
             return;
         }
         WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
         if (wareFuluInfoEntity == null) {
+            logger.debug("平台发送失败订单状态商品不可售");
             orderFromYouzanEntity.setException("商品不可售，退款。");
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
             applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "商品不可售"));
+            return;
         }
         Map<String, String> map = new HashMap();
         // 合作商家订单号（唯一不重复）

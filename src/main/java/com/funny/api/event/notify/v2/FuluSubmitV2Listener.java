@@ -77,6 +77,7 @@ public class FuluSubmitV2Listener {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
             applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "商品不可售"));
+            return;
         }
 
         String url = fuluConfig.getKamiUrl();

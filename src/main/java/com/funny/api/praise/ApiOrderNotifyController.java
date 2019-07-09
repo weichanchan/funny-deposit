@@ -156,7 +156,7 @@ public class ApiOrderNotifyController {
             return res;
         }
         if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
-            if (wareFuluInfoEntity.getWareName().contains("Q币")) {
+            if (wareFuluInfoEntity.getWareName().contains("Q币") || wareFuluInfoEntity.getWareName().contains("喜点")) {
                 applicationContext.publishEvent(new SupermanSubmitEvent(orderFromYouzanEntity.getId()));
             } else {
                 // 非Q币的超人渠道，如果要购买多个，需要拆单

@@ -13,6 +13,7 @@ import com.funny.api.event.notify.a.ACheckEvent;
 import com.funny.api.event.notify.superman.SupermanCheckEvent;
 import com.funny.api.event.notify.v2.FuluCheckV2Event;
 import com.funny.api.event.notify.v2.FuluSubmitV2Event;
+import com.funny.utils.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,12 @@ public class FuluCheckTask {
 
         // 查找需要退款的
         map.put("status", OrderFromYouzanEntity.FAIL);
-        List<OrderFromYouzanEntity> orderFromYouzanEntities = orderFromYouzanService.queryList(map);
+        map.put("page", 1);
+        map.put("limit", 60);
+        map.put("sidx", "");
+        map.put("order", "");
+        Query query = new Query(map);
+        List<OrderFromYouzanEntity> orderFromYouzanEntities = orderFromYouzanService.queryList(query);
         for (OrderFromYouzanEntity orderFromYouzanEntity : orderFromYouzanEntities) {
             applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), orderFromYouzanEntity.getException()));
         }

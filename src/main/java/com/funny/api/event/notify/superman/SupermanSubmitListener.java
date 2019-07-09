@@ -80,6 +80,7 @@ public class SupermanSubmitListener {
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
             applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "商品不可售"));
+            return;
         }
         MultiValueMap map = new LinkedMultiValueMap(16);
         map.put("user", Collections.singletonList(supermanConfig.getUsername()));
@@ -91,7 +92,7 @@ public class SupermanSubmitListener {
         map.put("spid", Collections.singletonList(wareFuluInfoEntity.getProductId()));
         // 除了Q币，超人的数量都为1
         Integer count = 1;
-        if (wareFuluInfoEntity.getWareName().contains("Q币")) {
+        if (wareFuluInfoEntity.getWareName().contains("Q币") || wareFuluInfoEntity.getWareName().contains("喜点")) {
             count = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
         }
 
