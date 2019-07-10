@@ -3,14 +3,15 @@ package com.funny.api.event.notify.v2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.OrderRequestRecordEntity;
+import com.funny.admin.agent.entity.ThridPlatformGateEntity;
 import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
+import com.funny.admin.agent.service.ThridPlatformGateService;
 import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.YouzanRefundEvent;
 import com.funny.config.FuluConfig;
 import com.funny.utils.DateUtils;
-import com.funny.utils.IPUtils;
 import com.funny.utils.SignUtils;
 import com.youzan.open.sdk.util.hash.MD5Utils;
 import org.slf4j.Logger;
@@ -42,11 +43,12 @@ public class FuluSubmitV2Listener {
 
     private static final Logger logger = LoggerFactory.getLogger(FuluSubmitV2Listener.class);
 
+    private static final int gate = 1;
+
     @Autowired
     protected FuluConfig fuluConfig;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
@@ -60,6 +62,9 @@ public class FuluSubmitV2Listener {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private ThridPlatformGateService thridPlatformGateService;
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Async
@@ -69,6 +74,14 @@ public class FuluSubmitV2Listener {
         OrderFromYouzanEntity orderFromYouzanEntity = orderFromYouzanService.queryObject(id, true);
         // 不是待充值状态，不处理
         if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.WAIT_PROCESS) {
+            return;
+        }
+        ThridPlatformGateEntity thridPlatformGateEntity = thridPlatformGateService.queryObject(gate);
+        if (thridPlatformGateEntity.getStatus() == ThridPlatformGateEntity.STATUS_CLOSE) {
+            orderFromYouzanEntity.setException("【福禄】渠道关闭。");
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+            orderFromYouzanService.update(orderFromYouzanEntity);
+            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "充值渠道关闭。"));
             return;
         }
         WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
@@ -146,7 +159,7 @@ public class FuluSubmitV2Listener {
         }
 
         // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
-        if(orderFromYouzanEntity.getOrderPrice() == null || orderFromYouzanEntity.getOrderPrice().compareTo(BigDecimal.ZERO) <= 0) {
+        if (orderFromYouzanEntity.getOrderPrice() == null || orderFromYouzanEntity.getOrderPrice().compareTo(BigDecimal.ZERO) <= 0) {
             Map m = (Map) result.get("Result");
             orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Double.parseDouble(m.get("OrderPrice").toString())).multiply(BigDecimal.valueOf(Double.parseDouble(m.get("BuyNum").toString()))));
         }

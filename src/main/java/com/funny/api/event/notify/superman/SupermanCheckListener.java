@@ -2,8 +2,10 @@ package com.funny.api.event.notify.superman;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
+import com.funny.admin.agent.entity.ThridPlatformGateEntity;
 import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
+import com.funny.admin.agent.service.ThridPlatformGateService;
 import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.superman.SupermanCheckEvent;
 import com.funny.config.AConfig;
@@ -49,10 +51,12 @@ public class SupermanCheckListener {
 
     private static final Logger logger = LoggerFactory.getLogger(SupermanCheckListener.class);
 
+    private static final int gate = 3;
+
     @Autowired
     protected SupermanConfig supermanConfig;
-    @Autowired
-    private RestTemplate restTemplate;
+
+    private RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
@@ -60,7 +64,8 @@ public class SupermanCheckListener {
     @Autowired
     ApplicationContext applicationContext;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ThridPlatformGateService thridPlatformGateService;
 
     @Async
     @EventListener
@@ -69,6 +74,11 @@ public class SupermanCheckListener {
         OrderFromYouzanEntity orderFromYouzanEntity = orderFromYouzanService.queryObject(id, true);
         // 不是充值中状态，不处理
         if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.PROCESS) {
+            return;
+        }
+        ThridPlatformGateEntity thridPlatformGateEntity = thridPlatformGateService.queryObject(gate);
+        if (thridPlatformGateEntity.getStatus() == ThridPlatformGateEntity.STATUS_CLOSE) {
+            logger.debug("超人平台渠道关闭，先不查询");
             return;
         }
         MultiValueMap map = new LinkedMultiValueMap(16);

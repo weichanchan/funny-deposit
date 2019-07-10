@@ -2,11 +2,14 @@ package com.funny.api.event.notify.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
+import com.funny.admin.agent.entity.ThridPlatformGateEntity;
 import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
+import com.funny.admin.agent.service.ThridPlatformGateService;
 import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.AbstractFuluListener;
 import com.funny.api.event.notify.FuluCheckEvent;
+import com.funny.api.event.notify.YouzanRefundEvent;
 import com.funny.config.FuluConfig;
 import com.funny.utils.DateUtils;
 import com.funny.utils.SignUtils;
@@ -39,10 +42,12 @@ public class FuluCheckV2Listener {
 
     private static final Logger logger = LoggerFactory.getLogger(FuluCheckV2Listener.class);
 
+    private static final int gate = 1;
+
     @Autowired
     protected FuluConfig fuluConfig;
-    @Autowired
-    private RestTemplate restTemplate;
+
+    private RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
@@ -53,6 +58,9 @@ public class FuluCheckV2Listener {
     @Autowired
     ApplicationContext applicationContext;
 
+    @Autowired
+    private ThridPlatformGateService thridPlatformGateService;
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Async
@@ -62,6 +70,11 @@ public class FuluCheckV2Listener {
         OrderFromYouzanEntity orderFromYouzanEntity = orderFromYouzanService.queryObject(id, true);
         // 不是充值中状态，不处理
         if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.PROCESS) {
+            return;
+        }
+        ThridPlatformGateEntity thridPlatformGateEntity = thridPlatformGateService.queryObject(gate);
+        if (thridPlatformGateEntity.getStatus() == ThridPlatformGateEntity.STATUS_CLOSE) {
+           logger.debug("福禄平台渠道关闭，先不查询");
             return;
         }
         Map map = getCommonParam();

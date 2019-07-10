@@ -3,9 +3,11 @@ package com.funny.api.event.notify.superman;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.OrderRequestRecordEntity;
+import com.funny.admin.agent.entity.ThridPlatformGateEntity;
 import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
+import com.funny.admin.agent.service.ThridPlatformGateService;
 import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.AbstractFuluListener;
 import com.funny.api.event.notify.YouzanRefundEvent;
@@ -42,8 +44,9 @@ import java.util.*;
 @Component
 public class SupermanSubmitListener {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
+
+    private static final int gate = 3;
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
@@ -61,6 +64,9 @@ public class SupermanSubmitListener {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    @Autowired
+    private ThridPlatformGateService thridPlatformGateService;
+
     @Async
     @EventListener
     public void onApplicationEvent(SupermanSubmitEvent supermanSubmitEvent) throws IOException {
@@ -72,6 +78,14 @@ public class SupermanSubmitListener {
         }
         if(orderFromYouzanEntity.getLastRechargeTime() != null && orderFromYouzanEntity.getLastRechargeTime().after(new Date())) {
             // 还没到时间发
+            return;
+        }
+        ThridPlatformGateEntity thridPlatformGateEntity = thridPlatformGateService.queryObject(gate);
+        if (thridPlatformGateEntity.getStatus() == ThridPlatformGateEntity.STATUS_CLOSE) {
+            orderFromYouzanEntity.setException("【超人】渠道关闭。");
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+            orderFromYouzanService.update(orderFromYouzanEntity);
+            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "充值渠道关闭。"));
             return;
         }
         WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());

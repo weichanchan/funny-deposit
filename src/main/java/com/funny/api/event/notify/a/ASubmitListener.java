@@ -3,9 +3,11 @@ package com.funny.api.event.notify.a;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.OrderRequestRecordEntity;
+import com.funny.admin.agent.entity.ThridPlatformGateEntity;
 import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.OrderRequestRecordService;
+import com.funny.admin.agent.service.ThridPlatformGateService;
 import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.api.event.notify.AbstractFuluListener;
 import com.funny.api.event.notify.YouzanRefundEvent;
@@ -41,8 +43,9 @@ public class ASubmitListener {
 
     private static final Logger logger = LoggerFactory.getLogger(ASubmitListener.class);
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
+
+    private static final int gate = 2;
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
@@ -58,6 +61,9 @@ public class ASubmitListener {
     @Autowired
     protected AConfig aConfig;
 
+    @Autowired
+    private ThridPlatformGateService thridPlatformGateService;
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Async
@@ -69,6 +75,14 @@ public class ASubmitListener {
         // 不是待充值状态，不处理
         if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.WAIT_PROCESS) {
             logger.debug("平台发送失败订单状态不是待发送");
+            return;
+        }
+        ThridPlatformGateEntity thridPlatformGateEntity = thridPlatformGateService.queryObject(gate);
+        if (thridPlatformGateEntity.getStatus() == ThridPlatformGateEntity.STATUS_CLOSE) {
+            orderFromYouzanEntity.setException("【A】渠道关闭。");
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+            orderFromYouzanService.update(orderFromYouzanEntity);
+            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "充值渠道关闭。"));
             return;
         }
         WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());

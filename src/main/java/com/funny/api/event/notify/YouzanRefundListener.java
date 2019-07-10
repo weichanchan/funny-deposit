@@ -51,8 +51,7 @@ public class YouzanRefundListener {
     @Value("${optional.youzan.kdt-id}")
     private String kdtId;
 
-    @Autowired
-    private RestTemplate template;
+    private RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
@@ -134,7 +133,7 @@ public class YouzanRefundListener {
         paramMap.add("grant_type", "silent");
         paramMap.add("kdt_id", kdtId);
 
-        ResponseEntity<String> response = template.postForEntity("https://open.youzan.com/oauth/token", paramMap, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("https://open.youzan.com/oauth/token", paramMap, String.class);
         Map result = objectMapper.readValue(response.getBody(), Map.class);
         String accessToken = (String) result.get("access_token");
         Integer expiresIn = (Integer) result.get("expires_in");

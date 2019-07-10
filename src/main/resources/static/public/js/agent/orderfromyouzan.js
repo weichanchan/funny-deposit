@@ -64,7 +64,7 @@ $(function () {
             {
                 label: '异常', name: 'exception', index: 'exception', width: 80,
                 formatter: function (value, options, row) {
-                    if (value = 'null') {
+                    if (value == null) {
                         return ''
                     }
                     return '<font color="red">' + value + '</font>'
