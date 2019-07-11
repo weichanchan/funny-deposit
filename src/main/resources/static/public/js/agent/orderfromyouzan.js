@@ -58,6 +58,9 @@ $(function () {
                     if (value == -3) {
                         return '<font color="red">有赞退款异常</font>'
                     }
+                    if (value == -4) {
+                        return '<font color="red">充值状态查询异常</font>'
+                    }
                     return '未知状态';
                 }
             },

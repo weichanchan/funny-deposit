@@ -73,7 +73,7 @@ public class WareFuluInfoEntity implements Serializable {
      */
     private Integer type;
     /**
-     * 充值渠道，1：旧福禄平台，2：新福禄平台，3：A平台
+     * 充值渠道，1：旧福禄平台，2：新福禄平台，3：A平台，4：超人平台
      */
     private Integer rechargeChannel;
     /**

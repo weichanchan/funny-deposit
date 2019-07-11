@@ -85,6 +85,12 @@ public class SupermanCheckListener {
         // 合作商家订单号（唯一不重复）
         map.put("user", Collections.singletonList(supermanConfig.getUsername()));
         map.put("pass", Collections.singletonList(SignUtils.getMD5(supermanConfig.getPassword())));
+        if(orderFromYouzanEntity.getOrderNo().split("---").length <= 1){
+            orderFromYouzanEntity.setException("请到第三方充值平台确认充值状态");
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.CHECK_FAIL);
+            orderFromYouzanService.update(orderFromYouzanEntity);
+            return;
+        }
         map.put("order", Collections.singletonList(orderFromYouzanEntity.getOrderNo().split("---")[1]));
         map.put("code", Collections.singletonList("1010"));
         map.put("token", Collections.singletonList(supermanConfig.getToken()));

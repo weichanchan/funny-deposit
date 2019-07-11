@@ -146,6 +146,7 @@ public class ApiOrderNotifyController {
         // 订单状态为处理中
         orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.WAIT_PROCESS);
         orderFromYouzanEntity.setCreateTime(new Date());
+        orderFromYouzanEntity.setRechargeChannel(wareFuluInfoEntity.getRechargeChannel());
         orderFromYouzanService.save(orderFromYouzanEntity);
         if (WareFuluInfoEntity.TYPE_A_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
             applicationContext.publishEvent(new ASubmitEvent(orderFromYouzanEntity.getId()));

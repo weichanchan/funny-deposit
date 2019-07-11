@@ -46,6 +46,10 @@ public class OrderFromYouzanEntity implements Serializable {
      */
     public static final int REFUND_FAIL = -3;
     /**
+     * -4、查询状态失败，请到确认
+     */
+    public static final int CHECK_FAIL = -4;
+    /**
      * 设置：主键 ID
      */
     private Integer id;
@@ -106,6 +110,11 @@ public class OrderFromYouzanEntity implements Serializable {
      * 异常状况
      */
     private String exception;
+
+    /**
+     * 充值渠道，1：旧福禄平台，2：新福禄平台，3：A平台，4：超人平台
+     */
+    private Integer rechargeChannel;
 
     /**
      * 设置：主键 ID
@@ -285,5 +294,13 @@ public class OrderFromYouzanEntity implements Serializable {
 
     public void setNum(Integer num) {
         this.num = num;
+    }
+
+    public Integer getRechargeChannel() {
+        return rechargeChannel;
+    }
+
+    public void setRechargeChannel(Integer rechargeChannel) {
+        this.rechargeChannel = rechargeChannel;
     }
 }

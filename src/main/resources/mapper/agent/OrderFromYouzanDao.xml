@@ -19,6 +19,7 @@
         <result property="createTime" column="create_time"/>
         <result property="beginRechargeTime" column="begin_recharge_time"/>
         <result property="lastRechargeTime" column="last_recharge_time"/>
+		<result property="rechargeChannel" column="recharge_channel"/>
         <result property="exception" column="exception"/>
     </resultMap>
 
@@ -38,7 +39,8 @@
 					`create_time`,
 					`begin_recharge_time`, 
 					`last_recharge_time`,
-					`exception`
+					`exception`,
+					`recharge_channel`
 				from order_from_youzan where id = #{id}
         <if test="isLock != null and isLock == true">for update</if>
 	</select>
@@ -59,7 +61,8 @@
 					`create_time`,
 					`begin_recharge_time`,
 					`last_recharge_time`,
-					`exception`
+					`exception`,
+					`recharge_channel`
 				from order_from_youzan where order_no = #{value}
 				for update
 	</select>
@@ -80,7 +83,8 @@
 		            a.`create_time`,
 		            a.`begin_recharge_time`,
 		            a.`last_recharge_time`,
-					a.`exception`
+					a.`exception`,
+					a.`recharge_channel`
 				from order_from_youzan a
 	  	LEFT JOIN ware_fulu_info w ON a.ware_no = w.outer_sku_id
 		WHERE 1=1
@@ -197,7 +201,8 @@
 			`create_time`,
 			`begin_recharge_time`, 
 			`last_recharge_time`,
-			`exception`
+			`exception`,
+			`recharge_channel`
 		)
 		values
 		(
@@ -214,7 +219,8 @@
 			#{createTime},
 			#{beginRechargeTime}, 
 			#{lastRechargeTime},
-			#{exception}
+			#{exception},
+			#{rechargeChannel}
 		)
 	</insert>
 	 
@@ -234,7 +240,8 @@
 			<if test="createTime != null">`create_time` = #{createTime}, </if>
 			<if test="beginRechargeTime != null">`begin_recharge_time` = #{beginRechargeTime}, </if>
 			<if test="lastRechargeTime != null">`last_recharge_time` = #{lastRechargeTime},</if>
-			<if test="exception != null">`exception` = #{exception}</if>
+			<if test="exception != null">`exception` = #{exception},</if>
+			<if test="rechargeChannel != null">`recharge_channel` = #{rechargeChannel}</if>
 		</set>
 		where id = #{id}
 	</update>

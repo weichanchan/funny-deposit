@@ -54,7 +54,7 @@ public class FuluCheckTask {
         // 查找需要退款的
         map.put("status", OrderFromYouzanEntity.FAIL);
         map.put("page", 1);
-        map.put("limit", 60);
+        map.put("limit", 30);
         map.put("sidx", "");
         map.put("order", "");
         Query query = new Query(map);
@@ -75,19 +75,18 @@ public class FuluCheckTask {
                 // 没入库够1分钟不理他
                 continue;
             }
-            WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(orderFromYouzanEntity.getWareNo());
             logger.debug("充值中的订单【" + orderFromYouzanEntity.getId() + "】，查询充值状态");
-            if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
+            if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == orderFromYouzanEntity.getRechargeChannel()) {
                 logger.debug("执行新版本查询");
                 applicationContext.publishEvent(new FuluCheckV2Event(orderFromYouzanEntity.getId()));
                 continue;
             }
-            if (WareFuluInfoEntity.TYPE_A_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
+            if (WareFuluInfoEntity.TYPE_A_CHANNEL == orderFromYouzanEntity.getRechargeChannel()) {
                 logger.debug("执行A版本查询");
                 applicationContext.publishEvent(new ACheckEvent(orderFromYouzanEntity.getId()));
                 continue;
             }
-            if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
+            if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == orderFromYouzanEntity.getRechargeChannel()) {
                 logger.debug("执行超人版本查询");
                 applicationContext.publishEvent(new SupermanCheckEvent(orderFromYouzanEntity.getId()));
                 continue;
