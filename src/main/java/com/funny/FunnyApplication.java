@@ -25,9 +25,6 @@ public class FunnyApplication {
         SpringApplication.run(FunnyApplication.class, args);
     }
 
-    @Autowired
-    private ThridPlatformGateService thridPlatformGateService;
-
     @Bean
     public RestTemplate getRestTemplate() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
@@ -45,7 +42,7 @@ public class FunnyApplication {
     public Executor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         //如果池中的实际线程数小于corePoolSize,无论是否其中有空闲的线程，都会给新的任务产生新的线程
-        taskExecutor.setCorePoolSize(5);
+        taskExecutor.setCorePoolSize(10);
         //连接池中保留的最大连接数。
         taskExecutor.setMaxPoolSize(30);
         //queueCapacity 线程池所使用的缓冲队列
