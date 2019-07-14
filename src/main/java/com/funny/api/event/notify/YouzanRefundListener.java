@@ -51,7 +51,8 @@ public class YouzanRefundListener {
     @Value("${optional.youzan.kdt-id}")
     private String kdtId;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;

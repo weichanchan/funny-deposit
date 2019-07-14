@@ -56,7 +56,8 @@ public class SupermanCheckListener {
     @Autowired
     protected SupermanConfig supermanConfig;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;

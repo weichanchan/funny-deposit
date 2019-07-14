@@ -44,7 +44,8 @@ import java.util.*;
 @Component
 public class SupermanSubmitListener {
 
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     private static final int gate = 3;
 

@@ -47,7 +47,8 @@ public class FuluCheckV2Listener {
     @Autowired
     protected FuluConfig fuluConfig;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;

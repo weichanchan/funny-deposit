@@ -50,7 +50,8 @@ public class ACheckListener {
     @Autowired
     protected AConfig aConfig;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;

@@ -43,7 +43,8 @@ public class ASubmitListener {
 
     private static final Logger logger = LoggerFactory.getLogger(ASubmitListener.class);
 
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     private static final int gate = 2;
 
