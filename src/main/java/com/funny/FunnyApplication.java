@@ -21,10 +21,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -51,48 +53,21 @@ public class FunnyApplication {
 
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setRequestFactory(clientHttpRequestFactory());
-        restTemplate.setErrorHandler(new DefaultResponseErrorHandler());
-        return restTemplate;
+        return new RestTemplate();
     }
 
     @Bean
-    public HttpComponentsClientHttpRequestFactory clientHttpRequestFactory() {
-        try {
-            HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-                @Override
-                public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-                    return true;
-                }
-            }).build();
-            httpClientBuilder.setSSLContext(sslContext);
-            HostnameVerifier hostnameVerifier = NoopHostnameVerifier.INSTANCE;
-            SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContext,
-                    hostnameVerifier);
-            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                    .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                    .register("https", sslConnectionSocketFactory).build();// 注册http和https请求
-            // 开始设置连接池
-            PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager(
-                    socketFactoryRegistry);
-            poolingHttpClientConnectionManager.setMaxTotal(2700); // 最大连接数2700
-            poolingHttpClientConnectionManager.setDefaultMaxPerRoute(100); // 同路由并发数100
-            httpClientBuilder.setConnectionManager(poolingHttpClientConnectionManager);
-            httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(3, true)); // 重试次数
-            HttpClient httpClient = httpClientBuilder.build();
-            HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient); // httpClient连接配置
-            clientHttpRequestFactory.setConnectTimeout(20000); // 连接超时
-            clientHttpRequestFactory.setReadTimeout(30000); // 数据读取超时时间
-            clientHttpRequestFactory.setConnectionRequestTimeout(20000); // 连接不够用的等待时间
-            return clientHttpRequestFactory;
-        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
-            logger.error("初始化HTTP连接池出错", e);
-        }
-        return null;
+    public AsyncRestTemplate asyncRestTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        //设置链接超时时间
+        factory.setConnectTimeout(5000);
+        //设置读取资料超时时间
+        factory.setReadTimeout(5000);
+        //设置异步任务（线程不会重用，每次调用时都会重新启动一个新的线程）
+        factory.setTaskExecutor(new SimpleAsyncTaskExecutor());
+        AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate(factory);
+        return asyncRestTemplate;
     }
-
 
     /***
      * 创建异步任务执行器

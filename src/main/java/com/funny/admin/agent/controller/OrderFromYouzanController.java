@@ -2,10 +2,16 @@ package com.funny.admin.agent.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
+import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.common.AbstractController;
 import com.funny.admin.system.service.SysUserRoleService;
+import com.funny.api.event.notify.FuluCheckEvent;
+import com.funny.api.event.notify.a.ACheckEvent;
+import com.funny.api.event.notify.superman.SupermanCheckEvent;
+import com.funny.api.event.notify.v2.FuluCheckV2Event;
 import com.funny.config.FuluConfig;
+import com.funny.task.FuluCheckTask;
 import com.funny.utils.Des;
 import com.funny.utils.PageUtils;
 import com.funny.utils.Query;
@@ -14,6 +20,7 @@ import com.youzan.open.sdk.util.hash.MD5Utils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +50,8 @@ public class OrderFromYouzanController extends AbstractController {
     private OrderFromYouzanService orderFromYouzanService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
-
+    @Autowired
+    private FuluCheckTask fuluCheckTask;
     @Autowired
     private FuluConfig fuluConfig;
 
@@ -162,6 +170,22 @@ public class OrderFromYouzanController extends AbstractController {
     public R delete(@RequestBody Integer[] ids) {
         orderFromYouzanService.deleteBatch(ids);
 
+        return R.ok();
+    }
+
+    /**
+     * 查询充值状态
+     */
+    @RequestMapping("/check")
+    @RequiresPermissions("orderfromyouzan:list")
+    public R check(@RequestBody Integer[] ids) {
+        for (Integer id : ids) {
+            OrderFromYouzanEntity orderFromYouzanEntity = orderFromYouzanService.queryObject(id);
+            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
+            orderFromYouzanEntity.setNextRechargeTime(new Date());
+            orderFromYouzanService.update(orderFromYouzanEntity);
+            fuluCheckTask.publicCheckEvent(orderFromYouzanEntity);
+        }
         return R.ok();
     }
 

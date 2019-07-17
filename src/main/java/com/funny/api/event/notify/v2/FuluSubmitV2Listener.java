@@ -25,6 +25,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -49,7 +52,7 @@ public class FuluSubmitV2Listener {
     protected FuluConfig fuluConfig;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private AsyncRestTemplate asyncRestTemplate;
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
@@ -134,39 +137,49 @@ public class FuluSubmitV2Listener {
 
         OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(url + "参数：" + objectMapper.writeValueAsString(map), orderFromYouzanEntity.getId());
 
-        ResponseEntity<String> responseEntity;
-        Map result;
-        try {
-            HttpEntity<Map<String, String>> request = new HttpEntity<>(map, headers);
-            orderFromYouzanEntity.setLastRechargeTime(new Date());
-            responseEntity = restTemplate.postForEntity(url, request, String.class);
-            orderRequestRecordEntity.setResponse(responseEntity.getBody());
-            result = objectMapper.readValue(responseEntity.getBody(), Map.class);
-        } catch (Exception e) {
-            // 请求异常直接记录，然后就返回。等待定时器重试
-            orderRequestRecordEntity.setException(e.getMessage());
-            orderRequestRecordService.update(orderRequestRecordEntity);
-            return;
-        }
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(map, headers);
+        orderFromYouzanEntity.setLastRechargeTime(new Date());
+        ListenableFuture<ResponseEntity<String>> forEntity = asyncRestTemplate.postForEntity(url, request, String.class);
+        forEntity.addCallback(new ListenableFutureCallback<ResponseEntity<String>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                // 请求异常直接记录，然后就返回。等待定时器重试
+                orderRequestRecordEntity.setException(throwable.getMessage());
+                orderRequestRecordService.update(orderRequestRecordEntity);
+                return;
+            }
 
-        // 福禄平台受理失败,等待退款，但是当请求为3000外部订单号已存在时，等待主动查询或者通知。
-        if (result.get("State") != null && !"Success".equals(result.get("State")) && !"3000".equals(result.get("Code").toString())) {
-            orderRequestRecordEntity.setException(responseEntity.getBody());
-            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
-            orderRequestRecordService.update(orderRequestRecordEntity);
-            orderFromYouzanService.update(orderFromYouzanEntity);
-            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "福禄平台受理失败"));
-            return;
-        }
+            @Override
+            public void onSuccess(ResponseEntity<String> responseEntity) {
+                orderRequestRecordEntity.setResponse(responseEntity.getBody());
+                Map result = null;
+                try {
+                    result = objectMapper.readValue(responseEntity.getBody(), Map.class);
+                } catch (IOException e) {
+                    logger.error( "json 格式转化失败",e);
+                }
+                // 福禄平台受理失败,等待退款，但是当请求为3000外部订单号已存在时，等待主动查询或者通知。
+                if (result.get("State") != null && !"Success".equals(result.get("State")) && !"3000".equals(result.get("Code").toString())) {
+                    orderRequestRecordEntity.setException(responseEntity.getBody());
+                    orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+                    orderRequestRecordService.update(orderRequestRecordEntity);
+                    orderFromYouzanService.update(orderFromYouzanEntity);
+                    applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "福禄平台受理失败"));
+                    return;
+                }
 
-        // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
-        if (orderFromYouzanEntity.getOrderPrice() == null || orderFromYouzanEntity.getOrderPrice().compareTo(BigDecimal.ZERO) <= 0) {
-            Map m = (Map) result.get("Result");
-            orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Double.parseDouble(m.get("OrderPrice").toString())).multiply(BigDecimal.valueOf(Double.parseDouble(m.get("BuyNum").toString()))));
-        }
-        orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
-        orderRequestRecordService.update(orderRequestRecordEntity);
-        orderFromYouzanService.update(orderFromYouzanEntity);
+                // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
+                if (orderFromYouzanEntity.getOrderPrice() == null || orderFromYouzanEntity.getOrderPrice().compareTo(BigDecimal.ZERO) <= 0) {
+                    Map m = (Map) result.get("Result");
+                    orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Double.parseDouble(m.get("OrderPrice").toString())).multiply(BigDecimal.valueOf(Double.parseDouble(m.get("BuyNum").toString()))));
+                }
+                orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
+                orderRequestRecordService.update(orderRequestRecordEntity);
+                orderFromYouzanService.update(orderFromYouzanEntity);
+            }
+        });
+
+
     }
 
     private Map<String, String> getCommonParam() {

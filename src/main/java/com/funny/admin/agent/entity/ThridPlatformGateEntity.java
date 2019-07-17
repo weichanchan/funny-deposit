@@ -26,6 +26,10 @@ public class ThridPlatformGateEntity implements Serializable {
      * 设置：状态，开启：0，关闭：1
      */
     private Integer status;
+    /**
+     * 设置：状态，开启：0，关闭：1
+     */
+    private Integer checkStatus;
 
     /**
      * 设置：
@@ -67,5 +71,13 @@ public class ThridPlatformGateEntity implements Serializable {
      */
     public Integer getStatus() {
         return status;
+    }
+
+    public Integer getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(Integer checkStatus) {
+        this.checkStatus = checkStatus;
     }
 }

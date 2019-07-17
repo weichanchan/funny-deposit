@@ -15,6 +15,7 @@
         <result property="type" column="type"/>
         <result property="rechargeChannel" column="recharge_channel"/>
         <result property="createTime" column="create_time"/>
+        <result property="roleName" column="role_name"/>
     </resultMap>
 
     <select id="queryObject" resultType="com.funny.admin.agent.entity.WareFuluInfoEntity">
@@ -28,7 +29,8 @@
         `mark`,
         `type`,
         `recharge_channel`,
-        `create_time`
+        `create_time`,
+        `role_name`
         from ware_fulu_info where id = #{id}
         <if test="isLock != null and isLock == true">for update</if>
     </select>
@@ -45,7 +47,8 @@
         `mark`,
         `type`,
         `recharge_channel`,
-        `create_time`
+        `create_time`,
+        `role_name`
         from ware_fulu_info where outer_sku_id = #{value}
     </select>
 
@@ -60,7 +63,8 @@
         `mark`,
         `type`,
         `recharge_channel`,
-        `create_time`
+        `create_time`,
+        `role_name`
         from ware_fulu_info where 1=1
         <if test="type != null">
             and ware_name like concat('%',#{type},'%')
@@ -69,7 +73,7 @@
             and ware_name not like concat('%',#{other},'%')
         </if>
         <if test="no != null">
-            and (ware_name like concat('%',#{no},'%') or outer_sku_id like concat('%',#{no},'%') or product_id like concat('%',#{no},'%'))
+            and (ware_name like concat('%',#{no},'%') or role_name like concat('%',#{no},'%') or outer_sku_id like concat('%',#{no},'%') or product_id like concat('%',#{no},'%'))
         </if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
@@ -90,7 +94,7 @@
             and ware_name like concat('%',#{type},'%')
         </if>
         <if test="no != null">
-            and (ware_name like concat('%',#{no},'%') or outer_sku_id like concat('%',#{no},'%') or product_id like concat('%',#{no},'%'))
+            and (ware_name like concat('%',#{no},'%') or role_name like concat('%',#{no},'%') or outer_sku_id like concat('%',#{no},'%') or product_id like concat('%',#{no},'%'))
         </if>
         <if test="other != null">
             and ware_name not like concat('%',#{other},'%')
@@ -109,7 +113,8 @@
 			`mark`,
 			`recharge_channel`,
 			`type`, 
-			`create_time`
+			`create_time`,
+			`role_name`
 		)
 		values
 		(
@@ -121,7 +126,8 @@
 			#{mark}, 
 			#{rechargeChannel},
 			#{type},
-			#{createTime}
+			#{createTime},
+			#{roleName}
 		)
 	</insert>
 
@@ -136,7 +142,8 @@
             <if test="mark != null">`mark` = #{mark},</if>
             <if test="rechargeChannel != null">`recharge_channel` = #{rechargeChannel},</if>
             <if test="type != null">`type` = #{type},</if>
-            <if test="createTime != null">`create_time` = #{createTime}</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="roleName != null">`role_name` = #{roleName}</if>
         </set>
         where id = #{id}
     </update>

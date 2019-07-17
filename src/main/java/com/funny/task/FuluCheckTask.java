@@ -40,9 +40,6 @@ public class FuluCheckTask {
     private OrderFromYouzanService orderFromYouzanService;
 
     @Autowired
-    private WareFuluInfoService wareFuluInfoService;
-
-    @Autowired
     private ApplicationContext applicationContext;
 
     @Value("${optional.fulu.v2Enable}")
@@ -54,7 +51,7 @@ public class FuluCheckTask {
         // 查找需要退款的
         map.put("status", OrderFromYouzanEntity.FAIL);
         map.put("page", 1);
-        map.put("limit", 30);
+        map.put("limit", 60);
         map.put("sidx", "");
         map.put("order", "");
         Query query = new Query(map);
@@ -75,23 +72,27 @@ public class FuluCheckTask {
                 // 没入库够1分钟不理他
                 continue;
             }
-            logger.debug("充值中的订单【" + orderFromYouzanEntity.getId() + "】，查询充值状态");
-            if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == orderFromYouzanEntity.getRechargeChannel()) {
-                logger.debug("执行新版本查询");
-                applicationContext.publishEvent(new FuluCheckV2Event(orderFromYouzanEntity.getId()));
-                continue;
-            }
-            if (WareFuluInfoEntity.TYPE_A_CHANNEL == orderFromYouzanEntity.getRechargeChannel()) {
-                logger.debug("执行A版本查询");
-                applicationContext.publishEvent(new ACheckEvent(orderFromYouzanEntity.getId()));
-                continue;
-            }
-            if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == orderFromYouzanEntity.getRechargeChannel()) {
-                logger.debug("执行超人版本查询");
-                applicationContext.publishEvent(new SupermanCheckEvent(orderFromYouzanEntity.getId()));
-                continue;
-            }
-            applicationContext.publishEvent(new FuluCheckEvent(orderFromYouzanEntity.getId()));
+            publicCheckEvent(orderFromYouzanEntity);
         }
+    }
+
+    public void publicCheckEvent(OrderFromYouzanEntity orderFromYouzanEntity) {
+        logger.debug("充值中的订单【" + orderFromYouzanEntity.getId() + "】，查询充值状态");
+        if (WareFuluInfoEntity.TYPE_NEW_RECHARGE_CHANNEL == orderFromYouzanEntity.getRechargeChannel()) {
+            logger.debug("执行新版本查询");
+            applicationContext.publishEvent(new FuluCheckV2Event(orderFromYouzanEntity.getId()));
+            return;
+        }
+        if (WareFuluInfoEntity.TYPE_A_CHANNEL == orderFromYouzanEntity.getRechargeChannel()) {
+            logger.debug("执行A版本查询");
+            applicationContext.publishEvent(new ACheckEvent(orderFromYouzanEntity.getId()));
+            return;
+        }
+        if (WareFuluInfoEntity.TYPE_SUPERMAN_CHANNEL == orderFromYouzanEntity.getRechargeChannel()) {
+            logger.debug("执行超人版本查询");
+            applicationContext.publishEvent(new SupermanCheckEvent(orderFromYouzanEntity.getId()));
+            return;
+        }
+        applicationContext.publishEvent(new FuluCheckEvent(orderFromYouzanEntity.getId()));
     }
 }

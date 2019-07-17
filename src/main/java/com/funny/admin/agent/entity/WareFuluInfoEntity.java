@@ -84,6 +84,10 @@ public class WareFuluInfoEntity implements Serializable {
      * 角色ID列表
      */
     private List<Long> roleList;
+    /**
+     * 角色名串
+     */
+    private String roleName;
 
     /**
      * 设置：主键id
@@ -213,5 +217,13 @@ public class WareFuluInfoEntity implements Serializable {
 
     public void setRoleList(List<Long> roleList) {
         this.roleList = roleList;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

@@ -40,13 +40,24 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">状态</div>
+                <div class="col-sm-2 control-label">发送状态</div>
                 <div class="col-sm-10">
                     <label class="radio-inline">
-                        <input type="radio" name="type" value="0" v-model="thridPlatformGate.status"/> 开启
+                        <input type="radio" name="status" value="0" v-model="thridPlatformGate.status"/> 开启
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="type" value="1" v-model="thridPlatformGate.status"/> 关闭
+                        <input type="radio" name="status" value="1" v-model="thridPlatformGate.status"/> 关闭
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">查询状态</div>
+                <div class="col-sm-10">
+                    <label class="radio-inline">
+                        <input type="radio" name="checkStatus" value="0" v-model="thridPlatformGate.checkStatus"/> 开启
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="checkStatus" value="1" v-model="thridPlatformGate.checkStatus"/> 关闭
                     </label>
                 </div>
             </div>

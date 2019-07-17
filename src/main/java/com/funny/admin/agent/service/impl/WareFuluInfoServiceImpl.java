@@ -5,6 +5,7 @@ import com.funny.admin.agent.dao.WareFuluRoleDao;
 import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.entity.WareFuluRoleEntity;
 import com.funny.admin.agent.service.WareFuluInfoService;
+import com.funny.admin.system.dao.SysRoleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,8 @@ public class WareFuluInfoServiceImpl implements WareFuluInfoService {
     private WareFuluInfoDao wareFuluInfoDao;
     @Autowired
     private WareFuluRoleDao wareFuluRoleDao;
+    @Autowired
+    private SysRoleDao sysRoleDao;
 
 
     @Override
@@ -49,28 +52,31 @@ public class WareFuluInfoServiceImpl implements WareFuluInfoService {
 
     @Override
     public void save(WareFuluInfoEntity wareFuluInfo) {
+        wareFuluInfo.setRoleName(saveWareFuluRoles(wareFuluInfo));
         wareFuluInfoDao.save(wareFuluInfo);
-        saveWareFuluRoles(wareFuluInfo);
     }
 
-    private void saveWareFuluRoles(WareFuluInfoEntity wareFuluInfo) {
+    private String saveWareFuluRoles(WareFuluInfoEntity wareFuluInfo) {
+        String roleName = "";
         List<Long> roleIds = wareFuluInfo.getRoleList();
         if (roleIds == null || roleIds.size() == 0) {
-            return;
+            return "";
         }
         for (Long roleId : roleIds) {
             WareFuluRoleEntity wareFuluRoleEntity = new WareFuluRoleEntity();
             wareFuluRoleEntity.setRoleId(roleId);
             wareFuluRoleEntity.setWareFuluInfoId(wareFuluInfo.getId());
             wareFuluRoleDao.save(wareFuluRoleEntity);
+            roleName += "、" + sysRoleDao.queryObject(roleId).getRoleName();
         }
+        return roleName.substring(1);
     }
 
     @Override
     public void update(WareFuluInfoEntity wareFuluInfo) {
-        wareFuluInfoDao.update(wareFuluInfo);
         wareFuluRoleDao.deleteByWareId(wareFuluInfo.getId());
-        saveWareFuluRoles(wareFuluInfo);
+        wareFuluInfo.setRoleName(saveWareFuluRoles(wareFuluInfo));
+        wareFuluInfoDao.update(wareFuluInfo);
     }
 
     @Override

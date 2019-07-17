@@ -39,8 +39,10 @@
                 <input id="endTime" type="text" class="form-control" width="20" @keyup.enter="query" placeholder="结束时间">
             </div>
 			<div class="form-group col-sm-4">
+				<a style="float: right;"  class="btn btn-default" @click="check"><i class="fa fa-search">&nbsp;查询充值</i></a>
 				<a style="float: right;"  v-if="hasPermission('orderfromyouzan:info')" class="btn btn-primary" @click="getCards"><i class="fa fa-plus"></i>&nbsp;查看卡密</a>
 				<a style="float: right;"  class="btn btn-default" @click="query"><i class="fa fa-search">&nbsp;查询</i></a>
+
 				<p style="float:left;margin-top: 8px;">统计金额：</p><p style="margin-top: 8px">{{ totalFee }}</p>
 			</div>
 		</div>

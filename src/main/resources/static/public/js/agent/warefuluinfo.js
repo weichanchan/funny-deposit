@@ -36,6 +36,7 @@ $(function () {
                     }
                     return '未知状态';
                 }},
+			{ label: '处理角色', name: 'roleName', index: 'role_name', width: 80 },
 			{ label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }
         ],
 		viewrecords: true,
@@ -130,6 +131,29 @@ var vm = new Vue({
 				    url: "../warefuluinfo/delete",
 				    contentType: "application/json",
 				    data: JSON.stringify(ids),
+				    success: function(r){
+						if(r.code == 0){
+							alert('操作成功', function(index){
+								window.location.reload();
+							});
+						}else{
+							alert(r.msg);
+						}
+					}
+				});
+			});
+		},
+		check: function (event) {
+			var id = getSelectedRow();
+			if(id == null){
+				return ;
+			}
+
+			confirm('确定要执行查询吗？', function(){
+				$.ajax({
+					type: "POST",
+				    url: "../warefuluinfo/check?id=" + id,
+				    contentType: "application/json",
 				    success: function(r){
 						if(r.code == 0){
 							alert('操作成功', function(index){

@@ -7,6 +7,8 @@ import java.util.Map;
 import com.funny.admin.agent.entity.WareFuluRoleEntity;
 import com.funny.admin.agent.entity.WareInfoEntity;
 import com.funny.admin.agent.service.WareFuluRoleService;
+import com.funny.admin.system.service.SysRoleService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +38,8 @@ public class WareFuluInfoController {
     private WareFuluInfoService wareFuluInfoService;
     @Autowired
     private WareFuluRoleService wareFuluRoleService;
+    @Autowired
+    private SysRoleService sysRoleService;
 
     /**
      * 列表
@@ -46,13 +50,13 @@ public class WareFuluInfoController {
         //查询列表数据
         Query query = new Query(params);
         // 筛选出拼多多的商品
-        if("1".equals(query.get("type"))){
-            query.put("type","拼多多");
+        if ("1".equals(query.get("type"))) {
+            query.put("type", "拼多多");
         }
         // 筛选除了拼多多以外的商品
-        if("0".equals(query.get("type"))){
+        if ("0".equals(query.get("type"))) {
             query.remove("type");
-            query.put("other","拼多多");
+            query.put("other", "拼多多");
         }
         List<WareFuluInfoEntity> wareFuluInfoList = wareFuluInfoService.queryList(query);
         int total = wareFuluInfoService.queryTotal(query);
@@ -106,6 +110,33 @@ public class WareFuluInfoController {
     @RequiresPermissions("warefuluinfo:delete")
     public R delete(@RequestBody Long[] ids) {
         wareFuluInfoService.deleteBatch(ids);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/refresh")
+    public R refresh() {
+        List<WareFuluInfoEntity> wareFuluInfoEntities = wareFuluInfoService.queryList(null);
+        String roleName = "";
+        for (WareFuluInfoEntity wareFuluInfoEntity : wareFuluInfoEntities) {
+            List<Long> roleIdList = wareFuluRoleService.queryRoleList(wareFuluInfoEntity.getId());
+            for (Long roleId : roleIdList) {
+                try {
+                    roleName += "、" + sysRoleService.queryObject(roleId).getRoleName();
+                } catch (Exception e) {
+
+                }
+            }
+            roleName = roleName.substring(1);
+            if (StringUtils.isNotBlank(roleName)) {
+                wareFuluInfoEntity.setRoleName(roleName);
+                roleName = "";
+                wareFuluInfoService.update(wareFuluInfoEntity);
+            }
+        }
 
         return R.ok();
     }

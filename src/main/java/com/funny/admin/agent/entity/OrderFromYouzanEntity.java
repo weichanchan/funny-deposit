@@ -116,6 +116,10 @@ public class OrderFromYouzanEntity implements Serializable {
      */
     private Integer rechargeChannel;
 
+    private Integer count;
+
+    private Date nextRechargeTime;
+
     /**
      * 设置：主键 ID
      */
@@ -302,5 +306,21 @@ public class OrderFromYouzanEntity implements Serializable {
 
     public void setRechargeChannel(Integer rechargeChannel) {
         this.rechargeChannel = rechargeChannel;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public Date getNextRechargeTime() {
+        return nextRechargeTime;
+    }
+
+    public void setNextRechargeTime(Date nextRechargeTime) {
+        this.nextRechargeTime = nextRechargeTime;
     }
 }

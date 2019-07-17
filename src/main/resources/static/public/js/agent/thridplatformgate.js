@@ -20,6 +20,21 @@ $(function () {
                     return '未知状态';
                 }
             },
+            {
+                label: '状态',
+                name: 'checkStatus',
+                index: 'check_status',
+                width: 80,
+                formatter: function (value, options, row) {
+                    if (value == 1) {
+                        return '<font color="red">关闭</font>'
+                    }
+                    if (value == 0) {
+                        return '<font color="green">开启</font>'
+                    }
+                    return '未知状态';
+                }
+            },
         ],
         viewrecords: true,
         height: 385,

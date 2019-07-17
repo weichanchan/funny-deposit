@@ -30,6 +30,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -45,7 +48,7 @@ import java.util.*;
 public class SupermanSubmitListener {
 
     @Autowired
-    private RestTemplate restTemplate;
+    private AsyncRestTemplate asyncRestTemplate;
 
     private static final int gate = 3;
 
@@ -77,7 +80,7 @@ public class SupermanSubmitListener {
         if (orderFromYouzanEntity.getStatus() != OrderFromYouzanEntity.WAIT_PROCESS) {
             return;
         }
-        if(orderFromYouzanEntity.getLastRechargeTime() != null && orderFromYouzanEntity.getLastRechargeTime().after(new Date())) {
+        if (orderFromYouzanEntity.getLastRechargeTime() != null && orderFromYouzanEntity.getLastRechargeTime().after(new Date())) {
             // 还没到时间发
             return;
         }
@@ -126,8 +129,8 @@ public class SupermanSubmitListener {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
-       int i = orderRequestRecordService.queryTotalByOrderNo(orderFromYouzanEntity.getId());
-        if(i > 0){
+        int i = orderRequestRecordService.queryTotalByOrderNo(orderFromYouzanEntity.getId());
+        if (i > 0) {
             // 只发一次
             orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
             orderFromYouzanService.update(orderFromYouzanEntity);
@@ -136,50 +139,62 @@ public class SupermanSubmitListener {
         }
 
         OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(supermanConfig.getUrl() + "?" + request.toString(), orderFromYouzanEntity.getId());
-        ResponseEntity<Map> responseEntity;
-        Map<String, Object> result;
+
         try {
             orderFromYouzanEntity.setLastRechargeTime(new Date());
             // 将签名添加到URL参数后
-            responseEntity = restTemplate.postForEntity(supermanConfig.getUrl(), request, Map.class);
-            orderRequestRecordEntity.setResponse(responseEntity.getBody().toString());
-            result = responseEntity.getBody();
+            ListenableFuture<ResponseEntity<Map>> forEntity = asyncRestTemplate.postForEntity(supermanConfig.getUrl(), request, Map.class);
+            forEntity.addCallback(new ListenableFutureCallback<ResponseEntity<Map>>() {
+                @Override
+                public void onFailure(Throwable throwable) {
+                    // 请求异常直接记录，然后就返回。等待定时器重试
+                    orderRequestRecordEntity.setException(throwable.getMessage());
+                    orderRequestRecordService.update(orderRequestRecordEntity);
+                    return;
+                }
+
+                @Override
+                public void onSuccess(ResponseEntity<Map> responseEntity) {
+                    orderRequestRecordEntity.setResponse(responseEntity.getBody().toString());
+                    Map<String, Object> result = responseEntity.getBody();
+                    // 受理成功和处理中先不管，失败就置为失败
+                    if ("0".equals(responseEntity.getBody().get("study").toString())) {
+                        orderRequestRecordEntity.setException(responseEntity.getBody().toString());
+                        orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+                        orderRequestRecordService.update(orderRequestRecordEntity);
+                        orderFromYouzanService.update(orderFromYouzanEntity);
+                        applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "超人平台受理失败"));
+                        return;
+                    }
+
+                    // 受理成功和处理中先不管，失败就置为失败
+                    if (!"8888".equals(responseEntity.getBody().get("code").toString())) {
+                        orderRequestRecordEntity.setException(responseEntity.getBody().toString());
+                        orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+                        orderRequestRecordService.update(orderRequestRecordEntity);
+                        orderFromYouzanService.update(orderFromYouzanEntity);
+                        applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "超人平台受理失败"));
+                        return;
+                    }
+
+                    // 如果没有订单价格，就把充值平台的成本价写上去
+                    if (orderFromYouzanEntity.getOrderPrice().intValue() == 0) {
+                        orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Double.valueOf((result.get("money")).toString())));
+                    }
+                    orderFromYouzanEntity.setOrderNo(orderFromYouzanEntity.getOrderNo() + "---" + result.get("order").toString());
+                    // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
+                    orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
+                    orderRequestRecordService.update(orderRequestRecordEntity);
+                    orderFromYouzanService.update(orderFromYouzanEntity);
+                }
+            });
+
         } catch (Exception e) {
             // 请求异常直接记录，然后就返回。等待定时器重试
             orderRequestRecordEntity.setException(e.getMessage());
             orderRequestRecordService.update(orderRequestRecordEntity);
             return;
         }
-
-        // 受理成功和处理中先不管，失败就置为失败
-        if ("0".equals(responseEntity.getBody().get("study").toString())) {
-            orderRequestRecordEntity.setException(responseEntity.getBody().toString());
-            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
-            orderRequestRecordService.update(orderRequestRecordEntity);
-            orderFromYouzanService.update(orderFromYouzanEntity);
-            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "超人平台受理失败"));
-            return;
-        }
-
-        // 受理成功和处理中先不管，失败就置为失败
-        if (!"8888".equals(responseEntity.getBody().get("code").toString())) {
-            orderRequestRecordEntity.setException(responseEntity.getBody().toString());
-            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
-            orderRequestRecordService.update(orderRequestRecordEntity);
-            orderFromYouzanService.update(orderFromYouzanEntity);
-            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "超人平台受理失败"));
-            return;
-        }
-
-        // 如果没有订单价格，就把充值平台的成本价写上去
-        if (orderFromYouzanEntity.getOrderPrice().intValue() == 0) {
-            orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Double.valueOf((result.get("money")).toString())));
-        }
-        orderFromYouzanEntity.setOrderNo(orderFromYouzanEntity.getOrderNo() + "---" + result.get("order").toString());
-        // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
-        orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
-        orderRequestRecordService.update(orderRequestRecordEntity);
-        orderFromYouzanService.update(orderFromYouzanEntity);
     }
 
 }

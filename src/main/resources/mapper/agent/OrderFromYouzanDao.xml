@@ -40,7 +40,9 @@
 					`begin_recharge_time`, 
 					`last_recharge_time`,
 					`exception`,
-					`recharge_channel`
+					`recharge_channel`,
+					`count`,
+					`next_recharge_time`
 				from order_from_youzan where id = #{id}
         <if test="isLock != null and isLock == true">for update</if>
 	</select>
@@ -62,7 +64,9 @@
 					`begin_recharge_time`,
 					`last_recharge_time`,
 					`exception`,
-					`recharge_channel`
+					`recharge_channel`,
+					`count`,
+					`next_recharge_time`
 				from order_from_youzan where order_no = #{value}
 				for update
 	</select>
@@ -84,7 +88,9 @@
 		            a.`begin_recharge_time`,
 		            a.`last_recharge_time`,
 					a.`exception`,
-					a.`recharge_channel`
+					a.`recharge_channel`,
+					a.`count`,
+					a.`next_recharge_time`
 				from order_from_youzan a
 	  	LEFT JOIN ware_fulu_info w ON a.ware_no = w.outer_sku_id
 		WHERE 1=1
@@ -202,7 +208,9 @@
 			`begin_recharge_time`, 
 			`last_recharge_time`,
 			`exception`,
-			`recharge_channel`
+			`recharge_channel`,
+			`count`,
+			`next_recharge_time`
 		)
 		values
 		(
@@ -220,7 +228,9 @@
 			#{beginRechargeTime}, 
 			#{lastRechargeTime},
 			#{exception},
-			#{rechargeChannel}
+			#{rechargeChannel},
+			#{count},
+			#{nextRechargeTime}
 		)
 	</insert>
 	 
@@ -241,7 +251,9 @@
 			<if test="beginRechargeTime != null">`begin_recharge_time` = #{beginRechargeTime}, </if>
 			<if test="lastRechargeTime != null">`last_recharge_time` = #{lastRechargeTime},</if>
 			<if test="exception != null">`exception` = #{exception},</if>
-			<if test="rechargeChannel != null">`recharge_channel` = #{rechargeChannel}</if>
+			<if test="rechargeChannel != null">`recharge_channel` = #{rechargeChannel},</if>
+			<if test="count != null">`count` = #{count},</if>
+			<if test="nextRechargeTime != null">`next_recharge_time` = #{nextRechargeTime}</if>
 		</set>
 		where id = #{id}
 	</update>

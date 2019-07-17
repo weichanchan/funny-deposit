@@ -25,6 +25,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -44,7 +47,7 @@ public class ASubmitListener {
     private static final Logger logger = LoggerFactory.getLogger(ASubmitListener.class);
 
     @Autowired
-    private RestTemplate restTemplate;
+    private AsyncRestTemplate asyncRestTemplate;
 
     private static final int gate = 2;
 
@@ -117,37 +120,47 @@ public class ASubmitListener {
         String sign = SignUtils.getASign(map, aConfig.getAppKey());
         String request = SignUtils.MaptoString(map) + "&signType=md5&sign=" + sign;
         OrderRequestRecordEntity orderRequestRecordEntity = orderRequestRecordService.saveRequest(aConfig.getUrl() + "?" + request, orderFromYouzanEntity.getId());
-        ResponseEntity<String> responseEntity;
-        Map<String, Object> result;
-        try {
-            orderFromYouzanEntity.setLastRechargeTime(new Date());
-            responseEntity = restTemplate.getForEntity(aConfig.getUrl() + "?" + request, String.class);
-            orderRequestRecordEntity.setResponse(responseEntity.getBody());
-            result = objectMapper.readValue(responseEntity.getBody(), Map.class);
-        } catch (Exception e) {
-            // 请求异常直接记录，然后就返回。等待定时器重试
-            orderRequestRecordEntity.setException(e.getMessage());
-            orderRequestRecordService.update(orderRequestRecordEntity);
-            return;
-        }
+        orderFromYouzanEntity.setLastRechargeTime(new Date());
+        ListenableFuture<ResponseEntity<String>> forEntity = asyncRestTemplate.getForEntity(aConfig.getUrl() + "?" + request, String.class);
+        forEntity.addCallback(new ListenableFutureCallback<ResponseEntity<String>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                // 请求异常直接记录，然后就返回。等待定时器重试
+                orderRequestRecordEntity.setException(throwable.getMessage());
+                orderRequestRecordService.update(orderRequestRecordEntity);
+                return;
+            }
 
-        if (!"0".equals(result.get("resultCode").toString())) {
-            orderRequestRecordEntity.setException(responseEntity.getBody());
-            orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
-            orderRequestRecordService.update(orderRequestRecordEntity);
-            orderFromYouzanService.update(orderFromYouzanEntity);
-            applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "A平台受理失败"));
-            return;
-        }
-        // 如果没有订单价格，就把充值平台的成本价写上去
-        if (orderFromYouzanEntity.getOrderPrice().intValue() == 0) {
-            orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Long.valueOf(((Map) result.get("resultData")).get("totalFee").toString())).
-                    divide(BigDecimal.TEN).divide(BigDecimal.TEN));
-        }
-        // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
-        orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
-        orderRequestRecordService.update(orderRequestRecordEntity);
-        orderFromYouzanService.update(orderFromYouzanEntity);
+            @Override
+            public void onSuccess(ResponseEntity<String> responseEntity) {
+                orderRequestRecordEntity.setResponse(responseEntity.getBody());
+                Map<String, Object> result = null;
+                try {
+                    result = objectMapper.readValue(responseEntity.getBody(), Map.class);
+                } catch (IOException e) {
+                    logger.error( "json 格式转化失败",e);
+                }
+                if (!"0".equals(result.get("resultCode").toString())) {
+                    orderRequestRecordEntity.setException(responseEntity.getBody());
+                    orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.FAIL);
+                    orderRequestRecordService.update(orderRequestRecordEntity);
+                    orderFromYouzanService.update(orderFromYouzanEntity);
+                    applicationContext.publishEvent(new YouzanRefundEvent(orderFromYouzanEntity.getId(), "A平台受理失败"));
+                    return;
+                }
+                // 如果没有订单价格，就把充值平台的成本价写上去
+                if (orderFromYouzanEntity.getOrderPrice().intValue() == 0) {
+                    orderFromYouzanEntity.setOrderPrice(BigDecimal.valueOf(Long.valueOf(((Map) result.get("resultData")).get("totalFee").toString())).
+                            divide(BigDecimal.TEN).divide(BigDecimal.TEN));
+                }
+                // 福禄平台已经受理订单，改变订单为受理中（等待通知或者在主动定时查询中处理）
+                orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.PROCESS);
+                orderRequestRecordService.update(orderRequestRecordEntity);
+                orderFromYouzanService.update(orderFromYouzanEntity);
+            }
+        });
+
+
     }
 
 }

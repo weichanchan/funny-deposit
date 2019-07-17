@@ -105,6 +105,7 @@ public class ApiPDDOrderNotifyController {
         orderFromYouzanEntity.setStatus(OrderFromYouzanEntity.WAIT_PROCESS);
         orderFromYouzanEntity.setCreateTime(new Date());
         orderFromYouzanEntity.setRechargeChannel(wareFuluInfoEntity.getRechargeChannel());
+        orderFromYouzanEntity.setCount(0);
         orderFromYouzanService.save(orderFromYouzanEntity);
         if (WareFuluInfoEntity.TYPE_A_CHANNEL == wareFuluInfoEntity.getRechargeChannel()) {
             applicationContext.publishEvent(new ASubmitEvent(orderFromYouzanEntity.getId()));

@@ -22,7 +22,7 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
-            {label: '有赞订单号', name: 'youzanOrderId', index: 'youzan_order_id', width: 100},
+            {label: '订单号', name: 'youzanOrderId', index: 'youzan_order_id', width: 100},
             {label: '对接平台下单号', name: 'orderNo', index: 'order_no', width: 60},
             {label: '订单金额', name: 'orderPrice', index: 'order_price', width: 40},
             {label: '商品编号', name: 'wareNo', index: 'ware_no', width: 40},
@@ -192,6 +192,28 @@ var vm = new Vue({
                         }
                     }
                 });
+            });
+        },
+        check: function (event) {
+            var ids = getSelectedRows();
+            if (ids == null) {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "../orderfromyouzan/check",
+                contentType: "application/json",
+                data: JSON.stringify(ids),
+                success: function (r) {
+                    if (r.code == 0) {
+                        alert('操作成功', function (index) {
+                            window.location.reload();
+                        });
+                    } else {
+                        alert(r.msg);
+                    }
+                }
             });
         },
         getInfo: function (id) {
