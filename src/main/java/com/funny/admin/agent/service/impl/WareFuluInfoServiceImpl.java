@@ -6,6 +6,8 @@ import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.entity.WareFuluRoleEntity;
 import com.funny.admin.agent.service.WareFuluInfoService;
 import com.funny.admin.system.dao.SysRoleDao;
+import com.funny.admin.system.entity.SysRoleEntity;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,9 +69,15 @@ public class WareFuluInfoServiceImpl implements WareFuluInfoService {
             wareFuluRoleEntity.setRoleId(roleId);
             wareFuluRoleEntity.setWareFuluInfoId(wareFuluInfo.getId());
             wareFuluRoleDao.save(wareFuluRoleEntity);
-            roleName += "、" + sysRoleDao.queryObject(roleId).getRoleName();
+            SysRoleEntity sysRole = sysRoleDao.queryObject(roleId);
+            if (sysRole != null) {
+                roleName += "、" + sysRoleDao.queryObject(roleId).getRoleName();
+            }
         }
-        return roleName.substring(1);
+        if(StringUtils.isNotBlank(roleName)){
+            return roleName.substring(1);
+        }
+        return "";
     }
 
     @Override

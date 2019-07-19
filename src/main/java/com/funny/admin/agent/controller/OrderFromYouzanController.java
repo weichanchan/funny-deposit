@@ -91,14 +91,14 @@ public class OrderFromYouzanController extends AbstractController {
     @RequiresPermissions("orderfromyouzan:list")
     public R totalFee(String no, String wareNo,
                       String beginTime,
-                      String endTime, String type) {
+                      String endTime, String type,String status) {
         Map<String, Object> params = new HashMap<>();
         params.put("no", no);
         params.put("wareNo", wareNo);
         params.put("beginTime", beginTime);
         params.put("endTime", endTime);
-        params.put("status", 1);
         params.put("type", type);
+        params.put("status", status);
         if (getUser().getUserId() != 1L) {
             params.put("roleIds", sysUserRoleService.queryRoleIdList(getUserId()));
         }

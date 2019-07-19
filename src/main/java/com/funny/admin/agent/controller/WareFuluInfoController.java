@@ -114,31 +114,20 @@ public class WareFuluInfoController {
         return R.ok();
     }
 
-    /**
-     * 删除
-     */
-    @RequestMapping("/refresh")
-    public R refresh() {
-        List<WareFuluInfoEntity> wareFuluInfoEntities = wareFuluInfoService.queryList(null);
-        String roleName = "";
-        for (WareFuluInfoEntity wareFuluInfoEntity : wareFuluInfoEntities) {
-            List<Long> roleIdList = wareFuluRoleService.queryRoleList(wareFuluInfoEntity.getId());
-            for (Long roleId : roleIdList) {
-                try {
-                    roleName += "、" + sysRoleService.queryObject(roleId).getRoleName();
-                } catch (Exception e) {
-
-                }
-            }
-            roleName = roleName.substring(1);
-            if (StringUtils.isNotBlank(roleName)) {
-                wareFuluInfoEntity.setRoleName(roleName);
-                roleName = "";
-                wareFuluInfoService.update(wareFuluInfoEntity);
-            }
-        }
-
-        return R.ok();
-    }
+//    /**
+//     * 删除
+//     */
+//    @RequestMapping("/refresh")
+//    public R refresh() {
+//        List<WareFuluInfoEntity> wareFuluInfoEntities = wareFuluInfoService.queryList(null);
+//        String roleName = "";
+//        for (WareFuluInfoEntity wareFuluInfoEntity : wareFuluInfoEntities) {
+//            List<Long> roleIdList = wareFuluRoleService.queryRoleList(wareFuluInfoEntity.getId());
+//            wareFuluInfoEntity.setRoleList(roleIdList);
+//            wareFuluInfoService.update(wareFuluInfoEntity);
+//        }
+//
+//        return R.ok();
+//    }
 
 }

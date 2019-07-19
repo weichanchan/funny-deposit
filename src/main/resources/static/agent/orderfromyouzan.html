@@ -38,6 +38,20 @@
             <div class="form-group col-sm-2">
                 <input id="endTime" type="text" class="form-control" width="20" @keyup.enter="query" placeholder="结束时间">
             </div>
+			<div class="form-group col-sm-2">
+				<select v-model="q.status" class="form-control">
+					<option value="0" >订单状态</option>
+					<option value="1" >充值成功</option>
+					<option value="2" >待充值</option>
+					<option value="3" >充值中</option>
+					<option value="4" >退款成功</option>
+					<option value="5" >需要手工退款</option>
+					<option value="-1" >待退款</option>
+					<option value="-2" >重试中</option>
+					<option value="-3" >退款异常</option>
+					<option value="-4" >查询异常</option>
+				</select>
+			</div>
 			<div class="form-group col-sm-4">
 				<a style="float: right;"  class="btn btn-default" @click="check"><i class="fa fa-search">&nbsp;查询充值</i></a>
 				<a style="float: right;"  v-if="hasPermission('orderfromyouzan:info')" class="btn btn-primary" @click="getCards"><i class="fa fa-plus"></i>&nbsp;查看卡密</a>

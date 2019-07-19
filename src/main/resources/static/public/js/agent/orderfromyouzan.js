@@ -108,7 +108,7 @@ $(function () {
             var endTime = $('#endTime').val();
             $.ajax({
                 type: "POST",
-                url: "../orderfromyouzan/totalFee?no=" + vm.q.no + "&wareNo=" + vm.q.wareNo + "&beginTime=" + beginTime + "&endTime=" + endTime + "&type=" + $.getUrlParam('type'),
+                url: "../orderfromyouzan/totalFee?no=" + vm.q.no + "&wareNo=" + vm.q.wareNo + "&status=" + vm.q.status + "&beginTime=" + beginTime + "&endTime=" + endTime + "&type=" + $.getUrlParam('type'),
                 contentType: "application/json",
                 success: function (r) {
                     vm.totalFee = r.totalFee;
@@ -129,7 +129,8 @@ var vm = new Vue({
         orderFromYouzan: {},
         q: {
             no: "",
-            wareNo: ""
+            wareNo: "",
+            status: 0
         }
     },
     methods: {
@@ -229,6 +230,7 @@ var vm = new Vue({
                 postData: {
                     "no": vm.q.no,
                     "wareNo": vm.q.wareNo,
+                    "status": vm.q.status,
                     "beginTime": $('#beginTime').val(),
                     "endTime": $('#endTime').val()
                 }

@@ -6,7 +6,7 @@ $(function () {
             {label: 'id', name: 'id', index: 'id', width: 50, key: true},
             {label: '平台名称', name: 'name', index: 'name', width: 80},
             {
-                label: '状态',
+                label: '充值阀状态',
                 name: 'status',
                 index: 'status',
                 width: 80,
@@ -21,7 +21,7 @@ $(function () {
                 }
             },
             {
-                label: '状态',
+                label: '查询阀状态',
                 name: 'checkStatus',
                 index: 'check_status',
                 width: 80,
