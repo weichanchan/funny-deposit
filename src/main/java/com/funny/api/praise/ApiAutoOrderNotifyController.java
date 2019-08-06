@@ -1,6 +1,5 @@
 package com.funny.api.praise;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
@@ -13,7 +12,6 @@ import com.funny.config.AConfig;
 import com.funny.utils.R;
 import com.funny.utils.SignUtils;
 import com.funny.utils.annotation.IgnoreAuth;
-import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -30,15 +28,15 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * 有赞订单通知
+ * 自建平台订单通知
  *
  * @author liyanjun
  */
 @RestController
-@RequestMapping("/api/pdd/order")
-public class ApiPDDOrderNotifyController {
+@RequestMapping("/api/auto/order")
+public class ApiAutoOrderNotifyController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiPDDOrderNotifyController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ApiAutoOrderNotifyController.class);
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -48,26 +46,18 @@ public class ApiPDDOrderNotifyController {
 
     @Autowired
     private OrderFromYouzanService orderFromYouzanService;
+
     @Autowired
     private AConfig aConfig;
 
-    @IgnoreAuth
-    @PostMapping("check")
-    public Object check(String outerSkuId) {
-        WareFuluInfoEntity wareFuluInfoEntity = wareFuluInfoService.queryByOuterSkuId(outerSkuId);
-        if (wareFuluInfoEntity == null) {
-            return R.error("检查商品编号【" + outerSkuId + "】不需要自动充值");
-        }
-        return R.ok();
-    }
 
     /**
-     * 拼多多通知
+     * 自建平台下单通知
      */
     @IgnoreAuth
     @PostMapping("notify")
-    public Object notify(String orderId, String number, String outerSkuId, Integer count, Long timeStamp, String sign) throws IOException {
-        String paramToDecode = "number=" + URLEncoder.encode(number, "UTF-8") + "&orderId=" + orderId + "&count=" + count + "&timeStamp=" + timeStamp + "&outerSkuId=" + URLEncoder.encode(outerSkuId, "UTF-8");
+    public Object notify(String orderId, String number,BigDecimal payAmount, String outerSkuId, Integer count, Long timeStamp, String sign) throws IOException {
+        String paramToDecode = "number=" + URLEncoder.encode(number, "UTF-8") + "&payAmount=" + payAmount + "&orderId=" + orderId + "&count=" + count + "&timeStamp=" + timeStamp + "&outerSkuId=" + URLEncoder.encode(outerSkuId, "UTF-8");
         String tempSign = SignUtils.getMD5(paramToDecode + aConfig.getClientKey());
         if (!sign.equals(tempSign)) {
             logger.debug(paramToDecode);
@@ -76,7 +66,7 @@ public class ApiPDDOrderNotifyController {
             logger.debug("签名错误");
             return R.ok();
         }
-        logger.debug("number=" + number + "&orderId=" + orderId + "&count=" + count + "&timeStamp=" + timeStamp + "&outerSkuId=" + outerSkuId);
+        logger.debug("number=" + number + "&payAmount=" + payAmount + "&orderId=" + orderId + "&count=" + count + "&timeStamp=" + timeStamp + "&outerSkuId=" + outerSkuId);
         // 获取订单信息
         if (outerSkuId == null) {
             logger.debug("outerSkuId未配置，不用处理");
@@ -98,7 +88,7 @@ public class ApiPDDOrderNotifyController {
         // 充值号码备注信息
         orderFromYouzanEntity.setRechargeInfo(number);
         // 订单金额
-        orderFromYouzanEntity.setOrderPrice(BigDecimal.ZERO);
+        orderFromYouzanEntity.setOrderPrice(payAmount);
         // 订单数量
         orderFromYouzanEntity.setNum(count);
         // 订单状态为处理中

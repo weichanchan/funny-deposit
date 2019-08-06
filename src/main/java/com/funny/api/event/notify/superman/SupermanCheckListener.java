@@ -1,20 +1,11 @@
 package com.funny.api.event.notify.superman;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.funny.admin.agent.entity.OrderFromYouzanEntity;
 import com.funny.admin.agent.entity.ThridPlatformGateEntity;
-import com.funny.admin.agent.entity.WareFuluInfoEntity;
 import com.funny.admin.agent.service.OrderFromYouzanService;
 import com.funny.admin.agent.service.ThridPlatformGateService;
-import com.funny.admin.agent.service.WareFuluInfoService;
-import com.funny.api.event.notify.superman.SupermanCheckEvent;
-import com.funny.config.AConfig;
-import com.funny.config.FuluConfig;
 import com.funny.config.SupermanConfig;
-import com.funny.utils.DateUtils;
 import com.funny.utils.SignUtils;
-import com.youzan.open.sdk.client.auth.Sign;
-import com.youzan.open.sdk.util.hash.MD5Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +22,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.client.AsyncRestTemplate;
-import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**

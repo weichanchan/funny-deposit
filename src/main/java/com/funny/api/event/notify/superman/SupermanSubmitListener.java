@@ -110,7 +110,11 @@ public class SupermanSubmitListener {
         map.put("spid", Collections.singletonList(wareFuluInfoEntity.getProductId()));
         // 除了Q币，超人的数量都为1
         Integer count = 1;
-        if (wareFuluInfoEntity.getWareName().contains("Q币") || wareFuluInfoEntity.getWareName().contains("喜点")) {
+        if (wareFuluInfoEntity.getWareName().contains("Q币")
+                || wareFuluInfoEntity.getWareName().contains("q币")
+                || wareFuluInfoEntity.getWareName().contains("鱼翅")
+                || wareFuluInfoEntity.getWareName().contains("陌陌币")
+                || wareFuluInfoEntity.getWareName().contains("喜点")) {
             count = wareFuluInfoEntity.getNum() * orderFromYouzanEntity.getNum();
         }
 

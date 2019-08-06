@@ -54,8 +54,10 @@ public class WareFuluInfoServiceImpl implements WareFuluInfoService {
 
     @Override
     public void save(WareFuluInfoEntity wareFuluInfo) {
-        wareFuluInfo.setRoleName(saveWareFuluRoles(wareFuluInfo));
         wareFuluInfoDao.save(wareFuluInfo);
+        wareFuluInfo.setRoleName(saveWareFuluRoles(wareFuluInfo));
+        wareFuluInfoDao.update(wareFuluInfo);
+
     }
 
     private String saveWareFuluRoles(WareFuluInfoEntity wareFuluInfo) {

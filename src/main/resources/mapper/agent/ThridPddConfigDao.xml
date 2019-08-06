@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.funny.admin.agent.dao.ThridPddConfigDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.funny.admin.agent.entity.ThridPddConfigEntity" id="thridPddConfigMap">
+        <result property="id" column="id"/>
+        <result property="clientId" column="client_id"/>
+        <result property="clientSecret" column="client_secret"/>
+        <result property="refreshToken" column="refresh_token"/>
+        <result property="code" column="code"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.funny.admin.agent.entity.ThridPddConfigEntity">
+		select
+					`id`, 
+					`client_id`, 
+					`client_secret`, 
+					`refresh_token`, 
+					`code`
+				from thrid_pdd_config where id = #{id}
+        <if test="isLock != null and isLock == true">for update</if>
+	</select>
+
+	<select id="queryList" resultType="com.funny.admin.agent.entity.ThridPddConfigEntity">
+		select
+		            `id`, 
+		            `client_id`, 
+		            `client_secret`, 
+		            `refresh_token`, 
+		            `code`
+				from thrid_pdd_config
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from thrid_pdd_config 
+	</select>
+	 
+	<insert id="save" parameterType="com.funny.admin.agent.entity.ThridPddConfigEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into thrid_pdd_config
+		(
+			`client_id`, 
+			`client_secret`, 
+			`refresh_token`, 
+			`code`
+		)
+		values
+		(
+			#{clientId}, 
+			#{clientSecret}, 
+			#{refreshToken}, 
+			#{code}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.funny.admin.agent.entity.ThridPddConfigEntity">
+		update thrid_pdd_config 
+		<set>
+			<if test="clientId != null">`client_id` = #{clientId}, </if>
+			<if test="clientSecret != null">`client_secret` = #{clientSecret}, </if>
+			<if test="refreshToken != null">`refresh_token` = #{refreshToken}, </if>
+			<if test="code != null">`code` = #{code}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from thrid_pdd_config where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from thrid_pdd_config where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
